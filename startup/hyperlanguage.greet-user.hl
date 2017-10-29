@@ -1,0 +1,19 @@
+
+/*
+ * Invoked when Hyperlanguage is started.
+ *
+ * Greets user, and waits for speech input.
+ */
+create-event:hyperlanguage.greet-user
+
+  /*
+   * Greets user.
+   */
+  micro.speak:Howdy
+    voice:Karen,en
+    onfinish
+
+      /*
+       * Awaits command.
+       */
+      hyperlanguage.listen

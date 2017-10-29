@@ -1,0 +1,13 @@
+
+/*
+ * Invoked when Hyperlanguage is closed.
+ *
+ * Says goodbye.
+ */
+create-event:hyperlanguage.goodbye
+
+  /*
+   * Greets user
+   */
+  micro.speak:No problem
+    voice:Karen,en

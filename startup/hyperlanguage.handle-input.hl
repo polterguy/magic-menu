@@ -1,0 +1,27 @@
+
+/*
+ * Invoked when a new voice command is given.
+ *
+ * Looks up command from database, and if existing, evaluates it - Otherwise,
+ * will ask user if he wants to create a mapping.
+ */
+create-event:hyperlanguage.handle-input
+
+  /*
+   * Checking if anything was given, and if not, closing Hyperlanguage.
+   */
+  if:x:/../*/_arg?value
+    =:
+    or:x:/../*/_arg?value
+      not
+
+    /*
+     * Stopping Hyperlanguage, and returning early to avoid evaluating the rest of our event.
+     */
+    hyperlanguage.actions.close
+    return
+
+  /*
+   * Looks up command from database.
+   */
+  micro.windows.info:x:/../*/_arg?value

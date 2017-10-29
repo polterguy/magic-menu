@@ -1,0 +1,16 @@
+
+/*
+ * Invoked when Hyperlanguage should listen for new input.
+ */
+create-event:hyperlanguage.listen
+
+  /*
+   * Starts speech recognition engine.
+   */
+  micro.listen
+    onfinish
+
+      /*
+       * Invokes event responsible for handling input.
+       */
+      hyperlanguage.handle-input:x:/../*/text?value

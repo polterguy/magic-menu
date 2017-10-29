@@ -1,0 +1,66 @@
+
+/*
+ * Creates the event that actually starts Hyperlanguage.
+ */
+create-event:hyperlanguage.start
+
+  /*
+   * Checking if Hyperlanguage is already initiated from before, and if so, making
+   * sure we close any previous instances first.
+   */
+  if
+    fetch:x:/0/0?value
+      widget-exists:hyperlanguage-listener
+    delete-widget:hyperlanguage-listener
+
+  /*
+   * Creating main Hyperlanguage widget.
+   */
+  create-widget:hyperlanguage-listener
+    class:hyperlanguage-listener shaded rounded air-inner
+    oninit
+
+      /*
+       * Greets user, and asks for input.
+       */
+      hyperlanguage.greet-user
+
+
+    events
+
+      /*
+       * Closes Hyperlanguage.
+       */
+      hyperlanguage.actions.close
+
+        /*
+         * Deletes main Hyperlanguage widget.
+         */
+        delete-widget:hyperlanguage-listener
+
+        /*
+         * Says goodbye, and stops input loop.
+         */
+        hyperlanguage.goodbye
+
+    widgets
+      div
+        class:strip
+        widgets
+          button
+            style:"margin-bottom:0;"
+            innerValue:@"<span class=""icon-close""></span>"
+            title:Close Hyperlanguage
+            oninit
+
+              /*
+               * Setting initial focus to "Close" button, to make it easy to close module.
+               */
+              micro.page.set-focus:x:/../*/_event?value
+
+            onclick
+
+              /*
+               * Closing Hyperlanguage.
+               */
+              hyperlanguage.actions.close

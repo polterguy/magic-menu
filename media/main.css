@@ -2,5 +2,30 @@
 /*
  * Styles for main plugin button, which initiates Hyperlanguage.
  */
+
+/*
+ * Button to start Hyperlanguage.
+ */
 .hyperlanguage-start {
 }
+
+/*
+ * Main Hyperlanguage "listener".
+ */
+@keyframes hyperlanguage-listener {
+    0% {background-color:white;}
+    100% {background-color:yellow;}
+}
+.hyperlanguage-listener {
+    position:fixed;
+    bottom:5px;
+    left:5px;
+    animation-name:hyperlanguage-listener;
+    animation-duration:1s;
+    animation-iteration-count:infinite;
+    animation-direction:alternate;
+}
+.hyperlanguage-listener button {
+    background:rgba(254, 254, 254, .8);
+}
+

@@ -37,3 +37,9 @@ create-event:desktop.plugins.post.initialize-page
       class:hyperlanguage-start
       title:Start Hyperlanguage
       innerValue:@"<span class=""icon-flash""></span>"
+      onclick
+
+        /*
+         * Starts Hyperlanguage.
+         */
+        hyperlanguage.start
