@@ -9,7 +9,7 @@ create-event:hyperlanguage.greet-user
   /*
    * Greets user.
    */
-  hyperlanguage.speak:Howdy, talk to me
+  hyperlanguage.speak:Howdy
     onfinish
 
       /*

@@ -8,6 +8,26 @@
 create-event:hyperlanguage.create-phrase2hyper-association
 
   /*
+   * Checking to see if we're in some specific point in our "grammar tree".
+   */
+  hyperlanguage.get-position
+  if:x:/@hyperlanguage.get-position?value
+
+    /*
+     * We're in some specific position in our tree, selecting the first phrase
+     * matching our command.
+     */
+    p5.mysql.connect:[hyperlanguage]
+      p5.mysql.scalar:@"select command from phrases p where exists (select * from commands c where c.id = @id and c.id = p.commandid) limit 1"
+        @id:x:/@hyperlanguage.get-position?value
+      eval-x:x:/+/*/*/*
+      insert-after:x:/../*/create-widgets/*/micro.widgets.modal/*/widgets/*/h3
+        src
+          p
+            innerValue:Parent grammer object '{0}'
+              :x:/@p5.mysql.scalar?value
+
+  /*
    * Creating a modal widget, which asks user to type in Hyperlambda, and configure
    * a piece of Hyperlambda, which will result in associating the specified Hyperlambda
    * with the given [_arg] phrase.
