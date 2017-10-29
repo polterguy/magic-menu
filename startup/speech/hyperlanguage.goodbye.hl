@@ -9,5 +9,4 @@ create-event:hyperlanguage.goodbye
   /*
    * Greets user
    */
-  micro.speak:No problem
-    voice:Karen,en
+  hyperlanguage.speak:No problem

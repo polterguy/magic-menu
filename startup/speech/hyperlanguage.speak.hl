@@ -1,0 +1,24 @@
+
+/*
+ * Invoked when Hyperlanguage should speak something.
+ *
+ * Expects [_arg] to be whatever should be spoken.
+ */
+create-event:hyperlanguage.speak
+
+  /*
+   * Signal node, to separate arguments from the rest of our lambda.
+   */
+  .signal
+
+  /*
+   * Applies arguments.
+   */
+  add:x:/../*/micro.speak
+    src:x:/@.signal/--(!/_arg)
+
+  /*
+   * Speaks given [_arg] with our configured voice.
+   */
+  micro.speak:x:/../*/_arg?value
+    voice:Karen,en

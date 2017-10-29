@@ -10,6 +10,7 @@ create table if not exists `commands` (
   `parent` int(10) unsigned null,
   `hyperlambda` longtext collate utf8mb4_unicode_ci not null,
   `username` varchar(1024) collate utf8mb4_unicode_ci null,
+  `global` int(10) unsigned null,
   primary key (`id`),
   unique key `id_UNIQUE` (`id`),
   key `commands_commands_idx` (`parent`),

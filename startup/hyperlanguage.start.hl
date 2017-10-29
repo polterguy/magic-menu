@@ -14,6 +14,11 @@ create-event:hyperlanguage.start
     delete-widget:hyperlanguage-listener
 
   /*
+   * Making sure we reset grammar position.
+   */
+  hyperlanguage.set-position
+
+  /*
    * Creating main Hyperlanguage widget.
    */
   create-widget:hyperlanguage-listener

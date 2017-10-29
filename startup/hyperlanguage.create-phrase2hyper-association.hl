@@ -97,7 +97,7 @@ create-event:hyperlanguage.create-phrase2hyper-association
                           /*
                            * Global command, implying no "parent" relationship.
                            */
-                          p5.mysql.insert:@"insert into commands (hyperlambda, username) values (@hyperlambda, @username)"
+                          p5.mysql.insert:@"insert into commands (hyperlambda, username, global) values (@hyperlambda, @username, 1)"
                             @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
                             @username:x:/@whoami/*/username?value
 
@@ -121,7 +121,7 @@ create-event:hyperlanguage.create-phrase2hyper-association
                           /*
                            * Global command, implying no "parent" relationship.
                            */
-                          p5.mysql.insert:@"insert into commands (hyperlambda) values (@hyperlambda)"
+                          p5.mysql.insert:@"insert into commands (hyperlambda, global) values (@hyperlambda, 1)"
                             @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
 
                         else
@@ -147,8 +147,7 @@ create-event:hyperlanguage.create-phrase2hyper-association
                      * Closing modal widget, and restarting listening loop.
                      */
                     delete-widget:hyperlanguage-create-phrase2hyper-association
-                    micro.speak:OK
-                      voice:Karen,en
+                    hyperlanguage.speak:OK
                       onfinish
 
                         /*
@@ -165,8 +164,7 @@ create-event:hyperlanguage.create-phrase2hyper-association
                      * Closing modal widget, and restarting listening loop.
                      */
                     delete-widget:hyperlanguage-create-phrase2hyper-association
-                    micro.speak:Talk to me
-                      voice:Karen,en
+                    hyperlanguage.speak:Talk to me
                       onfinish
 
                         /*
