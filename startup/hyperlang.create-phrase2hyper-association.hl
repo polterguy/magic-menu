@@ -5,21 +5,21 @@
  *
  * Expects [_arg] to be phrase to create association for.
  */
-create-event:hyperlanguage.create-phrase2hyper-association
+create-event:hyperlang.create-phrase2hyper-association
 
   /*
    * Checking to see if we're in some specific point in our "grammar tree".
    */
-  hyperlanguage.get-position
-  if:x:/@hyperlanguage.get-position?value
+  hyperlang.get-position
+  if:x:/@hyperlang.get-position?value
 
     /*
      * We're in some specific position in our tree, selecting the first phrase
      * matching our command.
      */
-    p5.mysql.connect:[hyperlanguage]
+    p5.mysql.connect:[hyperlang]
       p5.mysql.scalar:@"select command from phrases p where exists (select * from commands c where c.id = @id and c.id = p.commandid) limit 1"
-        @id:x:/@hyperlanguage.get-position?value
+        @id:x:/@hyperlang.get-position?value
       eval-x:x:/+/*/*/*
       insert-after:x:/../*/create-widgets/*/micro.widgets.modal/*/widgets/*/h3
         src
@@ -34,16 +34,16 @@ create-event:hyperlanguage.create-phrase2hyper-association
    */
   eval-x:x:/+/*/*/*/h3/*/innerValue
   create-widgets
-    micro.widgets.modal:hyperlanguage-create-phrase2hyper-association
+    micro.widgets.modal:hyperlang-create-phrase2hyper-association
       widgets
         h3
           innerValue:Configure <em>'{0}'</em>
             :x:/../*/_arg?value
         label
           innerValue:Synonymous phrases
-          for:hyperlanguage-synonymous-phrases
+          for:hyperlang-synonymous-phrases
           style:"margin-bottom:0;"
-        literal:hyperlanguage-synonymous-phrases
+        literal:hyperlang-synonymous-phrases
           element:textarea
           class:fill
           rows:5
@@ -90,17 +90,17 @@ create-event:hyperlanguage.create-phrase2hyper-association
                      * association between phrase and code, before we close widget
                      * and restarts listening loop.
                      */
-                    micro.form.serialize:hyperlanguage-create-phrase2hyper-association
+                    micro.form.serialize:hyperlang-create-phrase2hyper-association
 
                     /*
                      * Connecting to database, and inserting into "commands" and "phrases".
                      */
-                    p5.mysql.connect:[hyperlanguage]
+                    p5.mysql.connect:[hyperlang]
 
                       /*
                        * Retrieving current position in grammar tree.
                        */
-                      hyperlanguage.get-position
+                      hyperlang.get-position
 
                       /*
                        * Checking if this is a "private" command, at which point we
@@ -129,7 +129,7 @@ create-event:hyperlanguage.create-phrase2hyper-association
                           p5.mysql.insert:@"insert into commands (hyperlambda, username, parent) values (@hyperlambda, @username, @parent)"
                             @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
                             @username:x:/@whoami/*/username?value
-                            @parent:x:/@hyperlanguage.get-position?value
+                            @parent:x:/@hyperlang.get-position?value
 
                       else
 
@@ -151,7 +151,7 @@ create-event:hyperlanguage.create-phrase2hyper-association
                            */
                           p5.mysql.insert:@"insert into commands (hyperlambda, parent) values (@hyperlambda, @parent)"
                             @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
-                            @parent:x:/@hyperlanguage.get-position?value
+                            @parent:x:/@hyperlang.get-position?value
 
                       /*
                        * Splitting synonyms, and inserting one 'phrase' for each.
@@ -166,14 +166,14 @@ create-event:hyperlanguage.create-phrase2hyper-association
                     /*
                      * Closing modal widget, and restarting listening loop.
                      */
-                    delete-widget:hyperlanguage-create-phrase2hyper-association
-                    hyperlanguage.speak:OK
+                    delete-widget:hyperlang-create-phrase2hyper-association
+                    hyperlang.speak:OK
                       onfinish
 
                         /*
                          * Restarting input loop.
                          */
-                        hyperlanguage.listen
+                        hyperlang.listen
 
                 button
                   innerValue:Cancel
@@ -183,11 +183,11 @@ create-event:hyperlanguage.create-phrase2hyper-association
                     /*
                      * Closing modal widget, and restarting listening loop.
                      */
-                    delete-widget:hyperlanguage-create-phrase2hyper-association
-                    hyperlanguage.speak:Talk to me
+                    delete-widget:hyperlang-create-phrase2hyper-association
+                    hyperlang.speak:Talk to me
                       onfinish
 
                         /*
                          * Restarting input loop.
                          */
-                        hyperlanguage.listen
+                        hyperlang.listen

@@ -1,52 +1,52 @@
 
 /*
- * Creates the event that actually starts Hyperlanguage.
+ * Creates the event that actually starts Hyperlang.
  */
-create-event:hyperlanguage.start
+create-event:hyperlang.start
 
   /*
-   * Checking if Hyperlanguage is already initiated from before, and if so, making
+   * Checking if Hyperlang is already initiated from before, and if so, making
    * sure we close any previous instances first.
    */
   if
     fetch:x:/0/0?value
-      widget-exists:hyperlanguage-listener
-    delete-widget:hyperlanguage-listener
+      widget-exists:hyperlang-listener
+    delete-widget:hyperlang-listener
 
   /*
    * Making sure we reset grammar position.
    */
-  hyperlanguage.set-position
+  hyperlang.set-position
 
   /*
-   * Creating main Hyperlanguage widget.
+   * Creating main Hyperlang widget.
    */
-  create-widget:hyperlanguage-listener
-    class:hyperlanguage-listener shaded rounded air-inner
+  create-widget:hyperlang-listener
+    class:hyperlang-listener shaded rounded air-inner
     oninit
 
       /*
        * Greets user, and asks for input.
        */
-      hyperlanguage.greet-user
+      hyperlang.greet-user
 
 
     events
 
       /*
-       * Closes Hyperlanguage.
+       * Closes Hyperlang.
        */
-      hyperlanguage.actions.close
+      hyperlang.quit
 
         /*
-         * Deletes main Hyperlanguage widget.
+         * Deletes main Hyperlang widget.
          */
-        delete-widget:hyperlanguage-listener
+        delete-widget:hyperlang-listener
 
         /*
          * Says goodbye, and stops input loop.
          */
-        hyperlanguage.goodbye
+        hyperlang.goodbye
 
     widgets
       div
@@ -55,7 +55,7 @@ create-event:hyperlanguage.start
           button
             style:"margin-bottom:0;"
             innerValue:@"<span class=""icon-close""></span>"
-            title:Close Hyperlanguage
+            title:Close Hyperlang
             oninit
 
               /*
@@ -66,19 +66,19 @@ create-event:hyperlanguage.start
             onclick
 
               /*
-               * Closing Hyperlanguage.
+               * Closing Hyperlang.
                */
-              hyperlanguage.actions.close
+              hyperlang.quit
 
           literal
             element:label
-            class:hyperlanguage-tip
+            class:hyperlang-tip
             events
 
               /*
                * Shows the specified text to the user.
                */
-              hyperlanguage.set-text
+              hyperlang.set-text
 
                 /*
                  * Sets the innerValue of current widget to whatever we were given.
@@ -89,7 +89,7 @@ create-event:hyperlanguage.start
               /*
                * Retrieves the specified text to the caller.
                */
-              hyperlanguage.get-text
+              hyperlang.get-text
 
                 /*
                  * Returns the innerValue of current widget to the caller.

@@ -1,8 +1,8 @@
 
 /*
- * Invoked when Hyperlanguage should listen for new input.
+ * Invoked when Hyperlang should listen for new input.
  */
-create-event:hyperlanguage.listen
+create-event:hyperlang.listen
 
   /*
    * Starts speech recognition engine.
@@ -13,4 +13,4 @@ create-event:hyperlanguage.listen
       /*
        * Invokes event responsible for handling input.
        */
-      hyperlanguage.handle-input:x:/../*/text?value
+      hyperlang.handle-input:x:/../*/text?value

@@ -1,0 +1,12 @@
+
+/*
+ * Invoked when Hyperlang is closed.
+ *
+ * Says goodbye.
+ */
+create-event:hyperlang.goodbye
+
+  /*
+   * Greets user
+   */
+  hyperlang.speak:Goodbye

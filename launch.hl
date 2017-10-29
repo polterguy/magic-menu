@@ -21,7 +21,7 @@ p5.web.include-css-file:@MICRO/media/fonts.css
 /*
  * Creating our main wire frame.
  */
-create-widget:hyperlanguage-main-container
+create-widget:hyperlang-main-container
   class:container
   widgets
     div
@@ -39,7 +39,7 @@ create-widget:hyperlanguage-main-container
                   widgets
                     button
                       innerValue:@"<span class=""icon-home""></span>"
-                      title:Close Hyperlanguage
+                      title:Close Hyperlang
                       onclick
 
                         /*
@@ -51,5 +51,5 @@ create-widget:hyperlanguage-main-container
     div
       class:row
       widgets
-        container:hyperlanguage-content
+        container:hyperlang-content
           class:col-100

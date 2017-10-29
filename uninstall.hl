@@ -10,6 +10,6 @@
 /*
  * Deleting all relevant Active Events, and that's it.
  */
-delete-event:p5.io.unroll-path.@HYPERLANGUAGE
-vocabulary:hyperlanguage.
+delete-event:p5.io.unroll-path.@HYPERLANG
+vocabulary:hyperlang.
 delete-event:x:/-/*?name

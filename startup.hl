@@ -13,7 +13,7 @@ set:x:/@split/0/-
 join:x:/@split/*?name
   sep:/
 eval-x:x:/+/*
-create-event:p5.io.unroll-path.@HYPERLANGUAGE
+create-event:p5.io.unroll-path.@HYPERLANG
   return:/{0}
     :x:/@join?value
 
@@ -24,9 +24,9 @@ create-event:p5.io.unroll-path.@HYPERLANGUAGE
 /*
  * Creates our version Active Event.
  */
-create-event:hyperlanguage.version
+create-event:hyperlang.version
 
-  return:decimal:5.1
+  return:decimal:1.0
 
 
 
@@ -35,4 +35,4 @@ create-event:hyperlanguage.version
 /*
  * Evaluates all startup scripts in "/startup/" folder.
  */
-micro.evaluate.folder:@HYPERLANGUAGE/startup/
+micro.evaluate.folder:@HYPERLANG/startup/

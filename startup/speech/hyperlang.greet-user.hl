@@ -1,18 +1,18 @@
 
 /*
- * Invoked when Hyperlanguage is started.
+ * Invoked when Hyperlang is started.
  *
  * Greets user, and waits for speech input.
  */
-create-event:hyperlanguage.greet-user
+create-event:hyperlang.greet-user
 
   /*
    * Greets user.
    */
-  hyperlanguage.speak:Howdy
+  hyperlang.speak:Howdy
     onfinish
 
       /*
        * Awaits command.
        */
-      hyperlanguage.listen
+      hyperlang.listen
