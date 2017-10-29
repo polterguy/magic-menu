@@ -37,6 +37,28 @@ create-event:desktop.plugins.post.initialize-page
       class:hyperlang-start
       title:Start Hyperlang
       innerValue:@"<span class=""icon-flash""></span>"
+      oninit
+
+        /*
+         * Checking if we have a "keep alive" session variable, across page loads,
+         * and if so, make sure we initialize Hyperlang by default during pageload.
+         */
+        p5.web.session.get:hyperlang.keep-alive
+        if:x:/@p5.web.session.get/*?value
+
+          /*
+           * Hyperlang is supposed to be load initially during pageload.
+           *
+           * Making sure we destroy session variable, to avoid it from loading
+           * on every pageload, before we start Hyperlang.
+           */
+          p5.web.session.set:hyperlang.keep-alive
+
+          /*
+           * Starts Hyperlang.
+           */
+          hyperlang.start
+
       onclick
 
         /*
