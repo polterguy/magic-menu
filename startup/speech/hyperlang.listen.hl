@@ -35,9 +35,25 @@ create-event:hyperlang.listen
      */
     hyperlang.speak:x:/../*/_arg?value
       onfinish
+
+        /*
+         * Making sure we add "active" CSS class when speech recognition is initiated.
+         */
+        micro.css.add:hyperlang-listener
+          class:hyperlang-listening
+
+        /*
+         * Start listening.
+         */
         micro.listen
 
   else
+
+    /*
+     * Making sure we add "active" CSS class when speech recognition is initiated.
+     */
+    micro.css.add:hyperlang-listener
+      class:hyperlang-listening
 
     /*
      * Starts speech recognition engine directly.

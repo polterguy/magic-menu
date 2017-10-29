@@ -18,6 +18,15 @@ create-event:hyperlang.speak
     src:x:/@.signal/--(!/_arg)
 
   /*
+   * Making sure we remove "active" CSS class when speech recognition is done.
+   */
+  if
+    fetch:x:/0/0?value
+      widget-exists:hyperlang-listener
+    micro.css.delete:hyperlang-listener
+      class:hyperlang-listening
+
+  /*
    * Speaks given [_arg] with our configured voice.
    */
   micro.speak:x:/../*/_arg?value
