@@ -9,7 +9,7 @@ create-event:hyperlanguage.greet-user
   /*
    * Greets user.
    */
-  micro.speak:Howdy
+  micro.speak:Howdy, talk to me
     voice:Karen,en
     onfinish
 

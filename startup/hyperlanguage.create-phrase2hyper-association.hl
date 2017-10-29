@@ -28,18 +28,31 @@ create-event:hyperlanguage.create-phrase2hyper-association
           class:fill
           rows:5
           placeholder:Type in synonymous phrases here, one for each line ...
+          .data-field:synonyms
+          value:x:/../*/_arg?value
         label
           innerValue:Hyperlambda to asociate with phrase(s)
           style:"margin-bottom:0;"
         hypereval.widgets.hyperlambda-textarea:hyper-input
           element:textarea
+          .data-field:hyperlambda
         label
-          title:Is this a global command, meaning something you could ask the computer at any time?
+          title:Is this a global command, implying something you could tell Elizabeth at any time?
           widgets
             input
               type:checkbox
+              .data-field:global
             span
               innerValue:Global
+        label
+          title:Should this phrase only apply for you?
+          widgets
+            input
+              type:checkbox
+              checked
+              .data-field:private
+            span
+              innerValue:Private phrase
         div
           class:right
           widgets
@@ -57,6 +70,91 @@ create-event:hyperlanguage.create-phrase2hyper-association
                      * association between phrase and code, before we close widget
                      * and restarts listening loop.
                      */
+                    micro.form.serialize:hyperlanguage-create-phrase2hyper-association
+
+                    /*
+                     * Connecting to database, and inserting into "commands" and "phrases".
+                     */
+                    p5.mysql.connect:[hyperlanguage]
+
+                      /*
+                       * Retrieving current position in grammar tree.
+                       */
+                      hyperlanguage.get-position
+
+                      /*
+                       * Checking if this is a "private" command, at which point we
+                       * insert it with the currently logged in user's username.
+                       */
+                      if:x:/@micro.form.serialize/*/private?value
+
+                        /*
+                         * Private command, checking if it's global.
+                         */
+                        whoami
+                        if:x:/@micro.form.serialize/*/global?value
+
+                          /*
+                           * Global command, implying no "parent" relationship.
+                           */
+                          p5.mysql.insert:@"insert into commands (hyperlambda, username) values (@hyperlambda, @username)"
+                            @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
+                            @username:x:/@whoami/*/username?value
+
+                        else
+
+                          /*
+                           * Not a global command, inserting also "parent"
+                           */
+                          p5.mysql.insert:@"insert into commands (hyperlambda, username, parent) values (@hyperlambda, @username, @parent)"
+                            @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
+                            @username:x:/@whoami/*/username?value
+                            @parent:x:/@hyperlanguage.get-position?value
+
+                      else
+
+                        /*
+                         * Public command, checking if it's global.
+                         */
+                        if:x:/@micro.form.serialize/*/global?value
+
+                          /*
+                           * Global command, implying no "parent" relationship.
+                           */
+                          p5.mysql.insert:@"insert into commands (hyperlambda) values (@hyperlambda)"
+                            @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
+
+                        else
+
+                          /*
+                           * Not a global command, inserting also "parent"
+                           */
+                          p5.mysql.insert:@"insert into commands (hyperlambda, parent) values (@hyperlambda, @parent)"
+                            @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
+                            @parent:x:/@hyperlanguage.get-position?value
+
+                      /*
+                       * Splitting synonyms, and inserting one 'phrase' for each.
+                       */
+                      split:x:/@micro.form.serialize/*/synonyms?value
+                        =:"\r\n"
+                      for-each:x:/@split/*?name
+                        p5.mysql.insert:@"insert into phrases (command, commandid) values (@command, @commandid)"
+                          @command:x:/@_dp?value
+                          @commandid:x:/..p5.mysql.connect/**/p5.mysql.insert/*/id/[0,1]?value
+
+                    /*
+                     * Closing modal widget, and restarting listening loop.
+                     */
+                    delete-widget:hyperlanguage-create-phrase2hyper-association
+                    micro.speak:OK
+                      voice:Karen,en
+                      onfinish
+
+                        /*
+                         * Restarting input loop.
+                         */
+                        hyperlanguage.listen
 
                 button
                   innerValue:Cancel

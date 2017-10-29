@@ -31,15 +31,18 @@ create-event:hyperlanguage.handle-input
   .command
   p5.mysql.connect:[hyperlanguage]
     hyperlanguage.get-position
+    whoami
     if:x:/@hyperlanguage.get-position?value
 
       /*
        * Current position exists, retrieving command having current position 
        * as its parent.
        */
-      p5.mysql.select:@"select * from commands c inner join phrases p on p.commandid = c.id where p.command = @command and c.parent = @parent"
+      p5.mysql.select:@"select c.id, c.parent, c.hyperlambda, p.command from commands c inner join phrases p on p.commandid = c.id 
+where p.command = @command and c.parent = @parent and (c.username is null or c.username = @username)"
         @command:x:/../*/_arg?value
         @parent:x:/@hyperlanguage.get-position?value
+        @username:x:/@whoami/*/username?value
 
       /*
        * Adding command to buffer above.
@@ -52,8 +55,10 @@ create-event:hyperlanguage.handle-input
       /*
        * No current position, retrieving command having "null" parent.
        */
-      p5.mysql.select:@"select * from commands c inner join phrases p on p.commandid = c.id where p.command = @command and c.parent is null"
+      p5.mysql.select:@"select c.id, c.parent, c.hyperlambda, p.command from commands c inner join phrases p on p.commandid = c.id 
+where p.command = @command and c.parent is null and (c.username is null or c.username = @username)"
         @command:x:/../*/_arg?value
+        @username:x:/@whoami/*/username?value
 
       /*
        * Adding command to buffer above.
@@ -75,9 +80,24 @@ create-event:hyperlanguage.handle-input
        * Success, we have a command in the current position, matching our 
        * specified [_arg].
        */
-      hyper2lambda:x:/@.command/*/command?value
+      hyper2lambda:x:/@.command/*/hyperlambda?value
       eval:x:/@hyper2lambda
       hyperlanguage.set-position:x:/@.command/*/id?value
+
+      /*
+       * Checking if we should automatically continue listening loop.
+       */
+      if:x:/@eval?value
+        !=:stop
+
+        /*
+         * Lambda object didn't return "stop", hence we automatically continue
+         * listening loop.
+         */
+        micro.speak:OK
+          voice:Karen,en
+          onfinish
+            hyperlanguage.listen
 
     else
 
