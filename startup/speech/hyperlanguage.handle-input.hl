@@ -1,0 +1,134 @@
+
+/*
+ * Invoked when a new voice command is given.
+ *
+ * Looks up [_arg] command from database, and if existing, evaluates it - Otherwise,
+ * will ask user if he wants to create a mapping.
+ */
+create-event:hyperlanguage.handle-input
+
+  /*
+   * Checking if anything was given, and if not, closing Hyperlanguage.
+   */
+  if:x:/../*/_arg?value
+    =:
+    or:x:/../*/_arg?value
+      not
+
+    /*
+     * Stopping Hyperlanguage, and returning early to avoid evaluating the rest 
+     * of our event.
+     */
+    hyperlanguage.actions.close
+    return
+
+  /*
+   * Looks up command from database.
+   *
+   * But first we must check to see if we have a current "position" in our
+   * grammar graph, which will restrict the commands accordingly.
+   */
+  .command
+  p5.mysql.connect:[hyperlanguage]
+    hyperlanguage.get-position
+    if:x:/@hyperlanguage.get-position?value
+
+      /*
+       * Current position exists, retrieving command having current position 
+       * as its parent.
+       */
+      p5.mysql.select:@"select * from commands c inner join phrases p on p.commandid = c.id where p.command = @command and c.parent = @parent"
+        @command:x:/../*/_arg?value
+        @parent:x:/@hyperlanguage.get-position?value
+
+      /*
+       * Adding command to buffer above.
+       */
+      add:x:/@.command
+        src:x:/@p5.mysql.select/*/*
+
+    else
+
+      /*
+       * No current position, retrieving command having "null" parent.
+       */
+      p5.mysql.select:@"select * from commands c inner join phrases p on p.commandid = c.id where p.command = @command and c.parent is null"
+        @command:x:/../*/_arg?value
+
+      /*
+       * Adding command to buffer above.
+       */
+      add:x:/@.command
+        src:x:/@p5.mysql.select/*/*
+
+    /*
+     * Make sure we show the user what we heard.
+     */
+    hyperlanguage.set-text:x:/../*/_arg?value
+
+    /*
+     * Checking to see if we actually found a command.
+     */
+    if:x:/@.command/*
+
+      /*
+       * Success, we have a command in the current position, matching our 
+       * specified [_arg].
+       */
+      hyper2lambda:x:/@.command/*/command?value
+      eval:x:/@hyper2lambda
+      hyperlanguage.set-position:x:/@.command/*/id?value
+
+    else
+
+      /*
+       * The specified [_arg] command doesn't exist, asking user if he wants to
+       * create a new association for the given [_arg] command, or if he wants to
+       * discard input, and rephrase his command.
+       */
+      micro.speak:I don't understand that, do you want to teach me?
+        voice:Karen,en
+        onfinish
+
+          /*
+           * Waiting for user to say either "yes" or "no".
+           */
+          micro.listen
+            onfinish
+
+              /*
+               * Checking if user said "yes" or "no".
+               */
+              switch:x:/../*/text?value
+                case:yes
+
+                  /*
+                   * Giving user some feedback, and opening up a CodeMirror window
+                   * to allow him to write some piece of Hyperlambda in, which is
+                   * associated with the word user spoke, at the current "position"
+                   * in our grammar tree.
+                   */
+                  micro.speak:OK
+                    voice:Karen,en
+
+                  /*
+                   * Invoking Active Event responsible for creating a "phrase2hyper"
+                   * association, making sure we first retrieve what was spoken.
+                   */
+                  hyperlanguage.get-text
+                  hyperlanguage.create-phrase2hyper-association:x:/@hyperlanguage.get-text?value
+
+                case:no
+
+                  /*
+                   * User does not want to teach Elizabeth something new.
+                   */
+                  micro.speak:OK
+                    voice:Karen,en
+                    onfinish
+
+                      /*
+                       * Start listening again, since user probably just said
+                       * something wrong.
+                       */
+                      hyperlanguage.listen

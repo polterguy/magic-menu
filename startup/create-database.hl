@@ -1,0 +1,55 @@
+
+/*
+ * Creating database schema if it doesn't exist.
+ */
+try
+  p5.mysql.connect:[hyperlanguage]
+    p5.mysql.execute:@"
+create table if not exists `commands` (
+  `id` int(10) unsigned not null auto_increment,
+  `parent` int(10) unsigned null,
+  `hyperlambda` longtext collate utf8mb4_unicode_ci not null,
+  primary key (`id`),
+  unique key `id_UNIQUE` (`id`),
+  key `commands_commands_idx` (`parent`),
+  constraint `fk_commands_commands` foreign key (`parent`) references `commands` (`id`) on delete cascade on update cascade
+) engine=InnoDB auto_increment=0 default charset=utf8mb4 collate=utf8mb4_unicode_ci;
+
+create table if not exists `phrases` (
+  `id` int(10) unsigned not null auto_increment,
+  `command` varchar(4096) collate utf8mb4_unicode_ci not null,
+  `commandid` int(10) unsigned null,
+  primary key (`id`),
+  unique key `id_UNIQUE` (`id`),
+  key `index_command` (`command`(50)),
+  key `phrases_commands_idx` (`commandid`),
+  constraint `fk_phrases_commands` foreign key (`commandid`) references `commands` (`id`) on delete cascade on update cascade
+) engine=InnoDB auto_increment=0 default charset=utf8mb4 collate=utf8mb4_unicode_ci;
+"
+
+catch
+
+  /*
+   * Attempting to create database, unless this is our second invocation, for then
+   * to invoke self again, for simplicity reasons.
+   */
+  if:x:/../*/second?value
+    not
+
+    /*
+     * Making sure we prepend the database prefix in front of schema name.
+     */
+    p5.config.get:p5.data.prefix
+
+    /*
+     * Creating database schema.
+     */
+    p5.mysql.connect:[sys]
+      p5.mysql.execute:@"create schema `{0}hyperlanguage`;"
+        :x:/@p5.config.get/*?value
+
+    /*
+     * Invoking self, with [second] being true, to avoid never ending recursion.
+     */
+    micro.evaluate.file:x:/..?name
+      second:bool:true

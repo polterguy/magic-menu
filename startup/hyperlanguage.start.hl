@@ -64,3 +64,31 @@ create-event:hyperlanguage.start
                * Closing Hyperlanguage.
                */
               hyperlanguage.actions.close
+
+          literal
+            element:label
+            class:hyperlanguage-tip
+            events
+
+              /*
+               * Shows the specified text to the user.
+               */
+              hyperlanguage.set-text
+
+                /*
+                 * Sets the innerValue of current widget to whatever we were given.
+                 */
+                set-widget-property:x:/../*/_event?value
+                  innerValue:x:/../*/_arg?value
+
+              /*
+               * Retrieves the specified text to the caller.
+               */
+              hyperlanguage.get-text
+
+                /*
+                 * Returns the innerValue of current widget to the caller.
+                 */
+                get-widget-property:x:/../*/_event?value
+                  innerValue:x:/../*/_arg?value
+                return:x:/@get-widget-property/*/*?value

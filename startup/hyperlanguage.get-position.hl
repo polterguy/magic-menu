@@ -1,0 +1,11 @@
+
+/*
+ * Creates the event that returns the current position in our command hierarchy.
+ */
+create-event:hyperlanguage.get-position
+
+  /*
+   * Returns the current position to caller.
+   */
+  p5.web.viewstate.get:hyperlanguage.position
+  return:x:/@p5.web.viewstate.get/*?value

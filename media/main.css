@@ -28,4 +28,18 @@
 .hyperlanguage-listener button {
     background:rgba(254, 254, 254, .8);
 }
+label.hyperlanguage-tip {
+    color:black;
+    background:transparent !important;
+    font-style:italic;
+    margin-bottom:0;
+}
+.hyperlanguage-tip:before {
+    content:'"';
+    font-style:italic;
+}
+.hyperlanguage-tip:after {
+    content:'"';
+    font-style:italic;
+}
 
