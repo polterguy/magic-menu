@@ -1,0 +1,38 @@
+
+/*
+ * File responsible for initializing module.
+ */
+
+
+/*
+ * Creates the "path" Active Event.
+ */
+split:x:/..?name
+  =:/
+set:x:/@split/0/-
+join:x:/@split/*?name
+  sep:/
+eval-x:x:/+/*
+create-event:p5.io.unroll-path.@HYPERLANGUAGE
+  return:/{0}
+    :x:/@join?value
+
+
+
+
+
+/*
+ * Creates our version Active Event.
+ */
+create-event:hyperlanguage.version
+
+  return:decimal:5.1
+
+
+
+
+
+/*
+ * Evaluates all startup scripts in "/startup/" folder.
+ */
+micro.evaluate.folder:@HYPERLANGUAGE/startup/

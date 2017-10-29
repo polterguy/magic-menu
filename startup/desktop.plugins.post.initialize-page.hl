@@ -1,0 +1,39 @@
+
+/*
+ * Creates our plugin Active Event, that initialized Hyperlanguage, by creating
+ * a widget that allows us to start Hyperlanguage as a plugin.
+ *
+ * Notice, this plugin is only created if there exists a "toolbar" widget on the 
+ * current page.
+ */
+create-event:desktop.plugins.post.initialize-page
+
+  /*
+   * Trying to find the first widget on page with a CSS class containing the text "toolbar".
+   */
+  p5.web.widgets.find-first-like
+    class:toolbar
+  if:x:/@p5.web.widgets.find-first-like/*/*?value
+
+    /*
+     * Includes CSS file.
+     */
+    p5.web.include-css-file:@HYPERLANGUAGE/media/main.css
+
+    /*
+     * Making sure we insert our widget as the second last widget into our "toolbar".
+     */
+    p5.web.widgets.get-children:x:/@p5.web.widgets.find-first-like/*/*?value
+    eval-x:x:/+/*/*
+    add:x:/./*/create-widget
+      src
+        before:x:/@p5.web.widgets.get-children/*/0/-?value
+
+    /*
+     * Creating our button widget.
+     */
+    create-widget:hyperlanguage-start-button
+      element:button
+      class:hyperlanguage-start
+      title:Start Hyperlanguage
+      innerValue:@"<span class=""icon-flash""></span>"

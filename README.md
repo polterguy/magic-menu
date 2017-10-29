@@ -1,2 +1,5 @@
-# hyperlanguage
-An alternative input module for Phosphorus Five, allowing you to use natural language to control your apps
+
+# Hyperlanguage
+
+Hyperlanguage allows you to create speech to Active Event associations, allowing you to
+control your Phosphorus Five apps using natural speech.

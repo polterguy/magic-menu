@@ -1,0 +1,55 @@
+﻿
+/*
+ * File responsible for starting module.
+ */
+
+
+
+
+
+/*
+ * Including Micro and its "serious" skin.
+ */
+p5.web.include-css-file:@MICRO/media/main.css
+p5.web.include-css-file:@MICRO/media/skins/serious.css
+p5.web.include-css-file:@MICRO/media/fonts.css
+
+
+
+
+
+/*
+ * Creating our main wire frame.
+ */
+create-widget:hyperlanguage-main-container
+  class:container
+  widgets
+    div
+      class:row
+      widgets
+        div
+          class:col-100
+          widgets
+            div
+              class:right
+              widgets
+                div
+                  class:strip toolbar
+                  style:"display:inline-block;"
+                  widgets
+                    button
+                      innerValue:@"<span class=""icon-home""></span>"
+                      title:Close Hyperlanguage
+                      onclick
+
+                        /*
+                         * Redirecting user to server's root URL.
+                         */
+                        p5.web.get-root-location
+                        p5.web.set-location:x:/-?value
+
+    div
+      class:row
+      widgets
+        container:hyperlanguage-content
+          class:col-100
