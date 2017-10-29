@@ -106,7 +106,9 @@ order by `global`"
        * Giving a visual clue to user, to inform him that he can say "teach"
        * to teach the computer a new word.
        */
-      hyperlang.set-text:Say 'teach' to teach the computer a the word or phrase '{0}'
+      hyperlang.get-localized-phrase:[Say 'teach' to teach the computer]
+      hyperlang.set-text:{0} '{1}'
+        :x:/@hyperlang.get-localized-phrase?value
         :x:/../*/_arg?value
       eval-x:x:/+/*/*/*/*/hyperlang.create-phrase2hyper-association
       hyperlang.listen:[I don't understand]
@@ -116,6 +118,12 @@ order by `global`"
           /*
            * Checking if user said "teach".
            */
+          hyperlang.get-localized-phrase:[Teach]
+          set:x:/./*/switch/0?value
+            src:x:/@hyperlang.get-localized-phrase?value
+          create-widget
+            element:pre
+            innerValue:x:/..
           switch:x:/../*/text?value
             case:teach
 

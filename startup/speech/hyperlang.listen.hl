@@ -11,12 +11,23 @@ create-event:hyperlang.listen
    * Defaults.
    */
   .defaults
+    lang:en
     onfinish
 
       /*
        * Invokes event responsible for handling input.
        */
       hyperlang.handle-input:x:/../*/text?value
+
+  /*
+   * Retrieving settings for user, to figure out language to listen for, etc.
+   */
+  p5.auth.my-settings.get
+  if:x:/@p5.auth.my-settings.get/*/hyperlang/*/voice?value
+    split:x:/@p5.auth.my-settings.get/*/hyperlang/*/voice?value
+      =:,
+    set:x:/@.defaults/*/lang?value
+      src:x:/@split/0/-?name
 
   /*
    * Applying [onfinish], or default value if none was given.
@@ -28,6 +39,7 @@ create-event:hyperlang.listen
    * Checks to see if caller passed in [_arg], at which point we speak the given [_arg],
    * before we initiate listening.
    */
+  eval-x:x:/../**/micro.listen/*/lang
   if:x:/../*/_arg?value
 
     /*
@@ -46,6 +58,7 @@ create-event:hyperlang.listen
          * Start listening.
          */
         micro.listen
+          lang:x:/@.defaults/*/lang?value
 
   else
 
@@ -59,3 +72,4 @@ create-event:hyperlang.listen
      * Starts speech recognition engine directly.
      */
     micro.listen
+      lang:x:/@.defaults/*/lang?value

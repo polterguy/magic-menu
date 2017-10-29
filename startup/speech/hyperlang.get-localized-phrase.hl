@@ -1,0 +1,27 @@
+
+/*
+ * Returns the localized specified phrase.
+ */
+create-event:hyperlang.get-localized-phrase
+
+  /*
+   * Defaults.
+   */
+  .defaults
+    voice:Karen,en
+
+  /*
+   * Retrieving settings for user, to figure out language to listen for, etc.
+   */
+  p5.auth.my-settings.get
+
+  /*
+   * Doing a lookup into language file, and returning whatever phrase we found to
+   * caller.
+   */
+  split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
+    =:,
+  load-file:@HYPERLANG/configuration/lang-{0}.hl
+    :x:/@split/0/-?name
+  return:x:/@load-file/*/*/\{0}?value
+    :x:/../*/_arg?value

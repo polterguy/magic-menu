@@ -7,6 +7,17 @@
 create-event:hyperlang.speak
 
   /*
+   * Defaults, in case no settings exists.
+   */
+  .defaults
+    voice:Karen,en
+
+  /*
+   * Retrieving settings for user, to figure out voice to use, etc.
+   */
+  p5.auth.my-settings.get
+
+  /*
    * Checking if this is a referenced word, implying a word that should be translated.
    */
   if
@@ -17,10 +28,13 @@ create-event:hyperlang.speak
         src:]
 
     /*
-     * Referenced word, doing lookup into language files, and changing spoken
+     * Referenced word, doing a lookup into language file, and changing spoken
      * phrase accordingly.
      */
-    load-file:@HYPERLANG/configuration/lang-en.hl
+    split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
+      =:,
+    load-file:@HYPERLANG/configuration/lang-{0}.hl
+      :x:/@split/0/-?name
     set:x:/../*/_arg?value
       src:x:/@load-file/*/*/\{0}?value
         :x:/../*/_arg?value
@@ -48,5 +62,6 @@ create-event:hyperlang.speak
   /*
    * Speaks given [_arg] with our configured voice.
    */
+  eval-x:x:/+/*
   micro.speak:x:/../*/_arg?value
-    voice:Karen,en
+    voice:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
