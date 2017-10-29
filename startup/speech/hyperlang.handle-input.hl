@@ -121,9 +121,6 @@ order by `global`"
           hyperlang.get-localized-phrase:[Teach]
           set:x:/./*/switch/0?value
             src:x:/@hyperlang.get-localized-phrase?value
-          create-widget
-            element:pre
-            innerValue:x:/..
           switch:x:/../*/text?value
             case:teach
 

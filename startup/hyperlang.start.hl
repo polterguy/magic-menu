@@ -74,12 +74,35 @@ create-event:hyperlang.start
           literal
             element:label
             class:hyperlang-tip
+            visible:false
             events
 
               /*
                * Shows the specified text to the user.
                */
               hyperlang.set-text
+
+                /*
+                 * Checking if this is an empty piece of text, at which point we
+                 * simply hide label entirely, and return early.
+                 */
+                if:x:/../*/_arg?value
+                  =:
+                  or:x:/../*/_arg?value
+                    not
+
+                  /*
+                   * Making widget invisible, and returning early.
+                   */
+                  set-widget-property:x:/../*/_event?value
+                    visible:false
+                  return
+
+                /*
+                 * Making widget sure widget becomes visible.
+                 */
+                set-widget-property:x:/../*/_event?value
+                  visible:true
 
                 /*
                  * Sets the innerValue of current widget to whatever we were given.
