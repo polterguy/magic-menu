@@ -167,13 +167,11 @@ create-event:hyperlang.create-phrase2hyper-association
                      * Closing modal widget, and restarting listening loop.
                      */
                     delete-widget:hyperlang-create-phrase2hyper-association
-                    hyperlang.speak:OK
-                      onfinish
 
-                        /*
-                         * Restarting input loop.
-                         */
-                        hyperlang.listen
+                    /*
+                     * Restarting input loop.
+                     */
+                    hyperlang.listen:OK
 
                 button
                   innerValue:Cancel
@@ -184,10 +182,8 @@ create-event:hyperlang.create-phrase2hyper-association
                      * Closing modal widget, and restarting listening loop.
                      */
                     delete-widget:hyperlang-create-phrase2hyper-association
-                    hyperlang.speak:Talk to me
-                      onfinish
 
-                        /*
-                         * Restarting input loop.
-                         */
-                        hyperlang.listen
+                    /*
+                     * Restarting input loop.
+                     */
+                    hyperlang.listen:Talk to me

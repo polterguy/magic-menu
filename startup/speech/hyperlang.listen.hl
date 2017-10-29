@@ -1,16 +1,45 @@
 
 /*
  * Invoked when Hyperlang should listen for new input.
+ *
+ * Optionally pass in [_arg] being something to speak before listening is initiated,
+ * and a [onfinish] lambda, to beinvoked after something has been recognized.
  */
 create-event:hyperlang.listen
 
   /*
-   * Starts speech recognition engine.
+   * Defaults.
    */
-  micro.listen
+  .defaults
     onfinish
 
       /*
        * Invokes event responsible for handling input.
        */
       hyperlang.handle-input:x:/../*/text?value
+
+  /*
+   * Applying [onfinish], or default value if none was given.
+   */
+  add:x:/../**/micro.listen
+    src:x:(/../*/onfinish|/@.defaults/*/onfinish)/$
+
+  /*
+   * Checks to see if caller passed in [_arg], at which point we speak the given [_arg],
+   * before we initiate listening.
+   */
+  if:x:/../*/_arg?value
+
+    /*
+     * Speaking given [_arg], before we start listening.
+     */
+    hyperlang.speak:x:/../*/_arg?value
+      onfinish
+        micro.listen
+
+  else
+
+    /*
+     * Starts speech recognition engine directly.
+     */
+    micro.listen

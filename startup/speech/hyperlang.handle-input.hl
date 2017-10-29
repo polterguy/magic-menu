@@ -39,7 +39,8 @@ create-event:hyperlang.handle-input
        * as its parent.
        */
       p5.mysql.select:@"select c.id, c.parent, c.hyperlambda, p.command from commands c inner join phrases p on p.commandid = c.id 
-where p.command = @command and (c.parent = @parent or c.global = 1) and (c.username is null or c.username = @username)"
+where p.command = @command and (c.parent = @parent or c.global = 1) and (c.username is null or c.username = @username)
+order by `global`"
         @command:x:/../*/_arg?value
         @parent:x:/@hyperlang.get-position?value
         @username:x:/@whoami/*/username?value
@@ -56,7 +57,8 @@ where p.command = @command and (c.parent = @parent or c.global = 1) and (c.usern
        * No current position, retrieving command having "null" parent.
        */
       p5.mysql.select:@"select c.id, c.parent, c.hyperlambda, p.command from commands c inner join phrases p on p.commandid = c.id 
-where p.command = @command and c.parent is null and (c.username is null or c.username = @username)"
+where p.command = @command and c.parent is null and (c.username is null or c.username = @username)
+order by `global`"
         @command:x:/../*/_arg?value
         @username:x:/@whoami/*/username?value
 
@@ -92,67 +94,41 @@ where p.command = @command and c.parent is null and (c.username is null or c.use
       hyper2lambda:x:/@.command/*/hyperlambda?value
       eval:x:/@hyper2lambda
 
-      /*
-       * Checking if we should automatically continue listening loop.
-       */
-      if:x:/@eval?value
-        !=:stop
-
-        /*
-         * Lambda object didn't return "stop", hence we automatically continue
-         * listening loop.
-         */
-        hyperlang.speak:OK
-          onfinish
-            hyperlang.listen
-
     else
 
       /*
        * The specified [_arg] command doesn't exist, asking user if he wants to
        * create a new association for the given [_arg] command, or if he wants to
        * discard input, and rephrase his command.
+       *
+       * Waiting for user to say either "yes" or "no".
+       *
+       * Giving a visual clue to user, to inform him that he can say "teach"
+       * to teach the computer a new word.
        */
-      hyperlang.speak:I don't understand, do you want to teach me?
+      hyperlang.set-text:Say 'teach' to teach the computer a the word or phrase '{0}'
+        :x:/../*/_arg?value
+      eval-x:x:/+/*/*/*/*/hyperlang.create-phrase2hyper-association
+      hyperlang.listen:I don't understand
         onfinish
 
+
           /*
-           * Waiting for user to say either "yes" or "no".
+           * Checking if user said "teach".
            */
-          micro.listen
-            onfinish
+          switch:x:/../*/text?value
+            case:teach
 
               /*
-               * Checking if user said "yes" or "no".
+               * Invoking Active Event responsible for creating a "phrase2hyper"
+               * association, making sure we first retrieve what was spoken.
                */
-              switch:x:/../*/text?value
-                case:yes
+              hyperlang.create-phrase2hyper-association:x:/../*/_arg?value
 
-                  /*
-                   * Invoking Active Event responsible for creating a "phrase2hyper"
-                   * association, making sure we first retrieve what was spoken.
-                   */
-                  hyperlang.get-text
-                  hyperlang.create-phrase2hyper-association:x:/@hyperlang.get-text?value
+            default
 
-                case:no
-
-                  /*
-                   * User does not want to teach Elizabeth something new.
-                   */
-                  hyperlang.speak:OK
-                    onfinish
-
-                      /*
-                       * Start listening again, since user probably just said
-                       * something wrong.
-                       */
-                      hyperlang.listen
-
-                default
-
-                  /*
-                   * Unless the user says "yes" or "no", we assume it's the actual
-                   * command he wanted to utter.
-                   */
-                  hyperlang.handle-input:x:/../*/text?value
+              /*
+               * Unless the user says "yes" or "no", we assume it's the actual
+               * command he wanted to utter.
+               */
+              hyperlang.handle-input:x:/../*/text?value

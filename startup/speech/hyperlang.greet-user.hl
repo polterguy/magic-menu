@@ -7,12 +7,12 @@
 create-event:hyperlang.greet-user
 
   /*
-   * Greets user.
+   * Defaults.
    */
-  hyperlang.speak:Howdy
-    onfinish
+  .defaults
+    greeting:Howdy
 
-      /*
-       * Awaits command.
-       */
-      hyperlang.listen
+  /*
+   * Greets user, before we start listening loop.
+   */
+  hyperlang.listen:x:(/../*/greeting|/@.defaults/*/greeting)/$?value

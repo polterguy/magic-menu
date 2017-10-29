@@ -1,6 +1,8 @@
 
 /*
  * Creates the event that actually starts Hyperlang.
+ *
+ * You can override the default greeting with [greeting]
  */
 create-event:hyperlang.start
 
@@ -19,18 +21,17 @@ create-event:hyperlang.start
   hyperlang.set-position
 
   /*
+   * Greets user, and asks for input.
+   */
+  add:x:/../*/hyperlang.greet-user
+    src:x:/../*/greeting
+  hyperlang.greet-user
+
+  /*
    * Creating main Hyperlang widget.
    */
   create-widget:hyperlang-listener
     class:hyperlang-listener shaded rounded air-inner
-    oninit
-
-      /*
-       * Greets user, and asks for input.
-       */
-      hyperlang.greet-user
-
-
     events
 
       /*

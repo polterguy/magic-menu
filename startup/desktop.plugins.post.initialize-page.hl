@@ -58,6 +58,7 @@ create-event:desktop.plugins.post.initialize-page
            * Starts Hyperlang.
            */
           hyperlang.start
+            greeting:OK
 
       onclick
 
