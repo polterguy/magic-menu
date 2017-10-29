@@ -10,7 +10,7 @@ create-event:hyperlang.greet-user
    * Defaults.
    */
   .defaults
-    greeting:Howdy
+    greeting:[Hello]
 
   /*
    * Greets user, before we start listening loop.

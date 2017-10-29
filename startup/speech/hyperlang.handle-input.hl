@@ -109,7 +109,7 @@ order by `global`"
       hyperlang.set-text:Say 'teach' to teach the computer a the word or phrase '{0}'
         :x:/../*/_arg?value
       eval-x:x:/+/*/*/*/*/hyperlang.create-phrase2hyper-association
-      hyperlang.listen:I don't understand
+      hyperlang.listen:[I don't understand]
         onfinish
 
 

@@ -7,6 +7,25 @@
 create-event:hyperlang.speak
 
   /*
+   * Checking if this is a referenced word, implying a word that should be translated.
+   */
+  if
+    starts-with:x:/../*/_arg?value
+      src:[
+    and
+      ends-with:x:/../*/_arg?value
+        src:]
+
+    /*
+     * Referenced word, doing lookup into language files, and changing spoken
+     * phrase accordingly.
+     */
+    load-file:@HYPERLANG/configuration/lang-en.hl
+    set:x:/../*/_arg?value
+      src:x:/@load-file/*/*/\{0}?value
+        :x:/../*/_arg?value
+
+  /*
    * Signal node, to separate arguments from the rest of our lambda.
    */
   .signal

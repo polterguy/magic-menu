@@ -9,4 +9,4 @@ create-event:hyperlang.goodbye
   /*
    * Greets user
    */
-  hyperlang.speak:Goodbye
+  hyperlang.speak:[Goodbye]
