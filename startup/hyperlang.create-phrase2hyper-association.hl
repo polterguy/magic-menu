@@ -154,14 +154,24 @@ create-event:hyperlang.create-phrase2hyper-association
                             @parent:x:/@hyperlang.get-position?value
 
                       /*
+                       * Figuring out language for current user.
+                       */
+                      .defaults
+                        voice:Karen,en
+                      p5.auth.my-settings.get
+                      split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
+                        =:,
+
+                      /*
                        * Splitting synonyms, and inserting one 'phrase' for each.
                        */
                       split:x:/@micro.form.serialize/*/synonyms?value
                         =:"\r\n"
                       for-each:x:/@split/*?name
-                        p5.mysql.insert:@"insert into phrases (command, commandid) values (@command, @commandid)"
+                        p5.mysql.insert:@"insert into phrases (command, commandid, lang) values (@command, @commandid, @lang)"
                           @command:x:/@_dp?value
                           @commandid:x:/..p5.mysql.connect/**/p5.mysql.insert/*/id/[0,1]?value
+                          @lang:x:/@split/@split/0/-?name
 
                     /*
                      * Closing modal widget, and restarting listening loop.

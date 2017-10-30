@@ -7,6 +7,11 @@
 create-event:hyperlang.speak
 
   /*
+   * Signal node, to separate arguments from the rest of our lambda.
+   */
+  .signal
+
+  /*
    * Defaults, in case no settings exists.
    */
   .defaults
@@ -31,18 +36,34 @@ create-event:hyperlang.speak
      * Referenced word, doing a lookup into language file, and changing spoken
      * phrase accordingly.
      */
-    split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
-      =:,
-    load-file:@HYPERLANG/configuration/lang-{0}.hl
-      :x:/@split/0/-?name
+    hyperlang.get-localized-phrase:x:/../*/_arg?value
     set:x:/../*/_arg?value
-      src:x:/@load-file/*/*/\{0}?value
+      src:x:/@hyperlang.get-localized-phrase?value
         :x:/../*/_arg?value
 
-  /*
-   * Signal node, to separate arguments from the rest of our lambda.
-   */
-  .signal
+  else
+
+    /*
+     * Checking if there are referenced word(s) inside specified word or phrase.
+     */
+    split:x:/../*/_arg?value
+      =:[
+      =:]
+    if:x:/@split/*?count
+      >:int:1
+
+      /*
+       * There is at least one referenced word or phrase inside specified phrase.
+       *
+       * Making sure we do our substitution.
+       */
+      for-each:x:/@split/*/%2
+        hyperlang.get-localized-phrase:x:/@_dp/#?name
+        set:x:/@_dp/#?name
+          src:x:/@hyperlang.get-localized-phrase?value
+      join:x:/@split/*?name
+      set:x:/../*/_arg?value
+        src:x:/@join?value
 
   /*
    * Applies arguments.

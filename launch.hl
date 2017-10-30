@@ -53,3 +53,16 @@ create-widget:hyperlang-main-container
       widgets
         container:hyperlang-content
           class:col-100
+          widgets
+
+            /*
+             * Grid containing all words and phrasese Hyperlang understands.
+             */
+            micro.widgets.grid:hyperlang-phrases-grid
+              class:hover striped
+              oninit
+
+                /*
+                 * Evaluating file that databinds grid.
+                 */
+                micro.evaluate.file:@HYPERLANG/helpers/databind-grid.hl
