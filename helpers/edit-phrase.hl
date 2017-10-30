@@ -119,7 +119,8 @@ create-widget
                   style:"display:inline-block;"
                   widgets
                     button
-                      innerValue:Save
+                      innerValue:@"<span class=""icon-check""></span>"
+                      title:Saves command object, and all associated synonyms
                       style:"margin-bottom:0;"
                       events
 
@@ -280,7 +281,79 @@ create-widget
                             class:micro-windows-info warning
 
                     button
-                      innerValue:Close
+                      innerValue:@"<span class=""icon-trash""></span>"
+                      title:Deletes command object, and all associated synonyms
+                      style:"margin-bottom:0;"
+                      onclick
+
+                        /*
+                         * Asks user to confirm deletion using a modal widget.
+                         */
+                        p5.web.widgets.find-first-ancestor:x:/../*/_event?value
+                          .edit
+                        get-widget-property:x:/-/*/*?value
+                          .edit
+                        eval-x:x:/+/**/.id
+                        create-widgets
+                          micro.widgets.modal:hyperlang-confirm-deletion-modal
+                            widgets
+                              h3
+                                innerValue:Please confirm
+                              p
+                                innerValue:Are you sure you want to delete this command, and all its associated synonyms? This action is permanent.
+                              div
+                                class:right
+                                widgets
+                                  div
+                                    class:strip
+                                    style:"display:inline-block;"
+                                    widgets
+                                      button
+                                        innerValue:Yes
+                                        style:"margin-bottom:0;"
+                                        oninit
+
+                                          /*
+                                           * Setting initial focus to "Yes" button.
+                                           */
+                                          micro.page.set-focus:x:/../*/_event?value
+
+                                        onclick
+
+                                          /*
+                                           * Deleting command, and deleting row from grid.
+                                           */
+                                          .id:x:/../*/get-widget-property/*/*?value
+                                          p5.mysql.connect:[hyperlang]
+                                            p5.mysql.delete:@"delete from commands where id in (select commandid from phrases where id = @id)"
+                                              @id:x:/@.id?value
+                                          p5.web.widgets.find
+                                            .id:x:/@.id?value
+                                          delete-widget:x:/-/*/*?value
+                                          p5.web.widgets.find
+                                            .edit:x:/@.id?value
+                                          delete-widget:x:/-/*/*?value
+                                          micro.windows.info:Command object was successfully deleted
+                                            class:micro-windows-info success
+
+                                          /*
+                                           * Deletes modal widget.
+                                           */
+                                          delete-widget:hyperlang-confirm-deletion-modal
+
+                                      button
+                                        innerValue:No
+                                        style:"margin-bottom:0;"
+                                        onclick
+
+                                          /*
+                                           * Simply deletes modal widget.
+                                           */
+                                          delete-widget:hyperlang-confirm-deletion-modal
+
+                    button
+                      innerValue:@"<span class=""icon-close""></span>"
+                      title:Close editor for command object without saving
                       style:"margin-bottom:0;"
                       onclick
 
