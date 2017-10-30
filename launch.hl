@@ -104,6 +104,30 @@ create-widget:hyperlang-main-container
                          */
                         micro.evaluate.file:@HYPERLANG/helpers/databind-grid.hl
 
+                    input:hyperlang-search-textbox
+                      type:text
+                      placeholder:Filter ...
+                      onkeydown:@"if (event.keyCode == 13) {p5.$('hyperlang-search-button').raise('onclick');return false;}"
+
+                    button:hyperlang-search-button
+                      innerValue:@"<span class=""icon-search""></span>"
+                      title:Search
+                      onclick
+
+                        /*
+                         * Retrieving filter, and re-databinding grid, now with the specified filter condition.
+                         */
+                        get-widget-property:hyperlang-search-textbox
+                          value
+                        eval-x:x:/+/*
+                        micro.evaluate.file:@HYPERLANG/helpers/databind-grid.hl
+                          filter:x:/@get-widget-property/*/*?value
+
+                        /*
+                         * For simplicity, we set focus to search textbox again.
+                         */
+                        micro.page.set-focus:hyperlang-search-textbox
+
                     button
                       innerValue:@"<span class=""icon-home""></span>"
                       title:Close Hyperlang

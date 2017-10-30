@@ -51,7 +51,15 @@ p5.mysql.connect:[hyperlang]
 /*
  * Preparing all synonyms for databind operation.
  */
-join:x:/@p5.mysql.connect/*/p5.mysql.select/[1,2]/*/*/command?value
+.synonyms
+for-each:x:/@p5.mysql.connect/*/p5.mysql.select/[1,2]/*
+  eval-x:x:/+/*/*
+  add:x:/@.synonyms
+    src
+      :"{0}:{1}"
+        :x:/@_dp/#/*/lang?value
+        :x:/@_dp/#/*/command?value
+join:x:/@.synonyms/*?value
   sep:"\r\n"
 
 
@@ -83,7 +91,9 @@ create-widget
               text
                 info:Phrase
                 .data-field:command
-                value:x:/@p5.mysql.connect/*/p5.mysql.select/[0,1]/*/*/command?value
+                value:"{0}:{1}"
+                  :x:/@p5.mysql.connect/*/p5.mysql.select/[0,1]/*/*/lang?value
+                  :x:/@p5.mysql.connect/*/p5.mysql.select/[0,1]/*/*/command?value
               label
                 innerValue:Hyperlambda
                 style:"margin-bottom:0;"
@@ -97,6 +107,7 @@ create-widget
                 style:"margin-bottom:0;"
               textarea
                 info:Synonymous phrases ...
+                rows:10
                 value:x:/@join?value
                 .data-field:synonyms
 
@@ -110,6 +121,26 @@ create-widget
                     button
                       innerValue:Save
                       style:"margin-bottom:0;"
+                      events
+
+                        /*
+                         * Throws an exception if the specified language doesn't exist.
+                         */
+                        hyperlang._assume-language-exists
+
+                          /*
+                           * Checking to see if the specified [_arg] language exists.
+                           */
+                          p5.web.session.get:micro.speak.query.voices
+                          if:x:/@p5.web.session.get/*/*/*/={0}
+                            :x:/../*/_arg?value
+                            not
+                            and:x:/@p5.web.session.get/*/*/*/=~{0}-
+                              :x:/../*/_arg?value
+                              not
+                            throw:'{0}' is not a supported language
+                              :x:/../*/_arg?value
+
                       onclick
 
                         /*
@@ -124,52 +155,129 @@ create-widget
                         /*
                          * Connecting to database, and doing updates.
                          */
-                        p5.mysql.connect:[hyperlang]
+                        try
+                          p5.mysql.connect:[hyperlang]
+                            p5.mysql.transaction.begin
+
+                              /*
+                               * Figuring out commandid.
+                               */
+                              p5.mysql.scalar:@"select commandid from phrases where id = @id"
+                                @id:x:/@get-widget-property/*/*?value
+
+                              /*
+                               * Updating "lead phrase", checking if user provided a language for it.
+                               */
+                              split:x:/@micro.form.serialize/*/command?value
+                                =:":"
+                              if:x:/@split/*?count
+                                =:int:2
+
+                                /*
+                                 * User provided a language definition.
+                                 */
+                                hyperlang._assume-language-exists:x:/@split/0?name
+                                p5.mysql.update:@"update phrases set command = @command, lang = @lang where id = @id"
+                                  @command:x:/@split/0/-?name
+                                  @lang:x:/@split/0?name
+                                  @id:x:/@get-widget-property/*/*?value
+
+                              else-if:x:/@split/*?count
+                                =:int:1
+
+                                /*
+                                 * No language definition, assuming no change in language.
+                                 */
+                                p5.mysql.update:@"update phrases set command = @command where id = @id"
+                                  @command:x:/@micro.form.serialize/*/command?value
+                                  @id:x:/@get-widget-property/*/*?value
+
+                              else
+
+                                /*
+                                 * User provided two or more ":" in his language phrase, which is not allowed.
+                                 */
+                                throw:@"Sorry, you can't use ':' in your phrases, except for describing language"
+
+                              /*
+                               * Deleting all "old" synonyms.
+                               */
+                              p5.mysql.delete:@"delete from phrases where commandid = @commandid and id != @id"
+                                @commandid:x:/@p5.mysql.scalar?value
+                                @id:x:/@get-widget-property/*/*?value
+
+                              /*
+                               * Figuring out language for current user, which is necessary to filter our results.
+                               */
+                              .defaults
+                                voice:Karen,en-AU
+                              p5.auth.my-settings.get
+                              split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
+                                =:,
+
+                              /*
+                               * Inserting new synonyms.
+                               */
+                              split:x:/@micro.form.serialize/*/synonyms?value
+                                =:"\r\n"
+                              for-each:x:/@split/*?name
+
+                                /*
+                                 * Checking if there's an explicit language for current entry, and if not, using default.
+                                 */
+                                split:x:/@_dp?value
+                                  =:":"
+                                if:x:/@split/*?count
+                                  =:int:2
+
+                                  /*
+                                   * Explicit language definition.
+                                   */
+                                  hyperlang._assume-language-exists:x:/@split/0?name
+                                  add:x:/..for-each/*/p5.mysql.insert
+                                    src
+                                      @command:x:/@split/0/-?name
+                                      @lang:x:/@split/0?name
+
+                                else-if:x:/@split/*?count
+                                  =:int:1
+
+                                  /*
+                                   * No explicit language definition, relying on default.
+                                   */
+                                  add:x:/..for-each/*/p5.mysql.insert
+                                    src
+                                      @command:x:/@_dp?value
+                                      @lang:x:/..for-each/@split/@split/0/-?name
+
+                                else
+
+                                  /*
+                                   * We found at least two ":" in phrase, which is not legal.
+                                   */
+                                  throw:@"You can only use ':' to separate between language and phrase"
+                                    :x:/@_dp?value
+
+                                p5.mysql.insert:@"insert into phrases (command, lang, commandid) values (@command, @lang, @commandid)"
+                                  @commandid:x:/@p5.mysql.scalar?value
+
+                              /*
+                               * Committing transaction.
+                               */
+                              p5.mysql.transaction.commit
 
                           /*
-                           * Figuring out commandid.
+                           * Deleting editor widget and row entirely, and re-databinding grid.
                            */
-                          p5.mysql.scalar:@"select commandid from phrases where id = @id"
-                            @id:x:/@get-widget-property/*/*?value
+                          delete-widget:x:/@p5.web.widgets.find-first-ancestor/*/*?value
+
+                        catch
 
                           /*
-                           * Updating "lead phrase".
+                           * Oops ...!!
                            */
-                          p5.mysql.update:@"update phrases set command = @command where id = @id"
-                            @command:x:/@micro.form.serialize/*/command?value
-                            @id:x:/@get-widget-property/*/*?value
-
-                          /*
-                           * Deleting all "old" synonyms.
-                           */
-                          p5.mysql.delete:@"delete from phrases where commandid = @commandid and id != @id"
-                            @commandid:x:/@p5.mysql.scalar?value
-                            @id:x:/@get-widget-property/*/*?value
-
-                          /*
-                           * Figuring out language for current user, which is necessary to filter our results.
-                           */
-                          .defaults
-                            voice:Karen,en-AU
-                          p5.auth.my-settings.get
-                          split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
-                            =:,
-
-                          /*
-                           * Inserting new synonyms.
-                           */
-                          split:x:/@micro.form.serialize/*/synonyms?value
-                            =:"\r\n"
-                          for-each:x:/@split/*?name
-                            p5.mysql.insert:@"insert into phrases (command, lang, commandid) values (@command, @lang, @commandid)"
-                              @command:x:/@_dp?value
-                              @lang:x:/@split/@split/0/-?name
-                              @commandid:x:/@p5.mysql.scalar?value
-
-                        /*
-                         * Deleting editor widget and row entirely, and re-databinding grid.
-                         */
-                        delete-widget:x:/@p5.web.widgets.find-first-ancestor/*/*?value
+                          micro.windows.info:x:/@message?value
+                            class:micro-windows-info warning
 
                     button
                       innerValue:Close
