@@ -41,6 +41,8 @@ p5.mysql.connect:[hyperlang]
   p5.mysql.select:@"select * from phrases where commandid = @commandid and id != @id"
     @commandid:x:/./-/*/*/commandid?value
     @id:x:/../*/id?value
+  p5.mysql.select:@"select hyperlambda from commands where id = @commandid"
+    @commandid:x:/./-2/*/*/commandid?value
 
 
 
@@ -61,7 +63,7 @@ join:x:/@p5.mysql.connect/*/p5.mysql.select/[1,2]/*/*/command?value
  */
 p5.web.widgets.find:hyperlang-phrases-grid
   .id:x:/../*/id?value
-eval-x:x:/+/**/micro.widgets.wizard-form/*/value
+eval-x:x:/+/**/micro.widgets.wizard-form/*(/value|/*/hypereval.widgets.hyperlambda-textarea/*/value)
 create-widget
   element:tr
   .edit:x:/../*/id?value
@@ -82,13 +84,14 @@ create-widget
                 info:Phrase
                 .data-field:command
                 value:x:/@p5.mysql.connect/*/p5.mysql.select/[0,1]/*/*/command?value
-                oninit
-
-                  /*
-                   * Setting initial focus to "command" textbox.
-                   */
-                  micro.page.set-focus:x:/../*/_event?value
-
+              label
+                innerValue:Hyperlambda
+                style:"margin-bottom:0;"
+              div
+                widgets
+                  hypereval.widgets.hyperlambda-textarea
+                    .data-field:hyperlambda
+                    value:x:/@p5.mysql.connect/*/p5.mysql.select/[2,3]/*/*/hyperlambda?value
               label
                 innerValue:Synonymous words or phrases
                 style:"margin-bottom:0;"
@@ -107,6 +110,67 @@ create-widget
                     button
                       innerValue:Save
                       style:"margin-bottom:0;"
+                      onclick
+
+                        /*
+                         * Serializing form, and storing values into database.
+                         */
+                        p5.web.widgets.find-first-ancestor:x:/../*/_event?value
+                          .edit
+                        get-widget-property:x:/@p5.web.widgets.find-first-ancestor/*/*?value
+                          .edit
+                        micro.form.serialize:x:/@p5.web.widgets.find-first-ancestor/*/*?value
+
+                        /*
+                         * Connecting to database, and doing updates.
+                         */
+                        p5.mysql.connect:[hyperlang]
+
+                          /*
+                           * Figuring out commandid.
+                           */
+                          p5.mysql.scalar:@"select commandid from phrases where id = @id"
+                            @id:x:/@get-widget-property/*/*?value
+
+                          /*
+                           * Updating "lead phrase".
+                           */
+                          p5.mysql.update:@"update phrases set command = @command where id = @id"
+                            @command:x:/@micro.form.serialize/*/command?value
+                            @id:x:/@get-widget-property/*/*?value
+
+                          /*
+                           * Deleting all "old" synonyms.
+                           */
+                          p5.mysql.delete:@"delete from phrases where commandid = @commandid and id != @id"
+                            @commandid:x:/@p5.mysql.scalar?value
+                            @id:x:/@get-widget-property/*/*?value
+
+                          /*
+                           * Figuring out language for current user, which is necessary to filter our results.
+                           */
+                          .defaults
+                            voice:Karen,en
+                          p5.auth.my-settings.get
+                          split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
+                            =:,
+
+                          /*
+                           * Inserting new synonyms.
+                           */
+                          split:x:/@micro.form.serialize/*/synonyms?value
+                            =:"\r\n"
+                          for-each:x:/@split/*?name
+                            p5.mysql.insert:@"insert into phrases (command, lang, commandid) values (@command, @lang, @commandid)"
+                              @command:x:/@_dp?value
+                              @lang:x:/@split/@split/0/-?name
+                              @commandid:x:/@p5.mysql.scalar?value
+
+                        /*
+                         * Deleting editor widget and row entirely, and re-databinding grid.
+                         */
+                        delete-widget:x:/@p5.web.widgets.find-first-ancestor/*/*?value
+
                     button
                       innerValue:Close
                       style:"margin-bottom:0;"
