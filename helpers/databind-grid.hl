@@ -55,7 +55,7 @@ else
    * No filter supplied, still filtering on currently configured language.
    */
   set:x:/@_where?value
-    src:"where lang = @lang"
+    src:"where lang like @lang"
 
 
 
@@ -65,10 +65,11 @@ else
  * Figuring out language for current user, which is necessary to filter our results.
  */
 .defaults
-  voice:Karen,en
+  voice:Karen,en-AU
 p5.auth.my-settings.get
 split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
   =:,
+split:x:/-/0/-?name
 
 
 
@@ -80,7 +81,8 @@ split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?va
 p5.mysql.connect:[hyperlang]
   p5.mysql.select:@"select min(id) as id, max(command) as command, max(lang) as lang, commandid from phrases {0} group by commandid limit 50 offset @offset"
     :x:/@_where?value
-    @lang:x:/@split/0/-?name
+    @lang:{0}%
+      :x:/@split/0?name
     @offset:x:(/../*/offset|/../*/.defaults/*/offset)/$?value
 
   /*

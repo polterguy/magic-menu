@@ -37,6 +37,68 @@ create-widget:hyperlang-main-container
                   class:strip toolbar
                   style:"display:inline-block;"
                   widgets
+                    container:hyperlang-select-language
+                      element:select
+                      oninit
+
+                        /*
+                         * Selecting all supported languages, which depends upon
+                         * your browser's supported speech languages.
+                         */
+                        micro.speak.query-voices
+                          onfinish
+
+                            /*
+                             * Looping through each voice, and creating one option element for each.
+                             *
+                             * But first creating our "select voice" option element.
+                             */
+                            create-widget
+                              parent:hyperlang-select-language
+                              element:option
+                              innerValue:Select voice ...
+                              value:_default
+                            for-each:x:/../*/voices/*
+                              create-widget
+                                parent:hyperlang-select-language
+                                element:option
+                                innerValue:{0},{1}
+                                  :x:/@_dp/#?name
+                                  :x:/@_dp/#?value
+                                value:{0},{1}
+                                  :x:/@_dp/#?name
+                                  :x:/@_dp/#?value
+
+                            /*
+                             * Setting widget's initial value to settings for user, if possible.
+                             */
+                            p5.auth.my-settings.get
+                            if:x:/@p5.auth.my-settings.get/*/hyperlang/*/voice?value
+                              set-widget-property:hyperlang-select-language
+                                value:x:/@p5.auth.my-settings.get/*/hyperlang/*/voice?value
+
+
+                      onchange
+
+                        /*
+                         * Updating user's settings according to voice selected.
+                         */
+                        get-widget-property:x:/../*/_event?value
+                          value
+                        p5.auth.my-settings.get
+                        if:x:/@p5.auth.my-settings.get/*/hyperlang
+                          not
+                          add:x:/@p5.auth.my-settings.get
+                            src:hyperlang
+                        set:x:/@p5.auth.my-settings.get/*/hyperlang/*/voice
+                        eval-x:x:/+/*/*
+                        add:x:/@p5.auth.my-settings.get/*/hyperlang
+                          src
+                            voice:x:/@get-widget-property/*/*?value
+                        add:x:/../*/p5.auth.my-settings.set
+                          src:x:/@p5.auth.my-settings.get/*
+                        p5.auth.my-settings.set
+
                     button
                       innerValue:@"<span class=""icon-home""></span>"
                       title:Close Hyperlang

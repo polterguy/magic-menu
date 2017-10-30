@@ -157,7 +157,7 @@ create-event:hyperlang.create-phrase2hyper-association
                        * Figuring out language for current user.
                        */
                       .defaults
-                        voice:Karen,en
+                        voice:Karen,en-AU
                       p5.auth.my-settings.get
                       split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
                         =:,

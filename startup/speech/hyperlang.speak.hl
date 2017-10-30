@@ -15,7 +15,7 @@ create-event:hyperlang.speak
    * Defaults, in case no settings exists.
    */
   .defaults
-    voice:Karen,en
+    voice:Karen,en-AU
 
   /*
    * Retrieving settings for user, to figure out voice to use, etc.

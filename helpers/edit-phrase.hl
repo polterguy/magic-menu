@@ -150,7 +150,7 @@ create-widget
                            * Figuring out language for current user, which is necessary to filter our results.
                            */
                           .defaults
-                            voice:Karen,en
+                            voice:Karen,en-AU
                           p5.auth.my-settings.get
                           split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
                             =:,
