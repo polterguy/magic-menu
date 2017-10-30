@@ -19,13 +19,14 @@ create table if not exists `commands` (
 
 create table if not exists `phrases` (
   `id` int(10) unsigned not null auto_increment,
-  `command` varchar(4096) collate utf8mb4_unicode_ci not null,
+  `command` varchar(256) collate utf8mb4_unicode_ci not null,
   `lang` varchar(20) collate 'utf8mb4_unicode_ci' not null,
   `commandid` int(10) unsigned null,
   primary key (`id`),
   unique key `id_UNIQUE` (`id`),
   key `index_command` (`command`(50)),
   key `phrases_commands_idx` (`commandid`),
+  unique key `command_commandid_UNIQUE` (`command`, `commandid`),
   constraint `fk_phrases_commands` foreign key (`commandid`) references `commands` (`id`) on delete cascade on update cascade
 ) engine=InnoDB auto_increment=0 default charset=utf8mb4 collate=utf8mb4_unicode_ci;
 "
