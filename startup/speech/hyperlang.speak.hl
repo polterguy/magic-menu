@@ -58,7 +58,8 @@ create-event:hyperlang.speak
        * Making sure we do our substitution.
        */
       for-each:x:/@split/*/%2
-        hyperlang.get-localized-phrase:x:/@_dp/#?name
+        hyperlang.get-localized-phrase:[{0}]
+          :x:/@_dp/#?name
         set:x:/@_dp/#?name
           src:x:/@hyperlang.get-localized-phrase?value
       join:x:/@split/*?name

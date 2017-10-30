@@ -1,7 +1,20 @@
 ﻿
 /*
  * File responsible for databinding phrases grid.
+ * Optionally pass in [filter] and/or [offset].
+ *
+ * Select 50 phrases from database.
  */
+
+
+
+
+
+/*
+ * Defaults, if no arguments have been supplied.
+ */
+.defaults
+  offset:long:0
 
 
 
@@ -12,6 +25,7 @@
  */
 micro.lambda.contract.optional:x:/..
   filter:string
+  offset:long
 
 
 
@@ -29,11 +43,32 @@ if:x:/../*/filter?value
    * Caller supplied a filter.
    */
   set:x:/@_where?value
-    src:"where command like @filter"
+    src:"where command like @filter and lang = @lang"
   eval-x:x:/+/*/*
   add:x:/../*/p5.mysql.connect/*/p5.mysql.select/[0,1]
     src
       @filter:x:/../*/filter?value
+
+else
+
+  /*
+   * No filter supplied, still filtering on currently configured language.
+   */
+  set:x:/@_where?value
+    src:"where lang = @lang"
+
+
+
+
+
+/*
+ * Figuring out language for current user, which is necessary to filter our results.
+ */
+.defaults
+  voice:Karen,en
+p5.auth.my-settings.get
+split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
+  =:,
 
 
 
@@ -43,18 +78,33 @@ if:x:/../*/filter?value
  * Connecting to database, and selecting records according to filter condition.
  */
 p5.mysql.connect:[hyperlang]
-  p5.mysql.select:@"select * from phrases {0}"
+  p5.mysql.select:@"select min(id) as id, max(command) as command, max(lang) as lang, commandid from phrases {0} group by commandid limit 50 offset @offset"
     :x:/@_where?value
+    @lang:x:/@split/0/-?name
+    @offset:x:(/../*/offset|/../*/.defaults/*/offset)/$?value
 
   /*
    * Looping through each result from above SQL, and creating one datagrid row
    * for each result.
    */
   for-each:x:/@p5.mysql.select/*
-    eval-x:x:/+/*/*/*(/command|/lang)
+    eval-x:x:/+/*/*/*(/command|/lang)|/+/*/*/*/*/.id
     add:x:/../*/micro.widgets.grid.databind
       src
         item
+          .row
+            .id:x:/@_dp/#/*/id?value
+            onclick
+
+              /*
+               * Figuring out item's database id, and evaluating file responsible for editing item.
+               */
+              get-widget-property:x:/../*/_event?value
+                .id
+              eval-x:x:/+/*
+              micro.evaluate.file:@HYPERLANG/helpers/edit-phrase.hl
+                id:x:/@get-widget-property/*/*?value.long
+
           command:x:/@_dp/#/*/command?value
           lang:x:/@_dp/#/*/lang?value
 
@@ -65,7 +115,4 @@ p5.mysql.connect:[hyperlang]
 /*
  * Databinding datagrid.
  */
-create-widget
-  element:pre
-  innerValue:x:/..
 micro.widgets.grid.databind:hyperlang-phrases-grid

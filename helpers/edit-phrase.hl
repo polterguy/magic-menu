@@ -1,0 +1,120 @@
+﻿
+/*
+ * Edits a "phrase".
+ * 
+ * Expects [id] being database ID.
+ */
+
+
+
+
+
+/*
+ * Verifying that mandatory arguments were supplied.
+ */
+micro.lambda.contract.min:x:/..
+  id:long
+
+
+
+
+
+/*
+ * Checking if item is alread being edited, at which point we simply return early,
+ * doing nothing.
+ */
+p5.web.widgets.find:hyperlang-phrases-grid
+  .edit:x:/../*/id?value
+if:x:/@p5.web.widgets.find/*/*?value
+  return
+
+
+
+
+
+/*
+ * Connecting to database, to select record we're editing.
+ */
+p5.mysql.connect:[hyperlang]
+  p5.mysql.select:@"select * from phrases where id = @id"
+    @id:x:/../*/id?value
+  p5.mysql.select:@"select * from phrases where commandid = @commandid and id != @id"
+    @commandid:x:/./-/*/*/commandid?value
+    @id:x:/../*/id?value
+
+
+
+
+
+/*
+ * Preparing all synonyms for databind operation.
+ */
+join:x:/@p5.mysql.connect/*/p5.mysql.select/[1,2]/*/*/command?value
+  sep:"\r\n"
+
+
+
+
+
+/*
+ * Finding grid item, and appending a row beneath item, which allows for editing item.
+ */
+p5.web.widgets.find:hyperlang-phrases-grid
+  .id:x:/../*/id?value
+eval-x:x:/+/**/micro.widgets.wizard-form/*/value
+create-widget
+  element:tr
+  .edit:x:/../*/id?value
+  after:x:/@p5.web.widgets.find/*/*?value
+  class:no-hover
+  widgets
+    td
+      colspan:2
+      style:"background-color:#fefefe;"
+      widgets
+        container
+          class:rounded shaded bg air-inner air-top
+          widgets
+            h3
+              innerValue:Edit item
+            micro.widgets.wizard-form
+              text
+                info:Phrase
+                .data-field:command
+                value:x:/@p5.mysql.connect/*/p5.mysql.select/[0,1]/*/*/command?value
+                oninit
+
+                  /*
+                   * Setting initial focus to "command" textbox.
+                   */
+                  micro.page.set-focus:x:/../*/_event?value
+
+              label
+                innerValue:Synonymous words or phrases
+                style:"margin-bottom:0;"
+              textarea
+                info:Synonymous phrases ...
+                value:x:/@join?value
+                .data-field:synonyms
+
+            div
+              class:right
+              widgets
+                div
+                  class:strip
+                  style:"display:inline-block;"
+                  widgets
+                    button
+                      innerValue:Save
+                      style:"margin-bottom:0;"
+                    button
+                      innerValue:Close
+                      style:"margin-bottom:0;"
+                      onclick
+
+                        /*
+                         * Simply deleting editor widget and row entirely.
+                         */
+                        p5.web.widgets.find-first-ancestor:x:/../*/_event?value
+                          .edit
+                        delete-widget:x:/-/*/*?value
