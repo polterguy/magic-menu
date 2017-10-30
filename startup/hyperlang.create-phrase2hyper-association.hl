@@ -1,11 +1,26 @@
 
 /*
  * Creates the event that allows the user to configure a phrase to a piece of
- * Hyperlambda.
+ * Hyperlambda. User is expected to be "root" to be allowed evaluating this lambda.
  *
  * Expects [_arg] to be phrase to create association for.
  */
 create-event:hyperlang.create-phrase2hyper-association
+
+  /*
+   * Verifying user is root, and if not, we don't allow him to evaluate event.
+   *
+   * The reason is that this eventallows the user to create arbitrary Hyperlambda,
+   * that is evaluated on the server.
+   */
+  whoami
+  if:x:/@whoami/*/role?value
+    !=:root
+
+    /*
+     * We don't allow execution of this lambda, unless user is root.
+     */
+    return
 
   /*
    * Checking to see if we're in some specific point in our "grammar tree".
@@ -28,11 +43,27 @@ create-event:hyperlang.create-phrase2hyper-association
               :x:/@p5.mysql.scalar?value
 
   /*
+   * Figuring out current language.
+   */
+  p5.auth.my-settings.get
+  split:x:/@p5.auth.my-settings.get/*/hyperlang/*/voice?value
+    =:,
+  split:x:/@split/0/-?name
+    =:-
+  if:x:/@split/*?count?value
+    =:int:1
+
+    /*
+     * Deleting language radio buttons, since this is a "root language".
+     */
+    set:x:/../*/create-widgets/**/widgets/=radio-buttons(/.|/-/br)
+
+  /*
    * Creating a modal widget, which asks user to type in Hyperlambda, and configure
    * a piece of Hyperlambda, which will result in associating the specified Hyperlambda
    * with the given [_arg] phrase.
    */
-  eval-x:x:/+/*/*/*/h3/*/innerValue
+  eval-x:x:/+/*/*/*/h3/*/innerValue|/+/**/widgets/=radio-buttons/*(/input/*/.data-value|/span/*/innerValue)
   create-widgets
     micro.widgets.modal:hyperlang-create-phrase2hyper-association
       widgets
@@ -62,6 +93,7 @@ create-event:hyperlang.create-phrase2hyper-association
             input
               type:checkbox
               .data-field:global
+              checked
             span
               innerValue:Global
         label
@@ -69,10 +101,33 @@ create-event:hyperlang.create-phrase2hyper-association
           widgets
             input
               type:checkbox
-              checked
               .data-field:private
             span
               innerValue:Private phrase
+        br
+        label
+          widgets:radio-buttons
+            input
+              type:radio
+              checked
+              .data-field:lang
+              .data-value:x:/@split/0?name
+              name:hyperlang-name
+            span
+              innerValue:x:/@split/0?name
+        label
+          widgets:radio-buttons
+            input
+              type:radio
+              .data-field:lang
+              .data-value:{0}-{1}
+                :x:/@split/0?name
+                :x:/@split/1?name
+              name:hyperlang-name
+            span
+              innerValue::{0}-{1}
+                :x:/@split/0?name
+                :x:/@split/1?name
         div
           class:right
           widgets
@@ -154,15 +209,6 @@ create-event:hyperlang.create-phrase2hyper-association
                             @parent:x:/@hyperlang.get-position?value
 
                       /*
-                       * Figuring out language for current user.
-                       */
-                      .defaults
-                        voice:Karen,en-AU
-                      p5.auth.my-settings.get
-                      split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
-                        =:,
-
-                      /*
                        * Splitting synonyms, and inserting one 'phrase' for each.
                        */
                       split:x:/@micro.form.serialize/*/synonyms?value
@@ -171,7 +217,7 @@ create-event:hyperlang.create-phrase2hyper-association
                         p5.mysql.insert:@"insert into phrases (command, commandid, lang) values (@command, @commandid, @lang)"
                           @command:x:/@_dp?value
                           @commandid:x:/..p5.mysql.connect/**/p5.mysql.insert/*/id/[0,1]?value
-                          @lang:x:/@split/@split/0/-?name
+                          @lang:x:/@micro.form.serialize/*/lang?value
 
                     /*
                      * Closing modal widget, and restarting listening loop.

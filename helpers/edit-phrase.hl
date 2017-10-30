@@ -41,7 +41,7 @@ p5.mysql.connect:[hyperlang]
   p5.mysql.select:@"select * from phrases where commandid = @commandid and id != @id"
     @commandid:x:/./-/*/*/commandid?value
     @id:x:/../*/id?value
-  p5.mysql.select:@"select hyperlambda, parent, global from commands where id = @commandid"
+  p5.mysql.select:@"select hyperlambda, parent, global, username from commands where id = @commandid"
     @commandid:x:/./-2/*/*/commandid?value
 
 
@@ -71,7 +71,18 @@ join:x:/@.synonyms/*?value
  */
 if:x:/@p5.mysql.connect/*/p5.mysql.select/[2,3]/*/*/global?value.int
   =:int:1
-  add:x:/../*/create-widget/**/micro.widgets.wizard-form/*/checkbox
+  add:x:/../*/create-widget/**/micro.widgets.wizard-form/*/checkbox/*/.data-field/=global/.
+    src:checked
+
+
+
+
+
+/*
+ * Checking if this is a "private" command.
+ */
+if:x:/@p5.mysql.connect/*/p5.mysql.select/[2,3]/*/*/username?value
+  add:x:/../*/create-widget/**/micro.widgets.wizard-form/*/checkbox/*/.data-field/=private/.
     src:checked
 
 
@@ -125,6 +136,11 @@ create-widget
               checkbox
                 info:Global
                 .data-field:global
+                title:If checked, this phrase can be said at any time
+              checkbox
+                info:Private
+                .data-field:private
+                title:If checked, this phrase and it associated lambda is private for your user, otherwise all users can use it
 
             div
               class:right
@@ -278,22 +294,29 @@ create-widget
                                   @commandid:x:/@p5.mysql.scalar?value
 
                               /*
-                               * Saving Hyperlambda.
+                               * Saving actual command.
                                */
-                              p5.mysql.update:@"update commands set hyperlambda = @hyperlambda, global = @global where id = @id"
+                              _username
+                              if:x:/@micro.form.serialize/*/private?value
+
+                                /*
+                                 * Command is private for currently logged in user.
+                                 */
+                                whoami
+                                set:x:/@_username?value
+                                  src:x:/@whoami/*/username?value
+                                
+
+                              p5.mysql.update:@"update commands set hyperlambda = @hyperlambda, global = @global, username = @username where id = @id"
                                 @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
                                 @global:x:/@micro.form.serialize/*/global?value
+                                @username:x:/@_username?value
                                 @id:x:/@p5.mysql.scalar?value
 
                               /*
                                * Committing transaction.
                                */
                               p5.mysql.transaction.commit
-
-                          /*
-                           * Deleting editor widget and row entirely, and re-databinding grid.
-                           */
-                          delete-widget:x:/@p5.web.widgets.find-first-ancestor/*/*?value
 
                         catch
 

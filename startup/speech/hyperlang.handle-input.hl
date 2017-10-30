@@ -122,11 +122,25 @@ order by `global` limit 1"
        * create a new association for the given [_arg] command, or if he wants to
        * discard input, and rephrase his command.
        *
-       * Waiting for user to say either "yes" or "no".
+       * Waiting for user to say tell us what to do.
        *
        * Giving a visual clue to user, to inform him that he can say "teach"
        * to teach the computer a new word.
+       *
+       * Notice, the user is only allowed to configure new words, if he is root.
+       * If not, we simply say "I don't understand".
        */
+      whoami
+      if:x:/@whoami/*/role?value
+        !=:root
+
+        /*
+         * Computer didn't understand phrase, and user is not root.
+         * Informing user and returning early.
+         */
+        hyperlang.listen:[I don't understand]
+        return
+
       hyperlang.get-localized-phrase:[Say 'teach' to teach the computer]
       hyperlang.set-text:{0} '{1}'
         :x:/@hyperlang.get-localized-phrase?value

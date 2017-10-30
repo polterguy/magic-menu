@@ -115,6 +115,7 @@ select min(id) from phrases {0} group by commandid) limit 25 offset @offset"
                 id:x:/@get-widget-property/*/*?value.long
 
           command:x:/@_dp/#/*/command?value
+          lang::x:/@_dp/#/*/lang?value
 
 
 
