@@ -3,6 +3,10 @@
  * Styles for main plugin button, which initiates Hyperlang.
  */
 
+.container {
+    margin-bottom:150px;
+}
+
 /*
  * Button to start Hyperlang.
  */

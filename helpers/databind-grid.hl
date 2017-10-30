@@ -2,8 +2,11 @@
 /*
  * File responsible for databinding phrases grid.
  * Optionally pass in [filter] and/or [offset].
+ * You can also pass in [keep-items], at which the old items in your grid will
+ * be kept, and the databind operation will "append" the databound items to 
+ * your grid instead.
  *
- * Select 50 phrases from database.
+ * Selects 25 phrases from database.
  */
 
 
@@ -26,6 +29,7 @@
 micro.lambda.contract.optional:x:/..
   filter:string
   offset:long
+  keep-items:bool
 
 
 
@@ -82,7 +86,7 @@ split:x:/-/0/-?name
  */
 p5.mysql.connect:[hyperlang]
   p5.mysql.select:@"select * from phrases where id in (
-select min(id) from phrases {0} group by commandid) limit 50 offset @offset"
+select min(id) from phrases {0} group by commandid) limit 25 offset @offset"
     :x:/@_where?value
     @lang:x:/@split/@split/0/-?name
     @mainlang:x:/@split/0?name
@@ -119,4 +123,18 @@ select min(id) from phrases {0} group by commandid) limit 50 offset @offset"
 /*
  * Databinding datagrid.
  */
+eval-x:x:/+/*
 micro.widgets.grid.databind:hyperlang-phrases-grid
+  keep-items:x:/../*/keep-items?value
+
+
+
+
+
+/*
+ * Updating "offset".
+ */
++:x:(/../*/offset|/../*/.defaults/*/offset)/$?value
+  _:25
+p5.web.viewstate.set:hyperlang.grid-offset
+  src:x:/@+?value

@@ -41,7 +41,7 @@ p5.mysql.connect:[hyperlang]
   p5.mysql.select:@"select * from phrases where commandid = @commandid and id != @id"
     @commandid:x:/./-/*/*/commandid?value
     @id:x:/../*/id?value
-  p5.mysql.select:@"select hyperlambda from commands where id = @commandid"
+  p5.mysql.select:@"select hyperlambda, parent, global from commands where id = @commandid"
     @commandid:x:/./-2/*/*/commandid?value
 
 
@@ -61,6 +61,18 @@ for-each:x:/@p5.mysql.connect/*/p5.mysql.select/[1,2]/*
         :x:/@_dp/#/*/command?value
 join:x:/@.synonyms/*?value
   sep:"\r\n"
+
+
+
+
+
+/*
+ * Checking if this is a "global" command.
+ */
+if:x:/@p5.mysql.connect/*/p5.mysql.select/[2,3]/*/*/global?value.int
+  =:int:1
+  add:x:/../*/create-widget/**/micro.widgets.wizard-form/*/checkbox
+    src:checked
 
 
 
@@ -110,6 +122,9 @@ create-widget
                 rows:10
                 value:x:/@join?value
                 .data-field:synonyms
+              checkbox
+                info:Global
+                .data-field:global
 
             div
               class:right
@@ -265,8 +280,9 @@ create-widget
                               /*
                                * Saving Hyperlambda.
                                */
-                              p5.mysql.update:@"update commands set hyperlambda = @hyperlambda where id = @id"
+                              p5.mysql.update:@"update commands set hyperlambda = @hyperlambda, global = @global where id = @id"
                                 @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
+                                @global:x:/@micro.form.serialize/*/global?value
                                 @id:x:/@p5.mysql.scalar?value
 
                               /*

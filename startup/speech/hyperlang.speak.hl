@@ -3,6 +3,8 @@
  * Invoked when Hyperlang should speak something.
  *
  * Expects [_arg] to be whatever should be spoken.
+ * Optionally, pass in [voice] to override the default voice to use, which is 
+ * fetched from the user's settings.
  */
 create-event:hyperlang.speak
 
@@ -86,4 +88,4 @@ create-event:hyperlang.speak
    */
   eval-x:x:/+/*
   micro.speak:x:/../*/_arg?value
-    voice:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
+    voice:x:(/../*/voice|/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value

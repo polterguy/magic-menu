@@ -76,12 +76,12 @@ order by `global` limit 1"
        * that commands that are not global will be prioritized.
        */
       p5.mysql.select:@"select c.id, c.parent, c.hyperlambda, p.command from commands c inner join phrases p on p.commandid = c.id 
-where p.command = @command and c.parent is null and (c.username is null or c.username = @username) and lang like @lang
+where p.command = @command and c.parent is null and (c.username is null or c.username = @username) and (lang = @lang or lang = @mainlang)
 order by `global` limit 1"
         @command:x:/../*/_arg?value
         @username:x:/@whoami/*/username?value
-        @lang:{0}%
-          :x:/@split/0?name
+        @lang:x:/@split/@split/0/-?name
+        @mainlang:x:/@split/0?name
 
       /*
        * Adding command to buffer above.

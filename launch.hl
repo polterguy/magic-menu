@@ -157,3 +157,35 @@ create-widget:hyperlang-main-container
                  * Evaluating file that databinds grid.
                  */
                 micro.evaluate.file:@HYPERLANG/helpers/databind-grid.hl
+
+                /*
+                 * Including JavaScript to determine if user is at the bottom of page,
+                 * at which point we "auto-feed" grid with more items.
+                 */
+                p5.web.include-javascript:@"
+window.onscroll = function() {
+  if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+    if (!p5.hyperlang_end_of_dataset) {
+      if(p5.hyperlang_ongoing_scroll === true) {
+        return;
+      }
+      p5.hyperlang_ongoing_scroll = true;
+      var el = p5.$('hyperlang-phrases-grid');
+      el.raise('.onfeed',{
+        onsuccess:function() {
+          p5.hyperlang_ongoing_scroll = false;
+        }
+      });
+    }
+  }
+};"
+              .onfeed
+
+                /*
+                 * Invoked when grid needs more items.
+                 */
+                p5.web.viewstate.get:hyperlang.grid-offset
+                eval-x:x:/+/*/offset
+                micro.evaluate.file:@HYPERLANG/helpers/databind-grid.hl
+                  keep-items:true
+                  offset:x:/@p5.web.viewstate.get/*?value
