@@ -10,3 +10,8 @@ create-event:hyperlang.goodbye
    * Greets user
    */
   hyperlang.speak:[Goodbye]
+
+  /*
+   * Deletes main Hyperlang widget.
+   */
+  delete-widget:hyperlang-listener

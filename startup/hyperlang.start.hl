@@ -40,11 +40,6 @@ create-event:hyperlang.start
       hyperlang.quit
 
         /*
-         * Deletes main Hyperlang widget.
-         */
-        delete-widget:hyperlang-listener
-
-        /*
          * Says goodbye, and stops input loop.
          */
         hyperlang.goodbye

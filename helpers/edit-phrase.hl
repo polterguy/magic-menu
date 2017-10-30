@@ -263,6 +263,13 @@ create-widget
                                   @commandid:x:/@p5.mysql.scalar?value
 
                               /*
+                               * Saving Hyperlambda.
+                               */
+                              p5.mysql.update:@"update commands set hyperlambda = @hyperlambda where id = @id"
+                                @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
+                                @id:x:/@p5.mysql.scalar?value
+
+                              /*
                                * Committing transaction.
                                */
                               p5.mysql.transaction.commit
