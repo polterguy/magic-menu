@@ -99,6 +99,11 @@ create-widget:hyperlang-main-container
                           src:x:/@p5.auth.my-settings.get/*
                         p5.auth.my-settings.set
 
+                        /*
+                         * Re-databinding grid.
+                         */
+                        micro.evaluate.file:@HYPERLANG/helpers/databind-grid.hl
+
                     button
                       innerValue:@"<span class=""icon-home""></span>"
                       title:Close Hyperlang
