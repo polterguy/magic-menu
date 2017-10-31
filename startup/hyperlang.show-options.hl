@@ -48,36 +48,10 @@ create-event:hyperlang.show-options
         clear-widget:hyperlang-help-list
 
         /*
-         * Adds "close help" element.
-         */
-        create-widget
-          element:li
-          parent:hyperlang-help-list
-          class:hyperlang-close-help
-          innerValue:Close help
-          events
-
-            /*
-             * Closes help widget.
-             */
-            hyperlang.show-options.close
-
-              /*
-               * Deletes help widget.
-               */
-              delete-widget:hyperlang-help
-
-          onclick
-
-            /*
-             * Deletes help widget.
-             */
-            hyperlang.show-options.close
-
-        /*
          * Lists options, and creates one "li" element for each.
          */
         hyperlang.position.list-options
+          limit:25
         for-each:x:/@hyperlang.position.list-options/*
           eval-x:x:/+/**/.text
           create-widget
@@ -91,6 +65,16 @@ create-event:hyperlang.show-options
                */
               .text:x:/@_dp/#?value
               hyperlang.handle-input:x:/@.text?value
+
+      /*
+       * Closes help widget.
+       */
+      hyperlang.show-options.close
+
+        /*
+         * Deletes help widget.
+         */
+        delete-widget:hyperlang-help
 
     widgets
       container:hyperlang-help-list
