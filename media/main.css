@@ -49,4 +49,24 @@ label.hyperlang-tip {
     content:'"';
     font-style:italic;
 }
-
+.hyperlang-help {
+    position:absolute;
+    top:1rem;
+    right:1rem;
+    min-width:40%;
+    display:inline-block;
+    z-index:5000;
+}
+.hyperlang-help ul {
+    margin:0;
+}
+.hyperlang-help ul li {
+    list-style-type:none;
+    cursor:pointer;
+}
+.hyperlang-help ul li:hover {
+    background-color:rgba(0,0,0,.1);
+}
+.hyperlang-close-help {
+    font-weight:bold;
+}

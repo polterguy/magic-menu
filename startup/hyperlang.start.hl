@@ -18,7 +18,7 @@ create-event:hyperlang.start
   /*
    * Making sure we reset grammar position.
    */
-  hyperlang.position.set
+  hyperlang.position.reset
 
   /*
    * Greets user, and asks for input.
@@ -43,6 +43,7 @@ create-event:hyperlang.start
          * Says goodbye, and stops input loop.
          */
         hyperlang.goodbye
+        hyperlang.show-options.close
 
     widgets
       div
@@ -52,6 +53,7 @@ create-event:hyperlang.start
             style:"margin-bottom:0;"
             innerValue:@"<span class=""icon-close""></span>"
             title:Close Hyperlang
+            accesskey:Q
             oninit
 
               /*

@@ -246,6 +246,8 @@ create-widget
                               p5.auth.my-settings.get
                               split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
                                 =:,
+                              split:x:/@split/1?name
+                                =:-
 
                               /*
                                * Inserting new synonyms.
@@ -266,6 +268,7 @@ create-widget
                                    * Explicit language definition.
                                    */
                                   hyperlang._assume-language-exists:x:/@split/0?name
+                                  eval-x:x:/+/*/*
                                   add:x:/..for-each/*/p5.mysql.insert
                                     src
                                       @command:x:/@split/0/-?name
@@ -277,10 +280,11 @@ create-widget
                                   /*
                                    * No explicit language definition, relying on default.
                                    */
+                                  eval-x:x:/+/*/*
                                   add:x:/..for-each/*/p5.mysql.insert
                                     src
                                       @command:x:/@_dp?value
-                                      @lang:x:/..for-each/@split/@split/0/-?name
+                                      @lang:x:/..for-each/@split/@split/0?name
 
                                 else
 

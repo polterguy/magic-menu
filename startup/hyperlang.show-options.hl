@@ -1,0 +1,97 @@
+
+/*
+ * Creates the event that shows all available options to user.
+ */
+create-event:hyperlang.show-options
+
+  /*
+   * Checking if widget exists from before, and if so, we return early.
+   */
+  if
+    fetch:x:/0/0?value
+      widget-exists:hyperlang-help
+    return
+
+  /*
+   * Creates our "help" widget.
+   */
+  create-container-widget:hyperlang-help
+    class:hyperlang-help rounded shaded bg air-inner
+    oninit
+
+      /*
+       * Initial databinding of widget.
+       */
+      hyperlang.show-options._databind
+
+    events
+
+      /*
+       * Invoked when the current position is changed, we simply re-databind our
+       * help widget.
+       */
+      hyperlang.position.changed
+
+        /*
+         * Re-databinding grid.
+         */
+        hyperlang.show-options._databind
+
+      /*
+       * Reloads the different options for current position in grammar tree.
+       */
+      hyperlang.show-options._databind
+
+        /*
+         * Clears previous "li" elements.
+         */
+        clear-widget:hyperlang-help-list
+
+        /*
+         * Adds "close help" element.
+         */
+        create-widget
+          element:li
+          parent:hyperlang-help-list
+          class:hyperlang-close-help
+          innerValue:Close help
+          events
+
+            /*
+             * Closes help widget.
+             */
+            hyperlang.show-options.close
+
+              /*
+               * Deletes help widget.
+               */
+              delete-widget:hyperlang-help
+
+          onclick
+
+            /*
+             * Deletes help widget.
+             */
+            hyperlang.show-options.close
+
+        /*
+         * Lists options, and creates one "li" element for each.
+         */
+        hyperlang.position.list-options
+        for-each:x:/@hyperlang.position.list-options/*
+          eval-x:x:/+/**/.text
+          create-widget
+            element:li
+            parent:hyperlang-help-list
+            innerValue:x:/@_dp/#?value
+            onclick
+
+              /*
+               * Forward evaluated above.
+               */
+              .text:x:/@_dp/#?value
+              hyperlang.handle-input:x:/@.text?value
+
+    widgets
+      container:hyperlang-help-list
+        element:ul

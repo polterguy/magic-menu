@@ -4,10 +4,16 @@
  *
  * Requires [_arg] being the database ID of a "command" from hyperlang.
  */
-create-event:hyperlang.position.set
+create-event:hyperlang.position.reset
 
   /*
    * Sets the current position to the specified [_arg].
    */
   p5.web.viewstate.set:hyperlang.position
-    src:x:/../*/_arg?value
+    src
+      positions
+
+  /*
+   * Posting "changed" event.
+   */
+  hyperlang.position.changed

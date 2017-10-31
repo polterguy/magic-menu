@@ -110,7 +110,8 @@ order by id desc limit 25 offset @offset"
    * for each result.
    */
   for-each:x:/@p5.mysql.select/*
-    if:x:/@_dp/#/*/global?value
+    if:x:/@_dp/#/*/global?value.int
+      =:int:1
       add:x:/..for-each/**/Global
         src
           widgets

@@ -1,0 +1,24 @@
+
+/*
+ * Creates the event that sets the current position in our command hierarchy.
+ *
+ * Requires [_arg] being the database ID of a "command" from hyperlang.
+ */
+create-event:hyperlang.position.push
+
+  /*
+   * Sets the current position to the specified [_arg].
+   */
+  p5.web.viewstate.get:hyperlang.position
+  add:x:/../*/p5.web.viewstate.set/*
+    src:x:/@p5.web.viewstate.get/*/*
+  add:x:/../*/p5.web.viewstate.set/*/*
+    src:":{0}"
+      :x:/../*/_arg?value
+  p5.web.viewstate.set:hyperlang.position
+    src
+
+  /*
+   * Posting "changed" event.
+   */
+  hyperlang.position.changed

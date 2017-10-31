@@ -101,7 +101,7 @@ order by `global` limit 1"
      * Notice, we only update position if we found a command for phrase.
      */
     if:x:/@.command/*
-      hyperlang.position.set:x:/@.command/*/id?value
+      hyperlang.position.push:x:/@.command/*/id?value
 
     /*
      * Checking to see if we actually found a command.

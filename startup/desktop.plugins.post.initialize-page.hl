@@ -35,8 +35,9 @@ create-event:desktop.plugins.post.initialize-page
     create-widget:hyperlang-start-button
       element:button
       class:hyperlang-start
-      title:Start Hyperlang
+      title:Start Hyperlang, shortcut H
       innerValue:@"<span class=""icon-flash""></span>"
+      accesskey:H
       oninit
 
         /*

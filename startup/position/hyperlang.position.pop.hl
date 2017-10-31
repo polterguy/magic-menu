@@ -1,0 +1,21 @@
+
+/*
+ * Creates the event that pops one position off from the hierarchy.
+ */
+create-event:hyperlang.position.pop
+
+  /*
+   * Removes the last position from our chain, if any, and returns the new 
+   * position to caller.
+   */
+  p5.web.viewstate.get:hyperlang.position
+  set:x:/@p5.web.viewstate.get/*/*/0/-
+  add:x:/../*/p5.web.viewstate.set/*
+    src:x:/@p5.web.viewstate.get/*/*
+  p5.web.viewstate.set:hyperlang.position
+    src
+
+  /*
+   * Posting "changed" event.
+   */
+  hyperlang.position.changed

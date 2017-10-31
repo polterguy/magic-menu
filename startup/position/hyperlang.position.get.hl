@@ -8,4 +8,4 @@ create-event:hyperlang.position.get
    * Returns the current position to caller.
    */
   p5.web.viewstate.get:hyperlang.position
-  return:x:/@p5.web.viewstate.get/*?value
+  return:x:/@p5.web.viewstate.get/*/*/0/-?value
