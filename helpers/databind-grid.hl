@@ -47,20 +47,12 @@ if:x:/../*/filter?value
    * Caller supplied a filter.
    */
   set:x:/@_where?value
-    src:"where command like @filter and (lang = @lang or lang = @mainlang)"
+    src:"and command like @filter"
   eval-x:x:/+/*/*
   add:x:/../*/p5.mysql.connect/*/p5.mysql.select/[0,1]
     src
       @filter:%{0}%
         :x:/../*/filter?value
-
-else
-
-  /*
-   * No filter supplied, still filtering on currently configured language.
-   */
-  set:x:/@_where?value
-    src:"where lang = @lang or lang = @mainlang"
 
 
 
@@ -85,8 +77,19 @@ split:x:/-/0/-?name
  * Connecting to database, and selecting records according to filter condition.
  */
 p5.mysql.connect:[hyperlang]
-  p5.mysql.select:@"select * from phrases where id in (
-select min(id) from phrases {0} group by commandid) limit 25 offset @offset"
+  p5.mysql.select:@"
+select p.id, p.command, p.commandid, p.lang, p2.command as parentphrase, c.username, c.global from 
+  phrases p join commands c on c.id = p.commandid,
+  phrases p2 join commands c2 on c2.id = p2.commandid
+    where p.id in (select min(id) from phrases where (lang = @lang or lang = @mainlang) {0} group by commandid)
+      and p2.id in (select min(id) from phrases where (lang = @lang or lang = @mainlang) group by commandid)
+      and c.parent = c2.id
+union all
+select p3.*, null as parentphrase, c3.username, c3.global from
+  phrases p3 join commands c3 on c3.id = p3.commandid
+    where p3.id in (select min(id) from phrases where (lang = @lang or lang = @mainlang) {0} group by commandid)
+      and c3.parent is null
+order by id desc limit 25 offset @offset"
     :x:/@_where?value
     @lang:x:/@split/@split/0/-?name
     @mainlang:x:/@split/0?name
@@ -107,7 +110,14 @@ select min(id) from phrases {0} group by commandid) limit 25 offset @offset"
    * for each result.
    */
   for-each:x:/@p5.mysql.select/*
-    eval-x:x:/+/*/*/*(/command|/lang)|/+/*/*/*/*/.id
+    if:x:/@_dp/#/*/global?value
+      add:x:/..for-each/**/Global
+        src
+          widgets
+            literal
+              element:span
+              class:icon-check
+    eval-x:x:/+/*/*/*(/Command|/Language|/Parent|/Username)|/+/*/*/*/*/.id
     add:x:/../*/micro.widgets.grid.databind
       src
         item
@@ -124,8 +134,11 @@ select min(id) from phrases {0} group by commandid) limit 25 offset @offset"
               micro.evaluate.file:@HYPERLANG/helpers/edit-phrase.hl
                 id:x:/@get-widget-property/*/*?value.long
 
-          command:x:/@_dp/#/*/command?value
-          lang::x:/@_dp/#/*/lang?value
+          Command:x:/@_dp/#/*/command?value
+          Parent:x:/@_dp/#/*/parentphrase?value
+          Language:x:/@_dp/#/*/lang?value
+          Username:x:/@_dp/#/*/username?value
+          Global
 
 
 

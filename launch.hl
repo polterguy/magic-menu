@@ -157,6 +157,12 @@ create-widget:hyperlang-main-container
              */
             micro.widgets.grid:hyperlang-phrases-grid
               class:hover striped
+              columns
+                Command
+                Parent
+                Language
+                Username
+                Global
               oninit
 
                 /*
