@@ -318,6 +318,12 @@ create-widget
                                */
                               p5.mysql.transaction.commit
 
+                              /*
+                               * Providing feedback to user.
+                               */
+                              micro.windows.info:Command was successfully saved
+                                class:micro-windows-info success
+
                         catch
 
                           /*

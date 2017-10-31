@@ -93,6 +93,16 @@ select min(id) from phrases {0} group by commandid) limit 25 offset @offset"
     @offset:x:(/../*/offset|/../*/.defaults/*/offset)/$?value
 
   /*
+   * Checking if above SQL yields less than 25 results, and if so, making sure 
+   * we stop the scroller.
+   */
+  if:x:/@p5.mysql.select/*?count
+    <:int:25
+    p5.web.send-javascript:"p5.hyperlang_end_of_dataset = true;"
+  else
+    p5.web.send-javascript:"delete p5.hyperlang_end_of_dataset;"
+
+  /*
    * Looping through each result from above SQL, and creating one datagrid row
    * for each result.
    */
