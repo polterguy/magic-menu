@@ -29,6 +29,29 @@ create-event:hyperlang.show-options
     events
 
       /*
+       * Invoked when we have a "custom" list of potential results, and not
+       * the default which is taken from the database.
+       */
+      hyperlang.list-options
+
+        /*
+         * Used to separate arguments from the rest of the lambda.
+         */
+        .signal
+
+        /*
+         * Clears previous "li" elements, and clears out the pager viewstate value.
+         */
+        clear-widget:hyperlang-help-list
+        p5.web.viewstate.set:hyperlang.show-options._databind.offset
+          src:0
+        for-each:x:/@.signal/--(!/_arg!/_event)?name
+          create-widget
+            element:li
+            parent:hyperlang-help-list
+            innerValue:x:/@_dp?value
+
+      /*
        * Invoked when the current position is changed, we simply re-databind our
        * help widget.
        */
