@@ -22,7 +22,7 @@ p5.web.include-css-file:@MICRO/media/fonts.css
  * Creating our main wire frame.
  */
 create-widget:hyperlang-main-container
-  class:container
+  class:container hyperlang-editor
   widgets
     div
       class:row

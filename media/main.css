@@ -3,8 +3,8 @@
  * Styles for main plugin button, which initiates Hyperlang.
  */
 
-.container {
-    margin-bottom:150px;
+.hyperlang-editor {
+    padding-bottom:150px;
 }
 
 /*
@@ -18,16 +18,17 @@
  */
 @keyframes hyperlang-listener {
     0% {background-color:rgba(255,255,0,1);}
-    100% {background-color:rgba(128,255,0,.5);}
+    100% {background-color:rgba(128,255,0,1);}
 }
 .hyperlang-listener {
     position:fixed;
     bottom:0;
     left:1rem;
+    background-color:#fefefe;
 }
 .hyperlang-listening {
     animation-name: hyperlang-listener;
-    animation-duration: 1s;
+    animation-duration: .5s;
     animation-iteration-count: infinite;
     animation-direction: alternate;
 }
