@@ -18,7 +18,7 @@ create-event:hyperlang.start
   /*
    * Making sure we reset grammar position.
    */
-  hyperlang.set-position
+  hyperlang.position.set
 
   /*
    * Greets user, and asks for input.

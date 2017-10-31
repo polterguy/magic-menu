@@ -25,8 +25,8 @@ create-event:hyperlang.create-phrase2hyper-association
   /*
    * Checking to see if we're in some specific point in our "grammar tree".
    */
-  hyperlang.get-position
-  if:x:/@hyperlang.get-position?value
+  hyperlang.position.get
+  if:x:/@hyperlang.position.get?value
 
     /*
      * We're in some specific position in our tree, selecting the first phrase
@@ -34,7 +34,7 @@ create-event:hyperlang.create-phrase2hyper-association
      */
     p5.mysql.connect:[hyperlang]
       p5.mysql.scalar:@"select command from phrases p where exists (select * from commands c where c.id = @id and c.id = p.commandid) limit 1"
-        @id:x:/@hyperlang.get-position?value
+        @id:x:/@hyperlang.position.get?value
       eval-x:x:/+/*/*/*
       insert-after:x:/../*/create-widgets/*/micro.widgets.modal/*/widgets/*/h3
         src
@@ -87,6 +87,45 @@ create-event:hyperlang.create-phrase2hyper-association
         hypereval.widgets.hyperlambda-textarea:hyper-input
           element:textarea
           .data-field:hyperlambda
+        literal
+          element:label
+          oninit
+
+            /*
+             * Checking if we have a position, and if so, displaying it's first
+             * command, otherwise simply deleting widget entirely.
+             */
+            hyperlang.position.get
+            if:x:/@hyperlang.position.get?value
+
+              /*
+               * Figuring out the first relevant phrase, and displaying it as
+               * widget's innerValue.
+               */
+              .defaults
+                voice:Karen,en-AU
+              p5.auth.my-settings.get
+              split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
+                =:,
+              split:x:/@split/0/-?name
+                =:-
+              p5.mysql.connect:[hyperlang]
+                p5.mysql.scalar:@"select command from phrases where commandid in (select id from commands where id = @id) and (lang = @lang or lang = @mainlang) limit 1"
+                  @id:x:/@hyperlang.position.get?value
+                  @lang:x:/@split/@split/0/-?name
+                  @mainlang:x:/@split/0?name
+                set-widget-property:x:/../*/_event?value
+                  innerValue:@"Parent: '{0}'"
+                    :x:/@p5.mysql.scalar?value
+
+            else
+
+              /*
+               * Simply deleting widget.
+               */
+              delete-widget:x:/../*/_event?value
+
+        br
         label
           title:Is this a global command, implying something you could tell Elizabeth at any time?
           widgets
@@ -155,7 +194,7 @@ create-event:hyperlang.create-phrase2hyper-association
                       /*
                        * Retrieving current position in grammar tree.
                        */
-                      hyperlang.get-position
+                      hyperlang.position.get
 
                       /*
                        * Checking if this is a "private" command, at which point we
@@ -184,7 +223,7 @@ create-event:hyperlang.create-phrase2hyper-association
                           p5.mysql.insert:@"insert into commands (hyperlambda, username, parent) values (@hyperlambda, @username, @parent)"
                             @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
                             @username:x:/@whoami/*/username?value
-                            @parent:x:/@hyperlang.get-position?value
+                            @parent:x:/@hyperlang.position.get?value
 
                       else
 
@@ -206,7 +245,7 @@ create-event:hyperlang.create-phrase2hyper-association
                            */
                           p5.mysql.insert:@"insert into commands (hyperlambda, parent) values (@hyperlambda, @parent)"
                             @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
-                            @parent:x:/@hyperlang.get-position?value
+                            @parent:x:/@hyperlang.position.get?value
 
                       /*
                        * Splitting synonyms, and inserting one 'phrase' for each.

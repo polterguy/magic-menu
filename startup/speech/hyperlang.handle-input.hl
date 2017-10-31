@@ -41,9 +41,9 @@ create-event:hyperlang.handle-input
    */
   .command
   p5.mysql.connect:[hyperlang]
-    hyperlang.get-position
+    hyperlang.position.get
     whoami
-    if:x:/@hyperlang.get-position?value
+    if:x:/@hyperlang.position.get?value
 
       /*
        * Current position exists, retrieving command having current position 
@@ -56,7 +56,7 @@ create-event:hyperlang.handle-input
 where p.command = @command and (c.parent = @parent or c.global = 1) and (c.username is null or c.username = @username) and (lang = @lang or lang = @mainlang)
 order by `global` limit 1"
         @command:x:/../*/_arg?value
-        @parent:x:/@hyperlang.get-position?value
+        @parent:x:/@hyperlang.position.get?value
         @username:x:/@whoami/*/username?value
         @lang:x:/@split/@split/0/-?name
         @mainlang:x:/@split/0?name
@@ -101,7 +101,7 @@ order by `global` limit 1"
      * Notice, we only update position if we found a command for phrase.
      */
     if:x:/@.command/*
-      hyperlang.set-position:x:/@.command/*/id?value
+      hyperlang.position.set:x:/@.command/*/id?value
 
     /*
      * Checking to see if we actually found a command.

@@ -27,7 +27,7 @@
  * Checking for arguments.
  */
 micro.lambda.contract.optional:x:/..
-  filter:string
+  filter
   offset:long
   keep-items:bool
 

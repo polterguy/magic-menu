@@ -2,7 +2,7 @@
 /*
  * Creates the event that returns the current position in our command hierarchy.
  */
-create-event:hyperlang.get-position
+create-event:hyperlang.position.get
 
   /*
    * Returns the current position to caller.

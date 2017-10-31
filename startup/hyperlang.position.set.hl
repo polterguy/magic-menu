@@ -4,7 +4,7 @@
  *
  * Requires [_arg] being the database ID of a "command" from hyperlang.
  */
-create-event:hyperlang.set-position
+create-event:hyperlang.position.set
 
   /*
    * Sets the current position to the specified [_arg].
