@@ -1,6 +1,8 @@
 
 /*
  * Creates the event that pops one position off from the hierarchy.
+ *
+ * Optionally pass in [no-post] to avoid broadcasting change of position.
  */
 create-event:hyperlang.position.pop
 
@@ -16,6 +18,8 @@ create-event:hyperlang.position.pop
     src
 
   /*
-   * Posting "changed" event.
+   * Posting "changed" event, but only if caller did not say we shouldn't.
    */
-  hyperlang.position.changed
+  if:x:/../*/no-post?value
+    !=:bool:true
+    hyperlang.position.changed

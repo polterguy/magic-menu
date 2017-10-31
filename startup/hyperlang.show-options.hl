@@ -10,11 +10,13 @@ create-event:hyperlang.show-options
   if
     fetch:x:/0/0?value
       widget-exists:hyperlang-help
-    return
+    delete-widget:hyperlang-help
 
   /*
-   * Creates our "help" widget.
+   * Creates our "help" widget, making sure we reset the "pager".
    */
+  p5.web.viewstate.set:hyperlang.show-options._databind.offset
+    src:0
   create-container-widget:hyperlang-help
     class:hyperlang-help rounded shaded bg air-inner
     oninit
@@ -35,6 +37,8 @@ create-event:hyperlang.show-options
         /*
          * Re-databinding grid.
          */
+        p5.web.viewstate.set:hyperlang.show-options._databind.offset
+          src:0
         hyperlang.show-options._databind
 
       /*
@@ -65,6 +69,54 @@ create-event:hyperlang.show-options
                */
               .text:x:/@_dp/#?value
               hyperlang.handle-input:x:/@.text?value
+
+      /*
+       * Loads the 25 next options.
+       */
+      hyperlang.show-options._databind.next
+
+        /*
+         * Lists options, and creates one "li" element for each.
+         */
+        p5.web.viewstate.get:hyperlang.show-options._databind.offset
+        +:x:/@p5.web.viewstate.get/*?value.long
+          _:25
+        eval-x:x:/+/*/offset
+        hyperlang.position.list-options
+          limit:25
+          offset:x:/@+?value.long
+        if:x:/@hyperlang.position.list-options/*?count
+          =:int:0
+
+          /*
+           * No more options.
+           */
+          return:bool:false
+
+        /*
+         * We have more options, re-databinding options widget.
+         */
+        clear-widget:hyperlang-help-list
+        p5.web.viewstate.set:hyperlang.show-options._databind.offset
+          src:x:/@+?value
+        for-each:x:/@hyperlang.position.list-options/*
+          eval-x:x:/+/**/.text
+          create-widget
+            element:li
+            parent:hyperlang-help-list
+            innerValue:x:/@_dp/#?value
+            onclick
+
+              /*
+               * Forward evaluated above.
+               */
+              .text:x:/@_dp/#?value
+              hyperlang.handle-input:x:/@.text?value
+
+        /*
+         * Returning success to caller.
+         */
+        return:bool:true
 
       /*
        * Closes help widget.
