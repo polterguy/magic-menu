@@ -22,6 +22,7 @@ create table if not exists `phrases` (
   `command` varchar(256) collate utf8mb4_unicode_ci not null,
   `lang` varchar(20) collate 'utf8mb4_unicode_ci' not null,
   `commandid` int(10) unsigned null,
+  `lastused` datetime null,
   primary key (`id`),
   unique key `id_UNIQUE` (`id`),
   key `index_command` (`command`(50)),

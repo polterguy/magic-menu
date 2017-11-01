@@ -78,7 +78,7 @@ split:x:/-/0/-?name
  */
 p5.mysql.connect:[hyperlang]
   p5.mysql.select:@"
-select p.id, p.command, p.commandid, p.lang, p2.command as parentphrase, c.username, c.global from 
+select p.*, p2.command as parentphrase, c.username, c.global from 
   phrases p join commands c on c.id = p.commandid,
   phrases p2 join commands c2 on c2.id = p2.commandid
     where p.id in (select min(id) from phrases where (lang = @lang or lang = @mainlang) {0} group by commandid)
@@ -89,7 +89,7 @@ select p3.*, null as parentphrase, c3.username, c3.global from
   phrases p3 join commands c3 on c3.id = p3.commandid
     where p3.id in (select min(id) from phrases where (lang = @lang or lang = @mainlang) {0} group by commandid)
       and c3.parent is null
-order by id desc limit 25 offset @offset"
+order by lastused desc, id desc limit 25 offset @offset"
     :x:/@_where?value
     @lang:x:/@split/@split/0/-?name
     @mainlang:x:/@split/0?name

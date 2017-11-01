@@ -52,7 +52,7 @@ create-event:hyperlang.handle-input
        * Notice, we sort by "global", and we only select the first match, meaning 
        * that commands that are not global will be prioritized.
        */
-      p5.mysql.select:@"select c.id, c.parent, c.hyperlambda, p.command from commands c inner join phrases p on p.commandid = c.id 
+      p5.mysql.select:@"select c.id, c.parent, c.hyperlambda, p.command, p.id as phraseid from commands c inner join phrases p on p.commandid = c.id 
 where (soundex(p.command) = soundex(@command) or p.command = @command or p.command like @command2) and (c.parent = @parent or c.global = 1) and (c.username is null or c.username = @username) and (lang = @lang or lang = @mainlang)
 order by `global` limit 1"
         @command:x:/../*/_arg?value
@@ -77,7 +77,7 @@ order by `global` limit 1"
        * Notice, we sort by "global", and we only select the first match, meaning 
        * that commands that are not global will be prioritized.
        */
-      p5.mysql.select:@"select c.id, c.parent, c.hyperlambda, p.command from commands c inner join phrases p on p.commandid = c.id 
+      p5.mysql.select:@"select c.id, c.parent, c.hyperlambda, p.command, p.id as phraseid from commands c inner join phrases p on p.commandid = c.id 
 where (soundex(p.command) = soundex(@command) or p.command = @command or p.command like @command2) and c.parent is null and (c.username is null or c.username = @username) and (lang = @lang or lang = @mainlang)
 order by `global` limit 1"
         @command:x:/../*/_arg?value
@@ -109,15 +109,37 @@ order by `global` limit 1"
        * specified [_arg].
        */
       hyper2lambda:x:/@.command/*/hyperlambda?value
-      eval:x:/@hyper2lambda
-      if:x:/@eval?value
-        !=:bool:false
+
+      /*
+       * Making sure we wrap evaluation in a try/catch block.
+       */
+      try
+        eval:x:/@hyper2lambda
+        if:x:/@eval?value
+          !=:bool:false
+
+          /*
+           * Notice, if lambda returns "false", we do not push the id of the current
+           * command unto our stack.
+           */
+          hyperlang.position.push:x:/@.command/*/id?value
+
+      catch
 
         /*
-         * Notice, if lambda returns "false", we do not push the id of the current
-         * command unto our stack.
+         * Giving feedback to user.
          */
-        hyperlang.position.push:x:/@.command/*/id?value
+        hyperlang.listen:An exception occurred
+        micro.windows.info:x:/..catch/*/message?value
+          class:micro-windows-info warning
+
+      /*
+       * Updating "lastused" for phrase.
+       */
+      p5.types.date.now
+      p5.mysql.update:@"update phrases set lastused = @lastused where id = @id"
+        @lastused:x:/@p5.types.date.now?value
+        @id:x:/@.command/*/phraseid?value
 
     else
 

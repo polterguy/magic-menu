@@ -32,8 +32,8 @@ create-event:hyperlang.listen
   /*
    * Applying [onfinish], or default value if none was given.
    */
-  add:x:/../**/micro.listen
-    src:x:(/../*/onfinish|/@.defaults/*/onfinish)/$
+  add:x:/../**/micro.listen/*/onfinish/*/try
+    src:x:(/../*/onfinish|/@.defaults/*/onfinish)/$/*
 
   /*
    * Checks to see if caller passed in [_arg], at which point we speak the given [_arg],
@@ -59,6 +59,21 @@ create-event:hyperlang.listen
          */
         micro.listen
           lang:x:/@.defaults/*/lang?value
+          onfinish
+            try
+
+              /*
+               * Will be dynamically populated above.
+               */
+
+            catch
+
+              /*
+               * Giving feedback to user.
+               */
+              hyperlang.listen:An exception occurred
+              micro.windows.info:x:/..catch/*/message?value
+                class:micro-windows-info warning
 
   else
 
@@ -73,3 +88,18 @@ create-event:hyperlang.listen
      */
     micro.listen
       lang:x:/@.defaults/*/lang?value
+      onfinish
+        try
+
+          /*
+           * Will be dynamically populated above.
+           */
+
+        catch
+
+          /*
+           * Giving feedback to user.
+           */
+          hyperlang.listen:An exception occurred
+          micro.windows.info:x:/..catch/*/message?value
+            class:micro-windows-info warning

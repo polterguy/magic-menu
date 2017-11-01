@@ -24,7 +24,7 @@ create-event:hyperlang.show-options
       /*
        * Initial databinding of widget.
        */
-      hyperlang.show-options._databind
+      hyperlang.show-options.databind
 
     events
 
@@ -62,12 +62,12 @@ create-event:hyperlang.show-options
          */
         p5.web.viewstate.set:hyperlang.show-options._databind.offset
           src:0
-        hyperlang.show-options._databind
+        hyperlang.show-options.databind
 
       /*
        * Reloads the different options for current position in grammar tree.
        */
-      hyperlang.show-options._databind
+      hyperlang.show-options.databind
 
         /*
          * Clears previous "li" elements.
@@ -96,7 +96,7 @@ create-event:hyperlang.show-options
       /*
        * Loads the 25 next options.
        */
-      hyperlang.show-options._databind.next
+      hyperlang.show-options.databind.next
 
         /*
          * Lists options, and creates one "li" element for each.
