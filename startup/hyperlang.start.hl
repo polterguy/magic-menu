@@ -45,6 +45,12 @@ create-event:hyperlang.start
         hyperlang.goodbye
         hyperlang.show-options.close
 
+      /*
+       * Attempts to restart the listening loop.
+       */
+      hyperlang.restart
+        hyperlang.listen:x:/../*/_arg?value
+
     widgets
       div
         class:strip

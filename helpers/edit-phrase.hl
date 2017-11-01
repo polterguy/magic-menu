@@ -337,6 +337,71 @@ create-widget
                             class:micro-windows-info warning
 
                     button
+                      innerValue:@"<span class=""icon-plus""></span>"
+                      title:Creates a new child command
+                      style:"margin-bottom:0;"
+                      onclick
+
+                        /*
+                         * Invokes event responsible for creating a new phrase to command
+                         * association, passing in [pos] being currently edited command.
+                         *
+                         * First retrieving "phrase" id.
+                         */
+                        p5.web.widgets.find-first-ancestor:x:/../*/_event?value
+                          .edit
+                        get-widget-property:x:/@p5.web.widgets.find-first-ancestor/*/*?value
+                          .edit
+
+                        /*
+                         * Then we need to retrieve "command" id.
+                         */
+                        p5.mysql.connect:[hyperlang]
+                          p5.mysql.scalar:@"select commandid from phrases where id = @id"
+                            @id:x:/@get-widget-property/*/*?value
+
+                        /*
+                         * Then we invoke event that is responsible for creating a new phrase/command association,
+                         * making sure we pass in [pos] to explicitly override the default positioning logic.
+                         */
+                        eval-x:x:/+/*
+                        hyperlang.create-phrase2hyper-association:New child command
+                          pos:x:/@p5.mysql.connect/*/p5.mysql.scalar?value
+
+                    button
+                      innerValue:@"<span class=""icon-refresh""></span>"
+                      title:Clones the given command
+                      style:"margin-bottom:0;"
+                      onclick
+
+                        /*
+                         * Invokes event responsible for creating a new phrase to command
+                         * association, passing in [pos] being currently edited command.
+                         *
+                         * First retrieving "phrase" id.
+                         */
+                        p5.web.widgets.find-first-ancestor:x:/../*/_event?value
+                          .edit
+                        get-widget-property:x:/@p5.web.widgets.find-first-ancestor/*/*?value
+                          .edit
+
+                        /*
+                         * Then we need to retrieve "command" id.
+                         */
+                        p5.mysql.connect:[hyperlang]
+                          p5.mysql.select:@"select parent, hyperlambda from commands where id in (select commandid from phrases where id = @id)"
+                            @id:x:/@get-widget-property/*/*?value
+
+                        /*
+                         * Then we invoke event that is responsible for creating a new phrase/command association,
+                         * making sure we pass in [pos] to explicitly override the default positioning logic.
+                         */
+                        eval-x:x:/+/*
+                        hyperlang.create-phrase2hyper-association:New child command
+                          pos:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/parent?value
+                          hyperlambda:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/hyperlambda?value
+
+                    button
                       innerValue:@"<span class=""icon-trash""></span>"
                       title:Deletes command object, and all associated synonyms
                       style:"margin-bottom:0;"

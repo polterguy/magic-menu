@@ -4,8 +4,19 @@
  * Hyperlambda. User is expected to be "root" to be allowed evaluating this lambda.
  *
  * Expects [_arg] to be phrase to create association for.
+ *
+ * Optionally pass in [pos] being the parent phrase to create phrase to command association for.
  */
 create-event:hyperlang.create-phrase2hyper-association
+
+  /*
+   * Sanity checking arguments.
+   */
+  micro.lambda.contract.min:x:/..
+    _arg:string
+  micro.lambda.contract.optional:x:/..
+    pos:long
+    hyperlambda:string
 
   /*
    * Verifying user is root, and if not, we don't allow him to evaluate event.
@@ -25,22 +36,24 @@ create-event:hyperlang.create-phrase2hyper-association
   /*
    * Checking to see if we're in some specific point in our "grammar tree".
    */
+  _pos
   hyperlang.position.get
-  if:x:/@hyperlang.position.get?value
+  if:x:/../*/pos?value
+
+    /*
+     * Using explicitly given position from [pos].
+     */
+    set:x:/@_pos?value
+      src:x:/../*/pos?value
+
+  else-if:x:/@hyperlang.position.get?value
 
     /*
      * We're in some specific position in our tree, selecting the first phrase
      * matching our command.
      */
-    p5.mysql.connect:[hyperlang]
-      p5.mysql.scalar:@"select command from phrases p where exists (select * from commands c where c.id = @id and c.id = p.commandid) limit 1"
-        @id:x:/@hyperlang.position.get?value
-      eval-x:x:/+/*/*/*
-      insert-after:x:/../*/create-widgets/*/micro.widgets.modal/*/widgets/*/h3
-        src
-          p
-            innerValue:Parent grammer object '{0}'
-              :x:/@p5.mysql.scalar?value
+    set:x:/@_pos?value
+      src:x:/@hyperlang.position.get?value
 
   /*
    * Figuring out current language.
@@ -63,7 +76,7 @@ create-event:hyperlang.create-phrase2hyper-association
    * a piece of Hyperlambda, which will result in associating the specified Hyperlambda
    * with the given [_arg] phrase.
    */
-  eval-x:x:/+/*/*/*/h3/*/innerValue|/+/**/widgets/=radio-buttons/*(/input/*/.data-value|/span/*/innerValue)
+  eval-x:x:/+/*/*/*/h3/*/innerValue|/+/**/widgets/=radio-buttons/*(/input/*/.data-value|/span/*/innerValue)|/+/**(/_pos|/hypereval.widgets.hyperlambda-textarea)
   create-widgets
     micro.widgets.modal:hyperlang-create-phrase2hyper-association
       widgets
@@ -87,16 +100,65 @@ create-event:hyperlang.create-phrase2hyper-association
         hypereval.widgets.hyperlambda-textarea:hyper-input
           element:textarea
           .data-field:hyperlambda
+          value:x:/../*/hyperlambda?value
+        label
+          title:Is this a global command, implying something you could tell Elizabeth at any time?
+          style:"margin-bottom:0;"
+          widgets
+            input
+              type:checkbox
+              .data-field:global
+            span
+              innerValue:Global
+        label
+          title:Should this phrase only apply for you?
+          style:"margin-bottom:0;"
+          widgets
+            input
+              type:checkbox
+              .data-field:private
+              checked
+            span
+              innerValue:Private phrase
+        label
+          style:"margin-bottom:0;"
+          widgets:radio-buttons
+            input
+              type:radio
+              checked
+              .data-field:lang
+              .data-value:x:/@split/0?name
+              name:hyperlang-name
+            span
+              innerValue:x:/@split/0?name
+              title:Is this a 'main language phrase'
+        label
+          style:"margin-bottom:0;"
+          widgets:radio-buttons
+            input
+              type:radio
+              .data-field:lang
+              .data-value:{0}-{1}
+                :x:/@split/0?name
+                :x:/@split/1?name
+              name:hyperlang-name
+            span
+              innerValue::{0}-{1}
+                :x:/@split/0?name
+                :x:/@split/1?name
+              title:Is this a 'minor language phrase'
+        br
         literal
           element:label
+          style:"position:absolute;bottom:0;left:2rem;"
           oninit
 
             /*
              * Checking if we have a position, and if so, displaying it's first
              * command, otherwise simply deleting widget entirely.
              */
-            hyperlang.position.get
-            if:x:/@hyperlang.position.get?value
+            _pos:x:/../*/_pos?value
+            if:x:/@_pos?value
 
               /*
                * Figuring out the first relevant phrase, and displaying it as
@@ -111,7 +173,7 @@ create-event:hyperlang.create-phrase2hyper-association
                 =:-
               p5.mysql.connect:[hyperlang]
                 p5.mysql.scalar:@"select command from phrases where commandid in (select id from commands where id = @id) and (lang = @lang or lang = @mainlang) limit 1"
-                  @id:x:/@hyperlang.position.get?value
+                  @id:x:/@_pos?value
                   @lang:x:/@split/@split/0/-?name
                   @mainlang:x:/@split/0?name
                 set-widget-property:x:/../*/_event?value
@@ -125,47 +187,6 @@ create-event:hyperlang.create-phrase2hyper-association
                */
               delete-widget:x:/../*/_event?value
 
-        br
-        label
-          title:Is this a global command, implying something you could tell Elizabeth at any time?
-          widgets
-            input
-              type:checkbox
-              .data-field:global
-            span
-              innerValue:Global
-        label
-          title:Should this phrase only apply for you?
-          widgets
-            input
-              type:checkbox
-              .data-field:private
-            span
-              innerValue:Private phrase
-        br
-        label
-          widgets:radio-buttons
-            input
-              type:radio
-              checked
-              .data-field:lang
-              .data-value:x:/@split/0?name
-              name:hyperlang-name
-            span
-              innerValue:x:/@split/0?name
-        label
-          widgets:radio-buttons
-            input
-              type:radio
-              .data-field:lang
-              .data-value:{0}-{1}
-                :x:/@split/0?name
-                :x:/@split/1?name
-              name:hyperlang-name
-            span
-              innerValue::{0}-{1}
-                :x:/@split/0?name
-                :x:/@split/1?name
         div
           class:right
           widgets
@@ -191,9 +212,9 @@ create-event:hyperlang.create-phrase2hyper-association
                     p5.mysql.connect:[hyperlang]
 
                       /*
-                       * Retrieving current position in grammar tree.
+                       * Forward evaluated above.
                        */
-                      hyperlang.position.get
+                      _pos:x:/../*/_pos?value
 
                       /*
                        * Checking if this is a "private" command, at which point we
@@ -222,7 +243,7 @@ create-event:hyperlang.create-phrase2hyper-association
                           p5.mysql.insert:@"insert into commands (hyperlambda, username, parent) values (@hyperlambda, @username, @parent)"
                             @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
                             @username:x:/@whoami/*/username?value
-                            @parent:x:/@hyperlang.position.get?value
+                            @parent:x:/@_pos?value
 
                       else
 
@@ -244,7 +265,7 @@ create-event:hyperlang.create-phrase2hyper-association
                            */
                           p5.mysql.insert:@"insert into commands (hyperlambda, parent) values (@hyperlambda, @parent)"
                             @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
-                            @parent:x:/@hyperlang.position.get?value
+                            @parent:x:/@_pos?value
 
                       /*
                        * Splitting synonyms, and inserting one 'phrase' for each.
@@ -265,7 +286,7 @@ create-event:hyperlang.create-phrase2hyper-association
                     /*
                      * Restarting input loop.
                      */
-                    hyperlang.listen:[OK]
+                    hyperlang.restart:[OK]
 
                 button
                   innerValue:Cancel
@@ -280,4 +301,4 @@ create-event:hyperlang.create-phrase2hyper-association
                     /*
                      * Restarting input loop.
                      */
-                    hyperlang.listen:[Talk to me]
+                    hyperlang.restart:[Talk to me]
