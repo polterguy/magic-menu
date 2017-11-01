@@ -9,6 +9,13 @@
 create-event:desktop.plugins.post.initialize-page
 
   /*
+   * We only allow speech recognition for registered users in system.
+   */
+  whoami
+  if:x:/@whoami/*/default?value
+    return
+
+  /*
    * Trying to find the first widget on page with a CSS class containing the text "toolbar".
    */
   p5.web.widgets.find-first-like
