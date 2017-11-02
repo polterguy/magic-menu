@@ -120,7 +120,7 @@ order by lastused desc, id desc limit 25 offset @offset"
             literal
               element:span
               class:icon-check
-    eval-x:x:/+/*/*/*(/Command|/Language|/Parent|/Username)|/+/*/*/*/*/.id
+    eval-x:x:/+/*/*/*(/Command|/Parent|/Username)|/+/*/*/*/*/.id
     add:x:/../*/micro.widgets.grid.databind
       src
         item
@@ -139,7 +139,6 @@ order by lastused desc, id desc limit 25 offset @offset"
 
           Command:x:/@_dp/#/*/command?value
           Parent:x:/@_dp/#/*/parentphrase?value
-          Language:x:/@_dp/#/*/lang?value
           Username:x:/@_dp/#/*/username?value
           Global
 

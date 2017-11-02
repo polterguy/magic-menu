@@ -70,3 +70,42 @@ label.hyperlang-tip {
 label.input-label {
     min-width:0;
 }
+.hyperlang-grid tr th:nth-child(2),
+.hyperlang-grid tr td:nth-child(2),
+.hyperlang-grid tr th:nth-child(3),
+.hyperlang-grid tr td:nth-child(3),
+.hyperlang-grid tr th:nth-child(4),
+.hyperlang-grid tr td:nth-child(4) {
+    display: none;
+}
+.hyperlang-grid tr th:nth-child(4),
+.hyperlang-grid tr td:nth-child(4) {
+    width: 5px;
+    text-align: right;
+    white-space:nowrap;
+}
+.hyperlang-grid tr th:nth-child(2),
+.hyperlang-grid tr td:nth-child(2),
+.hyperlang-grid tr th:nth-child(3),
+.hyperlang-grid tr td:nth-child(3) {
+    white-space: nowrap;
+    width: 5px;
+}
+@media screen and (min-width: 450px) {
+    .hyperlang-grid tr th:nth-child(4),
+    .hyperlang-grid tr td:nth-child(4) {
+        display:table-cell;
+    }
+}
+@media screen and (min-width: 550px) {
+    .hyperlang-grid tr th:nth-child(3),
+    .hyperlang-grid tr td:nth-child(3) {
+        display: table-cell;
+    }
+}
+@media screen and (min-width: 800px) {
+    .hyperlang-grid tr th:nth-child(2),
+    .hyperlang-grid tr td:nth-child(2) {
+        display: table-cell;
+    }
+}

@@ -171,11 +171,10 @@ create-widget:hyperlang-main-container
              * Grid containing all words and phrasese Hyperlang understands.
              */
             micro.widgets.grid:hyperlang-phrases-grid
-              class:hover striped
+              class:hover striped hyperlang-grid
               columns
                 Command
                 Parent
-                Language
                 Username
                 Global
               oninit
