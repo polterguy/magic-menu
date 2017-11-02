@@ -6,6 +6,8 @@
  * Expects [_arg] to be phrase to create association for.
  *
  * Optionally pass in [pos] being the parent phrase to create phrase to command association for.
+ * You can also pass in [force-parent] and set its value to boolean "true", to make sure user can't
+ * make the command become a "global" command.
  */
 create-event:hyperlang.create-phrase2hyper-association
 
@@ -17,6 +19,7 @@ create-event:hyperlang.create-phrase2hyper-association
   micro.lambda.contract.optional:x:/..
     pos:long
     hyperlambda:string
+    force-parent:bool
 
   /*
    * Verifying user is root, and if not, we don't allow him to evaluate event.
@@ -56,6 +59,13 @@ create-event:hyperlang.create-phrase2hyper-association
       src:x:/@hyperlang.position.get?value
 
   /*
+   * Checking if user provided [force-parent], and if so, deleting the "Global"
+   * checkbox, to make sure user can't create a global command.
+   */
+  if:x:/../*/force-parent?value
+    set:x:/../*/create-widgets/**/.data-field/=global/././.
+
+  /*
    * Figuring out current language.
    */
   p5.auth.my-settings.get
@@ -76,22 +86,22 @@ create-event:hyperlang.create-phrase2hyper-association
    * a piece of Hyperlambda, which will result in associating the specified Hyperlambda
    * with the given [_arg] phrase.
    */
-  eval-x:x:/+/*/*/*/h3/*/innerValue|/+/**/widgets/=radio-buttons/*(/input/*/.data-value|/span/*/innerValue)|/+/**(/_pos|/hypereval.widgets.hyperlambda-textarea)
+  eval-x:x:/+/**/widgets/=radio-buttons/*(/input/*/.data-value|/span/*/innerValue)|/+/**(/_pos|/hypereval.widgets.hyperlambda-textarea)
   create-widgets
     micro.widgets.modal:hyperlang-create-phrase2hyper-association
       widgets
         h3
-          innerValue:Configure <em>'{0}'</em>
-            :x:/../*/_arg?value
+          innerValue:New association
         label
-          innerValue:Synonymous phrases
+          innerValue:Phrase(s)
           for:hyperlang-synonymous-phrases
           style:"margin-bottom:0;"
         literal:hyperlang-synonymous-phrases
           element:textarea
           class:fill
           rows:5
-          placeholder:Type in synonymous phrases here, one for each line ...
+          placeholder:Type in phrase(s) here, one for each line ...
+          title:Phrase(s), one for each line
           .data-field:synonyms
           value:x:/../*/_arg?value
         label
@@ -108,6 +118,22 @@ create-event:hyperlang.create-phrase2hyper-association
             input
               type:checkbox
               .data-field:global
+              onchange
+
+                /*
+                 * Toggling "parent" label according to whether or not "Global" command
+                 * checkbox is checked or not, since if it's checked, we don't insert
+                 * any parent relationship.
+                 */
+                get-widget-property:x:/../*/_event?value
+                  checked
+                if:x:/@get-widget-property/*/*
+                  set-widget-property:hyperlang-create-phrase-parent-label
+                    visible:false
+                else
+                  set-widget-property:hyperlang-create-phrase-parent-label
+                    visible:true
+
             span
               innerValue:Global
         label
@@ -120,37 +146,9 @@ create-event:hyperlang.create-phrase2hyper-association
               checked
             span
               innerValue:Private phrase
-        label
-          style:"margin-bottom:0;"
-          widgets:radio-buttons
-            input
-              type:radio
-              checked
-              .data-field:lang
-              .data-value:x:/@split/0?name
-              name:hyperlang-name
-            span
-              innerValue:x:/@split/0?name
-              title:Is this a 'main language phrase'
-        label
-          style:"margin-bottom:0;"
-          widgets:radio-buttons
-            input
-              type:radio
-              .data-field:lang
-              .data-value:{0}-{1}
-                :x:/@split/0?name
-                :x:/@split/1?name
-              name:hyperlang-name
-            span
-              innerValue::{0}-{1}
-                :x:/@split/0?name
-                :x:/@split/1?name
-              title:Is this a 'minor language phrase'
-        br
-        literal
-          element:label
-          style:"position:absolute;bottom:0;left:2rem;"
+        literal:hyperlang-create-phrase-parent-label
+          element:span
+          style:"position:absolute;top:1rem;right:1rem;font-style:italic;color:#a0a0a0;"
           oninit
 
             /*
@@ -172,10 +170,10 @@ create-event:hyperlang.create-phrase2hyper-association
               split:x:/@split/0/-?name
                 =:-
               p5.mysql.connect:[hyperlang]
-                p5.mysql.scalar:@"select command from phrases where commandid in (select id from commands where id = @id) and (lang = @lang or lang = @mainlang) limit 1"
+                p5.mysql.scalar:@"select command from phrases where commandid in (select id from commands where id = @id) and (lang = @lang or lang = @sublang) limit 1"
                   @id:x:/@_pos?value
                   @lang:x:/@split/@split/0/-?name
-                  @mainlang:x:/@split/0?name
+                  @sublang:x:/@split/0?name
                 set-widget-property:x:/../*/_event?value
                   innerValue:@"Parent: '{0}'"
                     :x:/@p5.mysql.scalar?value
@@ -200,93 +198,166 @@ create-event:hyperlang.create-phrase2hyper-association
                   onclick
 
                     /*
-                     * Retrieving code from CodeMirror widget, and creating an
-                     * association between phrase and code, before we close widget
-                     * and restarts listening loop.
+                     * Making sure we wrap our insertion in a try catch block, in case
+                     * user typed in "errors" in his command object.
                      */
-                    micro.form.serialize:hyperlang-create-phrase2hyper-association
-
-                    /*
-                     * Connecting to database, and inserting into "commands" and "phrases".
-                     */
-                    p5.mysql.connect:[hyperlang]
+                    try
 
                       /*
-                       * Forward evaluated above.
+                       * Retrieving code from CodeMirror widget, and creating an
+                       * association between phrase and code, before we close widget
+                       * and restarts listening loop.
                        */
-                      _pos:x:/../*/_pos?value
+                      micro.form.serialize:hyperlang-create-phrase2hyper-association
 
                       /*
-                       * Checking if this is a "private" command, at which point we
-                       * insert it with the currently logged in user's username.
+                       * Verifying user actually provided any Hyperlambda, and if not,
+                       * we throw an exception.
                        */
-                      if:x:/@micro.form.serialize/*/private?value
+                      if:x:/@micro.form.serialize/*/hyperlambda?value
+                        =:
+                        throw:No Hyperlambda was supplied
+
+                      /*
+                       * Connecting to database, and inserting into "commands" and "phrases",
+                       * making sure we wrap our attempt inside a transaction, to avoid inserting
+                       * "bad partial command objects".
+                       */
+                      p5.mysql.connect:[hyperlang]
+                        p5.mysql.transaction.begin
+
+                          /*
+                           * Forward evaluated above.
+                           */
+                          _pos:x:/../*/_pos?value
+
+                          /*
+                           * Checking if this is a "private" command, at which point we
+                           * insert it with the currently logged in user's username.
+                           */
+                          if:x:/@micro.form.serialize/*/private?value
+
+                            /*
+                             * Private command, checking if it's global.
+                             */
+                            whoami
+                            if:x:/@micro.form.serialize/*/global?value
+
+                              /*
+                               * Global command, implying no "parent" relationship.
+                               */
+                              p5.mysql.insert:@"insert into commands (hyperlambda, username, global) values (@hyperlambda, @username, 1)"
+                                @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
+                                @username:x:/@whoami/*/username?value
+
+                            else
+
+                              /*
+                               * Not a global command, inserting also "parent"
+                               */
+                              p5.mysql.insert:@"insert into commands (hyperlambda, username, parent) values (@hyperlambda, @username, @parent)"
+                                @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
+                                @username:x:/@whoami/*/username?value
+                                @parent:x:/@_pos?value
+
+                          else
+
+                            /*
+                             * Public command, checking if it's global.
+                             */
+                            if:x:/@micro.form.serialize/*/global?value
+
+                              /*
+                               * Global command, implying no "parent" relationship.
+                               */
+                              p5.mysql.insert:@"insert into commands (hyperlambda, global) values (@hyperlambda, 1)"
+                                @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
+
+                            else
+
+                              /*
+                               * Not a global command, inserting also "parent"
+                               */
+                              p5.mysql.insert:@"insert into commands (hyperlambda, parent) values (@hyperlambda, @parent)"
+                                @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
+                                @parent:x:/@_pos?value
+
+                          /*
+                           * Splitting synonyms, and inserting one 'phrase' for each.
+                           *
+                           * Defaulting language to user's configure language, and only overriding the language,
+                           * if user explicitly chose to override it, with a ":".
+                           */
+                          hyperlang.language.get
+                          split:x:/@micro.form.serialize/*/synonyms?value
+                            =:"\r\n"
+                          p5.types.date.now
+                          for-each:x:/@split/*?name
+
+                            /*
+                             * Figuring out language currently iterated phrase is.
+                             *
+                             * Defaulting to "lang" for user.
+                             */
+                            _lang
+                            split:x:/@_dp?value
+                              =:":"
+                            if:x:/@split/*?count
+                              =:int:2
+
+                              /*
+                               * Explicit language declaration.
+                               */
+                              set:x:/@_lang?value
+                                src:x:/@split/0?name
+
+                            else-if:x:/@split/*?count
+                              =:int:1
+
+                              /*
+                               * Using default language.
+                               */
+                              set:x:/@_lang?value
+                                src:x:/@hyperlang.language.get/*/lang?value
+
+                            else
+
+                              /*
+                               * "Syntax error" in phrase, more than one ":" was supplied.
+                               */
+                              throw:@"Oops, you can't use a "":"" in your phrase, except for declaring language to use"
+
+                            /*
+                             * Inserting currently iterated phrase.
+                             */
+                            p5.mysql.insert:@"insert into phrases (command, commandid, lang, lastused) values (@command, @commandid, @lang, @lastused)"
+                              @command:x:/@split/0/-?name
+                              @commandid:x:/..p5.mysql.connect/**/p5.mysql.insert/*/id/[0,1]?value
+                              @lang:x:/@_lang?value
+                              @lastused:x:/@p5.types.date.now?value
+
+                          /*
+                           * Success, committing transaction.
+                           */
+                          p5.mysql.transaction.commit
 
                         /*
-                         * Private command, checking if it's global.
+                         * Closing modal widget, and restarting listening loop.
                          */
-                        whoami
-                        if:x:/@micro.form.serialize/*/global?value
-
-                          /*
-                           * Global command, implying no "parent" relationship.
-                           */
-                          p5.mysql.insert:@"insert into commands (hyperlambda, username, global) values (@hyperlambda, @username, 1)"
-                            @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
-                            @username:x:/@whoami/*/username?value
-
-                        else
-
-                          /*
-                           * Not a global command, inserting also "parent"
-                           */
-                          p5.mysql.insert:@"insert into commands (hyperlambda, username, parent) values (@hyperlambda, @username, @parent)"
-                            @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
-                            @username:x:/@whoami/*/username?value
-                            @parent:x:/@_pos?value
-
-                      else
+                        delete-widget:hyperlang-create-phrase2hyper-association
 
                         /*
-                         * Public command, checking if it's global.
+                         * Restarting input loop.
                          */
-                        if:x:/@micro.form.serialize/*/global?value
+                        hyperlang.restart:[OK]
 
-                          /*
-                           * Global command, implying no "parent" relationship.
-                           */
-                          p5.mysql.insert:@"insert into commands (hyperlambda, global) values (@hyperlambda, 1)"
-                            @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
-
-                        else
-
-                          /*
-                           * Not a global command, inserting also "parent"
-                           */
-                          p5.mysql.insert:@"insert into commands (hyperlambda, parent) values (@hyperlambda, @parent)"
-                            @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
-                            @parent:x:/@_pos?value
+                    catch
 
                       /*
-                       * Splitting synonyms, and inserting one 'phrase' for each.
+                       * Oops, providing feedback to user.
                        */
-                      split:x:/@micro.form.serialize/*/synonyms?value
-                        =:"\r\n"
-                      for-each:x:/@split/*?name
-                        p5.mysql.insert:@"insert into phrases (command, commandid, lang) values (@command, @commandid, @lang)"
-                          @command:x:/@_dp?value
-                          @commandid:x:/..p5.mysql.connect/**/p5.mysql.insert/*/id/[0,1]?value
-                          @lang:x:/@micro.form.serialize/*/lang?value
-
-                    /*
-                     * Closing modal widget, and restarting listening loop.
-                     */
-                    delete-widget:hyperlang-create-phrase2hyper-association
-
-                    /*
-                     * Restarting input loop.
-                     */
-                    hyperlang.restart:[OK]
+                      micro.windows.info:x:/..catch/*/message?value
+                        class:micro-windows-info warning
 
                 button
                   innerValue:Cancel

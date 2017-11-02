@@ -38,9 +38,8 @@ if:x:/@p5.web.widgets.find/*/*?value
 p5.mysql.connect:[hyperlang]
   p5.mysql.select:@"select * from phrases where id = @id"
     @id:x:/../*/id?value
-  p5.mysql.select:@"select * from phrases where commandid = @commandid and id != @id"
+  p5.mysql.select:@"select * from phrases where commandid = @commandid"
     @commandid:x:/./-/*/*/commandid?value
-    @id:x:/../*/id?value
   p5.mysql.select:@"select hyperlambda, parent, global, username from commands where id = @commandid"
     @commandid:x:/./-2/*/*/commandid?value
 
@@ -108,15 +107,15 @@ create-widget
         container
           class:rounded shaded bg air-inner air-top
           widgets
-            h3
-              innerValue:Edit item
             micro.widgets.wizard-form
-              text
-                info:Phrase
-                .data-field:command
-                value:"{0}:{1}"
-                  :x:/@p5.mysql.connect/*/p5.mysql.select/[0,1]/*/*/lang?value
-                  :x:/@p5.mysql.connect/*/p5.mysql.select/[0,1]/*/*/command?value
+              label
+                innerValue:Phrase(s)
+                style:"margin-bottom:0;"
+              textarea
+                info:Phrase(s), one for each line
+                rows:5
+                value:x:/@join?value
+                .data-field:synonyms
               label
                 innerValue:Hyperlambda
                 style:"margin-bottom:0;"
@@ -125,14 +124,6 @@ create-widget
                   hypereval.widgets.hyperlambda-textarea
                     .data-field:hyperlambda
                     value:x:/@p5.mysql.connect/*/p5.mysql.select/[2,3]/*/*/hyperlambda?value
-              label
-                innerValue:Synonymous words or phrases
-                style:"margin-bottom:0;"
-              textarea
-                info:Synonymous phrases ...
-                rows:10
-                value:x:/@join?value
-                .data-field:synonyms
               checkbox
                 info:Global
                 .data-field:global
@@ -198,45 +189,10 @@ create-widget
                                 @id:x:/@get-widget-property/*/*?value
 
                               /*
-                               * Updating "lead phrase", checking if user provided a language for it.
+                               * Deleting all "old" phrases.
                                */
-                              split:x:/@micro.form.serialize/*/command?value
-                                =:":"
-                              if:x:/@split/*?count
-                                =:int:2
-
-                                /*
-                                 * User provided a language definition.
-                                 */
-                                hyperlang._assume-language-exists:x:/@split/0?name
-                                p5.mysql.update:@"update phrases set command = @command, lang = @lang where id = @id"
-                                  @command:x:/@split/0/-?name
-                                  @lang:x:/@split/0?name
-                                  @id:x:/@get-widget-property/*/*?value
-
-                              else-if:x:/@split/*?count
-                                =:int:1
-
-                                /*
-                                 * No language definition, assuming no change in language.
-                                 */
-                                p5.mysql.update:@"update phrases set command = @command where id = @id"
-                                  @command:x:/@micro.form.serialize/*/command?value
-                                  @id:x:/@get-widget-property/*/*?value
-
-                              else
-
-                                /*
-                                 * User provided two or more ":" in his language phrase, which is not allowed.
-                                 */
-                                throw:@"Sorry, you can't use ':' in your phrases, except for describing language"
-
-                              /*
-                               * Deleting all "old" synonyms.
-                               */
-                              p5.mysql.delete:@"delete from phrases where commandid = @commandid and id != @id"
+                              p5.mysql.delete:@"delete from phrases where commandid = @commandid"
                                 @commandid:x:/@p5.mysql.scalar?value
-                                @id:x:/@get-widget-property/*/*?value
 
                               /*
                                * Figuring out language for current user, which is necessary to filter our results.
@@ -367,6 +323,7 @@ create-widget
                         eval-x:x:/+/*
                         hyperlang.create-phrase2hyper-association:New child command
                           pos:x:/@p5.mysql.connect/*/p5.mysql.scalar?value
+                          force-parent:bool:true
 
                     button
                       innerValue:@"<span class=""icon-refresh""></span>"
@@ -404,6 +361,7 @@ create-widget
                         eval-x:x:/+/*
                         hyperlang.create-phrase2hyper-association:New cloned command
                           hyperlambda:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/hyperlambda?value
+                          force-parent:bool:true
 
                     button
                       innerValue:@"<span class=""icon-trash""></span>"
