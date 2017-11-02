@@ -32,7 +32,7 @@ hyperlang.listen:OK, I did that. What do you want me to do now?
  * if you return ""true"", or nothing at all, the stack is updated, and the
  * current command becomes the ""current position"" in your ""grammar tree"".
  */
-//return:bool:true
+//return:bool:false
 "
 
   /*
