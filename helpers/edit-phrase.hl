@@ -167,7 +167,7 @@ create-widget
                   style:"display:inline-block;"
                   widgets
                     button
-                      innerValue:@"<span class=""icon-check""></span>"
+                      innerValue:@"<span class=""icon-floppy-o""></span>"
                       title:Saves command object, and all associated synonyms
                       style:"margin-bottom:0;"
                       events
@@ -310,9 +310,10 @@ create-widget
                               p5.mysql.transaction.commit
 
                               /*
-                               * Closing editor widget.
+                               * Giving user feedback.
                                */
-                              delete-widget:x:/@p5.web.widgets.find-first-ancestor/*/*?value
+                              micro.windows.info:Command successfully saved
+                                class:micro-windows-info success
 
                               /*
                                * Making sure update database id for currently updated row.
