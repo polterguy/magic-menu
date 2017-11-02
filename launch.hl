@@ -28,122 +28,132 @@ create-widget:hyperlang-main-container
       class:row
       widgets
         div
-          class:col-100
+          class:col-70 right
           widgets
             div
-              class:right
+              class:strip fill
               widgets
-                div
-                  class:strip toolbar
-                  style:"display:inline-block;"
-                  widgets
-                    container:hyperlang-select-language
-                      element:select
-                      oninit
+                input:hyperlang-search-textbox
+                  type:text
+                  placeholder:Filter ...
+                  onkeydown:@"if (event.keyCode == 13) {p5.$('hyperlang-search-button').raise('onclick');return false;}"
+
+                container:hyperlang-select-language
+                  element:select
+                  style:"width:40%;"
+                  oninit
+
+                    /*
+                     * Selecting all supported languages, which depends upon
+                     * your browser's supported speech languages.
+                     */
+                    micro.speak.query-voices
+                      onfinish
 
                         /*
-                         * Selecting all supported languages, which depends upon
-                         * your browser's supported speech languages.
+                         * Looping through each voice, and creating one option element for each.
+                         *
+                         * But first creating our "select voice" option element.
                          */
-                        micro.speak.query-voices
-                          onfinish
-
-                            /*
-                             * Looping through each voice, and creating one option element for each.
-                             *
-                             * But first creating our "select voice" option element.
-                             */
-                            create-widget
-                              parent:hyperlang-select-language
-                              element:option
-                              innerValue:Select voice ...
-                              value:_default
-                            for-each:x:/../*/voices/*
-                              create-widget
-                                parent:hyperlang-select-language
-                                element:option
-                                innerValue:{0},{1}
-                                  :x:/@_dp/#?name
-                                  :x:/@_dp/#?value
-                                value:{0},{1}
-                                  :x:/@_dp/#?name
-                                  :x:/@_dp/#?value
-
-                            /*
-                             * Setting widget's initial value to language setting for user, if possible.
-                             */
-                            p5.auth.my-settings.get
-                            if:x:/@p5.auth.my-settings.get/*/hyperlang/*/voice?value
-                              set-widget-property:hyperlang-select-language
-                                value:x:/@p5.auth.my-settings.get/*/hyperlang/*/voice?value
-
-
-                      onchange
+                        create-widget
+                          parent:hyperlang-select-language
+                          element:option
+                          innerValue:Select voice ...
+                          value:_default
+                        for-each:x:/../*/voices/*
+                          create-widget
+                            parent:hyperlang-select-language
+                            element:option
+                            innerValue:{0},{1}
+                              :x:/@_dp/#?name
+                              :x:/@_dp/#?value
+                            value:{0},{1}
+                              :x:/@_dp/#?name
+                              :x:/@_dp/#?value
 
                         /*
-                         * Updating user's settings according to voice selected.
+                         * Setting widget's initial value to language setting for user, if possible.
                          */
-                        get-widget-property:x:/../*/_event?value
-                          value
                         p5.auth.my-settings.get
-                        if:x:/@p5.auth.my-settings.get/*/hyperlang
-                          not
-                          add:x:/@p5.auth.my-settings.get
-                            src:hyperlang
-                        set:x:/@p5.auth.my-settings.get/*/hyperlang/*/voice
-                        eval-x:x:/+/*/*
-                        add:x:/@p5.auth.my-settings.get/*/hyperlang
-                          src
-                            voice:x:/@get-widget-property/*/*?value
-                        add:x:/../*/p5.auth.my-settings.set
-                          src:x:/@p5.auth.my-settings.get/*
-                        p5.auth.my-settings.set
+                        if:x:/@p5.auth.my-settings.get/*/hyperlang/*/voice?value
+                          set-widget-property:hyperlang-select-language
+                            value:x:/@p5.auth.my-settings.get/*/hyperlang/*/voice?value
 
-                        /*
-                         * Re-databinding grid.
-                         */
-                        micro.evaluate.file:@HYPERLANG/helpers/databind-grid.hl
+                  onchange
 
-                    input:hyperlang-search-textbox
-                      type:text
-                      placeholder:Filter ...
-                      onkeydown:@"if (event.keyCode == 13) {p5.$('hyperlang-search-button').raise('onclick');return false;}"
+                    /*
+                     * Updating user's settings according to voice selected.
+                     */
+                    get-widget-property:x:/../*/_event?value
+                      value
+                    p5.auth.my-settings.get
+                    if:x:/@p5.auth.my-settings.get/*/hyperlang
+                      not
+                      add:x:/@p5.auth.my-settings.get
+                        src:hyperlang
+                    set:x:/@p5.auth.my-settings.get/*/hyperlang/*/voice
+                    eval-x:x:/+/*/*
+                    add:x:/@p5.auth.my-settings.get/*/hyperlang
+                      src
+                        voice:x:/@get-widget-property/*/*?value
+                    add:x:/../*/p5.auth.my-settings.set
+                      src:x:/@p5.auth.my-settings.get/*
+                    p5.auth.my-settings.set
 
-                    button:hyperlang-search-button
-                      innerValue:@"<span class=""icon-search""></span>"
-                      title:Search
-                      onclick
+                    /*
+                     * Re-databinding grid.
+                     */
+                    micro.evaluate.file:@HYPERLANG/helpers/databind-grid.hl
 
-                        /*
-                         * Retrieving filter, and re-databinding grid, now with the specified filter condition.
-                         */
-                        get-widget-property:hyperlang-search-textbox
-                          value
-                        eval-x:x:/+/*
-                        micro.evaluate.file:@HYPERLANG/helpers/databind-grid.hl
-                          filter:x:/@get-widget-property/*/*?value
+                button:hyperlang-search-button
+                  innerValue:@"<span class=""icon-search""></span>"
+                  title:Search
+                  onclick
 
-                        /*
-                         * For simplicity, we set focus to search textbox again.
-                         */
-                        micro.page.set-focus:hyperlang-search-textbox
+                    /*
+                     * Retrieving filter, and re-databinding grid, now with the specified filter condition.
+                     */
+                    get-widget-property:hyperlang-search-textbox
+                      value
+                    eval-x:x:/+/*
+                    micro.evaluate.file:@HYPERLANG/helpers/databind-grid.hl
+                      filter:x:/@get-widget-property/*/*?value
 
-                        /*
-                         * Making sure we store filter.
-                         */
-                        p5.web.viewstate.set:hyperlang.grid-filter
-                          src:x:/@get-widget-property/*/*?value
+                    /*
+                     * For simplicity, we set focus to search textbox again.
+                     */
+                    micro.page.set-focus:hyperlang-search-textbox
 
-                    button
-                      innerValue:@"<span class=""icon-home""></span>"
-                      title:Close Hyperlang
-                      onclick
+                    /*
+                     * Making sure we store filter.
+                     */
+                    p5.web.viewstate.set:hyperlang.grid-filter
+                      src:x:/@get-widget-property/*/*?value
 
-                        /*
-                         * Redirecting user to server's root URL.
-                         */
-                        p5.web.get-root-location
-                        p5.web.set-location:x:/-?value
+        div
+          class:col right
+          widgets
+            div
+              class:strip toolbar
+              style:"display:inline-block;"
+              widgets
+
+                button:hyperlang-add-command
+                  innerValue:@"<span class=""icon-plus""></span>"
+                  title:Add new command
+                  style:"padding-left:45px;padding-right:45px;"
+                  onclick
+
+                button
+                  innerValue:@"<span class=""icon-home""></span>"
+                  title:Close Hyperlang
+                  onclick
+
+                    /*
+                     * Redirecting user to server's root URL.
+                     */
+                    p5.web.get-root-location
+                    p5.web.set-location:x:/-?value
 
     div
       class:row
