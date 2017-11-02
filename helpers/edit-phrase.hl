@@ -316,12 +316,18 @@ create-widget
                                 class:micro-windows-info success
 
                               /*
-                               * Making sure update database id for currently updated row.
+                               * Making sure we update database id for currently updated row.
+                               *
+                               * Both in the grid, and our editor.
                                */
                               p5.web.widgets.find
                                 .id:x:/../*/get-widget-property/*/*?value
                               set-widget-property:x:/@p5.web.widgets.find/*/*?value
                                 .id:x:/@_new-phrase-id?value
+                              p5.web.widgets.find
+                                .edit:x:/../*/get-widget-property/*/*?value
+                              set-widget-property:x:/@p5.web.widgets.find/*/*?value
+                                .edit:x:/@_new-phrase-id?value
 
                         catch
 
