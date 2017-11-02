@@ -133,15 +133,20 @@ hyperlang.listen:OK, I did that. What do you want me to do now?
                  * Toggling "parent" label according to whether or not "Global" command
                  * checkbox is checked or not, since if it's checked, we don't insert
                  * any parent relationship.
+                 *
+                 * But first making sure widget actually exists.
                  */
-                get-widget-property:x:/../*/_event?value
-                  checked
-                if:x:/@get-widget-property/*/*
-                  set-widget-property:hyperlang-create-phrase-parent-label
-                    visible:false
-                else
-                  set-widget-property:hyperlang-create-phrase-parent-label
-                    visible:true
+                if
+                  fetch:x:/0/0?value
+                    widget-exists:hyperlang-create-phrase-parent-label
+                  get-widget-property:x:/../*/_event?value
+                    checked
+                  if:x:/@get-widget-property/*/*
+                    set-widget-property:hyperlang-create-phrase-parent-label
+                      visible:false
+                  else
+                    set-widget-property:hyperlang-create-phrase-parent-label
+                      visible:true
 
             span
               innerValue:Global

@@ -144,6 +144,11 @@ create-widget:hyperlang-main-container
                   style:"padding-left:45px;padding-right:45px;"
                   onclick
 
+                    /*
+                     * Creates a new command, by invoking file responsible for doing just that..
+                     */
+                    hyperlang.create-phrase2hyper-association
+
                 button
                   innerValue:@"<span class=""icon-home""></span>"
                   title:Close Hyperlang

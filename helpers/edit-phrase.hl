@@ -231,6 +231,7 @@ create-widget
                               split:x:/@micro.form.serialize/*/synonyms?value
                                 =:"\r\n"
                               _new-phrase-id
+                              p5.types.date.now
                               for-each:x:/@split/*?name
 
                                 /*
@@ -275,8 +276,9 @@ create-widget
                                  * Inserting into phrases, making sure we store database id for the
                                  * first insertion, such that we can update our row's database reference.
                                  */
-                                p5.mysql.insert:@"insert into phrases (command, lang, commandid) values (@command, @lang, @commandid)"
+                                p5.mysql.insert:@"insert into phrases (command, lang, commandid, lastused) values (@command, @lang, @commandid, @lastused)"
                                   @commandid:x:/@p5.mysql.scalar?value
+                                  @lastused:x:/@p5.types.date.now?value
                                 if:x:/@_new-phrase-id?value
                                   not
                                   set:x:/@_new-phrase-id?value
@@ -452,8 +454,6 @@ create-widget
                                           p5.web.widgets.find
                                             .edit:x:/@.id?value
                                           delete-widget:x:/-/*/*?value
-                                          micro.windows.info:Command object was successfully deleted
-                                            class:micro-windows-info success
 
                                           /*
                                            * Deletes modal widget.
