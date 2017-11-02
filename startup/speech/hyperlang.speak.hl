@@ -82,7 +82,7 @@ create-event:hyperlang.speak
    */
   eval-x:x:/+/*
   micro.speak:x:/../*/_arg?value
-    voice{0},{1}-{2}
+    voice:{0},{1}-{2}
       :x:/@hyperlang.language.get/*/voice?value
       :x:/@hyperlang.language.get/*/lang?value
       :x:/@hyperlang.language.get/*/sublang?value
