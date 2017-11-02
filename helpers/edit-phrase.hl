@@ -50,14 +50,40 @@ p5.mysql.connect:[hyperlang]
 /*
  * Preparing all synonyms for databind operation.
  */
+hyperlang.language.get
 .synonyms
 for-each:x:/@p5.mysql.connect/*/p5.mysql.select/[1,2]/*
-  eval-x:x:/+/*/*
-  add:x:/@.synonyms
-    src
-      :"{0}:{1}"
-        :x:/@_dp/#/*/lang?value
+
+  /*
+   * Checking is currently iterated synonym's language declaration equals the
+   * main language for user, at which point we do not prepend the language declaration
+   * for it.
+   */
+  if:x:/@hyperlang.language.get/*/lang?value
+    =:x:/@_dp/#/*/lang?value
+
+    /*
+     * Language for currently iterated synonym is the same as the root language for
+     * user, hence we don't explicitly prepend the phrase with its language definition.
+     */
+    eval-x:x:/+/*/*
+    add:x:/@.synonyms
+      src
         :x:/@_dp/#/*/command?value
+
+  else
+
+    /*
+     * Language declaration for currently iterated phrase is different from user's
+     * main language of choice.
+     */
+    eval-x:x:/+/*/*
+    add:x:/@.synonyms
+      src
+        :"{0}:{1}"
+          :x:/@_dp/#/*/lang?value
+          :x:/@_dp/#/*/command?value
+
 join:x:/@.synonyms/*?value
   sep:"\r\n"
 
@@ -290,7 +316,7 @@ create-widget
                                * Making sure update database id for currently updated row.
                                */
                               p5.web.widgets.find
-                                .id:x:/@../*/get-widget-property/*/*?value
+                                .id:x:/../*/get-widget-property/*/*?value
                               set-widget-property:x:/@p5.web.widgets.find/*/*?value
                                 .id:x:/@_new-phrase-id?value
 
