@@ -80,7 +80,7 @@ create-event:hyperlang.speak
   /*
    * Speaks given [_arg] with our configured voice.
    */
-  eval-x:x:/+/*
+  eval-x:x:/+/*/voice
   micro.speak:x:/../*/_arg?value
     voice:{0},{1}-{2}
       :x:/@hyperlang.language.get/*/voice?value
