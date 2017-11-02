@@ -7,7 +7,11 @@
  *
  * Optionally pass in [pos] being the parent phrase to create phrase to command association for.
  * You can also pass in [force-parent] and set its value to boolean "true", to make sure user can't
- * make the command become a "global" command.
+ * make the command become a "global" command. The latter will only be respected if the command does
+ * have an explicit [pos] declaration.
+ *
+ * You can also optionally pass in [global] and [private] to set the initial values for both of these
+ * values. However, the user can still explicitly change these if he wants to.
  */
 create-event:hyperlang.create-phrase2hyper-association
 
@@ -40,6 +44,8 @@ hyperlang.listen:OK, I did that. What do you want me to do now?
     pos:long
     hyperlambda:string
     force-parent:bool
+    global:bool
+    private:bool
 
   /*
    * Verifying user is root, and if not, we don't allow him to evaluate event.
@@ -83,7 +89,33 @@ hyperlang.listen:OK, I did that. What do you want me to do now?
    * checkbox, to make sure user can't create a global command.
    */
   if:x:/../*/force-parent?value
+    and:x:/../*/pos?value
+
+    /*
+     * Caller supplied a [force-parent], which implies the user cannot explicitly
+     * choose to make this a "global" command.
+     */
     set:x:/../*/create-widgets/**/.data-field/=global/././.
+
+  else-if:x:/../*/global?value
+    =:bool:true
+
+    /*
+     * Called supplied an initial "true" value for the "global" value.
+     */
+    add:x:/../*/create-widgets/**/.data-field/=global/.
+      src:checked
+
+  /*
+   * Checking if caller supplied a "false" value for "private".
+   */
+  if:x:/../*/private?value
+    =:bool:false
+
+    /*
+     * Called supplied an initial "false" value for the "private" value.
+     */
+    set:x:/../*/create-widgets/**/.data-field/=private/./*/checked
 
   /*
    * Retrieving language for user, to parametrise SQL.

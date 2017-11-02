@@ -384,7 +384,7 @@ create-widget
                          * Then we need to retrieve "command" id.
                          */
                         p5.mysql.connect:[hyperlang]
-                          p5.mysql.select:@"select parent, hyperlambda from commands where id in (select commandid from phrases where id = @id)"
+                          p5.mysql.select:@"select parent, hyperlambda, global, username from commands where id in (select commandid from phrases where id = @id)"
                             @id:x:/@get-widget-property/*/*?value
 
                         /*
@@ -396,6 +396,16 @@ create-widget
                           add:x:/../*/hyperlang.create-phrase2hyper-association
                             src
                               pos:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/parent?value
+                        if:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/global?value.int
+                          =:int:1
+                          add:x:/../*/hyperlang.create-phrase2hyper-association
+                            src
+                              global:bool:true
+                        if:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/username?value
+                          not
+                          add:x:/../*/hyperlang.create-phrase2hyper-association
+                            src
+                              private:bool:false
                         eval-x:x:/+/*
                         hyperlang.create-phrase2hyper-association:New cloned command
                           hyperlambda:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/hyperlambda?value
