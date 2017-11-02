@@ -200,10 +200,11 @@ create-widget
                               hyperlang.language.get
 
                               /*
-                               * Inserting new synonyms.
+                               * Inserting new phrases.
                                */
                               split:x:/@micro.form.serialize/*/synonyms?value
                                 =:"\r\n"
+                              _new-phrase-id
                               for-each:x:/@split/*?name
 
                                 /*
@@ -244,8 +245,16 @@ create-widget
                                   throw:@"You can only use ':' to separate between language and phrase"
                                     :x:/@_dp?value
 
+                                /*
+                                 * Inserting into phrases, making sure we store database id for the
+                                 * first insertion, such that we can update our row's database reference.
+                                 */
                                 p5.mysql.insert:@"insert into phrases (command, lang, commandid) values (@command, @lang, @commandid)"
                                   @commandid:x:/@p5.mysql.scalar?value
+                                if:x:/@_new-phrase-id?value
+                                  not
+                                  set:x:/@_new-phrase-id?value
+                                    src:x:/@p5.mysql.insert/*/id?value
 
                               /*
                                * Saving actual command.
@@ -273,10 +282,17 @@ create-widget
                               p5.mysql.transaction.commit
 
                               /*
-                               * Providing feedback to user.
+                               * Closing editor widget.
                                */
-                              micro.windows.info:Command was successfully saved
-                                class:micro-windows-info success
+                              delete-widget:x:/@p5.web.widgets.find-first-ancestor/*/*?value
+
+                              /*
+                               * Making sure update database id for currently updated row.
+                               */
+                              p5.web.widgets.find
+                                .id:x:/@../*/get-widget-property/*/*?value
+                              set-widget-property:x:/@p5.web.widgets.find/*/*?value
+                                .id:x:/@_new-phrase-id?value
 
                         catch
 
@@ -439,4 +455,4 @@ create-widget
                          */
                         p5.web.widgets.find-first-ancestor:x:/../*/_event?value
                           .edit
-                        delete-widget:x:/-/*/*?value
+                        delete-widget:x:/@p5.web.widgets.find-first-ancestor/*/*?value
