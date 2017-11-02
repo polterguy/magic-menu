@@ -394,11 +394,15 @@ create-widget
 
                         /*
                          * Then we invoke event that is responsible for creating a new phrase/command association,
-                         * making sure we pass in [pos] to explicitly override the default positioning logic.
+                         * making sure we pass in [pos] to explicitly override the default positioning logic, but only
+                         * if current command actually has a parent.
                          */
+                        if:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/parent?value
+                          add:x:/../*/hyperlang.create-phrase2hyper-association
+                            src
+                              pos:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/parent?value
                         eval-x:x:/+/*
-                        hyperlang.create-phrase2hyper-association:New child command
-                          pos:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/parent?value
+                        hyperlang.create-phrase2hyper-association:New cloned command
                           hyperlambda:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/hyperlambda?value
 
                     button
