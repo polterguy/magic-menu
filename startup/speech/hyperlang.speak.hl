@@ -14,15 +14,9 @@ create-event:hyperlang.speak
   .signal
 
   /*
-   * Defaults, in case no settings exists.
+   * Retrieving language for user, to figure out voice to use, etc.
    */
-  .defaults
-    voice:Karen,en-AU
-
-  /*
-   * Retrieving settings for user, to figure out voice to use, etc.
-   */
-  p5.auth.my-settings.get
+  hyperlang.language.get
 
   /*
    * Checking if this is a referenced word, implying a word that should be translated.
@@ -88,4 +82,7 @@ create-event:hyperlang.speak
    */
   eval-x:x:/+/*
   micro.speak:x:/../*/_arg?value
-    voice:x:(/../*/voice|/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
+    voice{0},{1}-{2}
+      :x:/@hyperlang.language.get/*/voice?value
+      :x:/@hyperlang.language.get/*/lang?value
+      :x:/@hyperlang.language.get/*/sublang?value

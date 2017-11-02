@@ -11,7 +11,6 @@ create-event:hyperlang.listen
    * Defaults.
    */
   .defaults
-    lang:en
     onfinish
 
       /*
@@ -20,14 +19,9 @@ create-event:hyperlang.listen
       hyperlang.handle-input:x:/../*/text?value
 
   /*
-   * Retrieving settings for user, to figure out language to listen for, etc.
+   * Retrieving language for user, to figure out language to listen for, etc.
    */
-  p5.auth.my-settings.get
-  if:x:/@p5.auth.my-settings.get/*/hyperlang/*/voice?value
-    split:x:/@p5.auth.my-settings.get/*/hyperlang/*/voice?value
-      =:,
-    set:x:/@.defaults/*/lang?value
-      src:x:/@split/0/-?name
+  hyperlang.language.get
 
   /*
    * Applying [onfinish], or default value if none was given.
@@ -58,7 +52,7 @@ create-event:hyperlang.listen
          * Start listening.
          */
         micro.listen
-          lang:x:/@.defaults/*/lang?value
+          lang:x:/@hyperlang.language.get/*/lang?value
           onfinish
             try
 
@@ -71,7 +65,7 @@ create-event:hyperlang.listen
               /*
                * Giving feedback to user.
                */
-              hyperlang.listen:An exception occurred
+              hyperlang.listen:[An exception occurred]
               micro.windows.info:x:/..catch/*/message?value
                 class:micro-windows-info warning
 
@@ -87,7 +81,7 @@ create-event:hyperlang.listen
      * Starts speech recognition engine directly.
      */
     micro.listen
-      lang:x:/@.defaults/*/lang?value
+      lang:x:/@hyperlang.language.get/*/lang?value
       onfinish
         try
 
@@ -100,6 +94,6 @@ create-event:hyperlang.listen
           /*
            * Giving feedback to user.
            */
-          hyperlang.listen:An exception occurred
+          hyperlang.listen:[An exception occurred]
           micro.windows.info:x:/..catch/*/message?value
             class:micro-windows-info warning

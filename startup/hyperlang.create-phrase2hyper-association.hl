@@ -12,6 +12,18 @@
 create-event:hyperlang.create-phrase2hyper-association
 
   /*
+   * Default values.
+   */
+  .defaults
+    hyperlambda:@"/*
+ * If you return ""false"", the ""current position stack"" is not changed,
+ * if you return ""true"", or nothing at all, the stack is updated, and the
+ * current command becomes the ""current position"".
+ */
+return:bool:true
+"
+
+  /*
    * Sanity checking arguments.
    */
   micro.lambda.contract.min:x:/..
@@ -66,27 +78,16 @@ create-event:hyperlang.create-phrase2hyper-association
     set:x:/../*/create-widgets/**/.data-field/=global/././.
 
   /*
-   * Figuring out current language.
+   * Retrieving language for user, to parametrise SQL.
    */
-  p5.auth.my-settings.get
-  split:x:/@p5.auth.my-settings.get/*/hyperlang/*/voice?value
-    =:,
-  split:x:/@split/0/-?name
-    =:-
-  if:x:/@split/*?count?value
-    =:int:1
-
-    /*
-     * Deleting language radio buttons, since this is a "root language".
-     */
-    set:x:/../*/create-widgets/**/widgets/=radio-buttons(/.|/-/br)
+  hyperlang.language.get
 
   /*
    * Creating a modal widget, which asks user to type in Hyperlambda, and configure
    * a piece of Hyperlambda, which will result in associating the specified Hyperlambda
    * with the given [_arg] phrase.
    */
-  eval-x:x:/+/**/widgets/=radio-buttons/*(/input/*/.data-value|/span/*/innerValue)|/+/**(/_pos|/hypereval.widgets.hyperlambda-textarea)
+  eval-x:x:/+/**(/_pos|/hypereval.widgets.hyperlambda-textarea/*/value)
   create-widgets
     micro.widgets.modal:hyperlang-create-phrase2hyper-association
       widgets
@@ -110,7 +111,7 @@ create-event:hyperlang.create-phrase2hyper-association
         hypereval.widgets.hyperlambda-textarea:hyper-input
           element:textarea
           .data-field:hyperlambda
-          value:x:/../*/hyperlambda?value
+          value:x:(/../*/hyperlambda|/@.defaults/*/hyperlambda)/$?value
         label
           title:Is this a global command, implying something you could tell Elizabeth at any time?
           style:"margin-bottom:0;"
@@ -162,18 +163,12 @@ create-event:hyperlang.create-phrase2hyper-association
                * Figuring out the first relevant phrase, and displaying it as
                * widget's innerValue.
                */
-              .defaults
-                voice:Karen,en-AU
-              p5.auth.my-settings.get
-              split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
-                =:,
-              split:x:/@split/0/-?name
-                =:-
+              hyperlang.language.get
               p5.mysql.connect:[hyperlang]
-                p5.mysql.scalar:@"select command from phrases where commandid in (select id from commands where id = @id) and (lang = @lang or lang = @sublang) limit 1"
+                p5.mysql.scalar:@"select command from phrases where commandid in (select id from commands where id = @id) and (lang = @lang or lang = @sublang) order by lastused, id limit 1"
                   @id:x:/@_pos?value
-                  @lang:x:/@split/@split/0/-?name
-                  @sublang:x:/@split/0?name
+                  @lang:x:/@hyperlang.language.get/*/lang?value
+                  @sublang:x:/@hyperlang.language.get/*/sublang?value
                 set-widget-property:x:/../*/_event?value
                   innerValue:@"Parent: '{0}'"
                     :x:/@p5.mysql.scalar?value
@@ -308,6 +303,7 @@ create-event:hyperlang.create-phrase2hyper-association
                               /*
                                * Explicit language declaration.
                                */
+                              hyperlang._assume-language-exists:x:/@split/0?name
                               set:x:/@_lang?value
                                 src:x:/@split/0?name
 

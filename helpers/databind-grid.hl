@@ -59,15 +59,9 @@ if:x:/../*/filter?value
 
 
 /*
- * Figuring out language for current user, which is necessary to filter our results.
+ * Retrieving language for user, such that we can parametrize SQL.
  */
-.defaults
-  voice:Karen,en-AU
-p5.auth.my-settings.get
-split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
-  =:,
-split:x:/-/0/-?name
-  =:-
+hyperlang.language.get
 
 
 
@@ -91,8 +85,8 @@ select p3.*, null as parentphrase, c3.username, c3.global from
       and c3.parent is null
 order by lastused desc, id desc limit 25 offset @offset"
     :x:/@_where?value
-    @lang:x:/@split/@split/0/-?name
-    @sublang:x:/@split/0?name
+    @lang:x:/@hyperlang.language.get/*/lang?value
+    @sublang:x:/@hyperlang.language.get/*/sublang?value
     @offset:x:(/../*/offset|/../*/.defaults/*/offset)/$?value
 
   /*
@@ -146,7 +140,8 @@ order by lastused desc, id desc limit 25 offset @offset"
 
 
 /*
- * Databinding datagrid.
+ * Databinding datagrid, making sure we support "adding items" to it, to
+ * support "never ending scrolling" to feed the grid.
  */
 eval-x:x:/+/*
 micro.widgets.grid.databind:hyperlang-phrases-grid

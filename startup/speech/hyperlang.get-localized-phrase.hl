@@ -5,57 +5,41 @@
 create-event:hyperlang.get-localized-phrase
 
   /*
-   * Defaults.
-   */
-  .defaults
-    voice:Karen,en-AU
-
-  /*
    * Retrieving settings for user, to figure out language to listen for, etc.
    */
-  p5.auth.my-settings.get
+  hyperlang.language.get
 
   /*
-   * Doing a lookup into language file, and returning whatever phrase we found to
-   * caller.
-   */
-  split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
-    =:,
-
-  /*
-   * Checking if localized file exists, and if not, defaulting upwards in hierarchy.
-   * With English being "root" language.
+   * Making sure we prioritize "sublang" if it exists.
    */
   if
     fetch:x:/0/0?value
       file-exists:@HYPERLANG/configuration/lang-{0}.hl
-        :x:/@split/0/-?name
+        :x:/@hyperlang.language.get/*/sublang?value
 
     /*
      * Localized file exists.
      */
     load-file:@HYPERLANG/configuration/lang-{0}.hl
-      :x:/@split/0/-?name
+      :x:/@hyperlang.language.get/*/sublang?value
     return:x:/@load-file/*/*/\{0}?value
       :x:/../*/_arg?value
 
   else
 
     /*
-     * Localized file didn't exist, trying "root" language, if there is such a thing.
+     * Sublang file didn't exist, trying "lang".
      */
-    split:x:/@split/0/-?name
-      =:-
     if
       fetch:x:/0/0?value
         file-exists:@HYPERLANG/configuration/lang-{0}.hl
-          :x:/@split/0?name
+          :x:/@hyperlang.language.get/*/lang?value
 
       /*
        * Localized "root" language file exists.
        */
       load-file:@HYPERLANG/configuration/lang-{0}.hl
-        :x:/@split/0?name
+        :x:/@hyperlang.language.get/*/lang?value
       return:x:/@load-file/*/*/\{0}?value
         :x:/../*/_arg?value
 

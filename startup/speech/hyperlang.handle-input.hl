@@ -23,15 +23,9 @@ create-event:hyperlang.handle-input
     return
 
   /*
-   * Figuring out language for current user, which is necessary to filter our results.
+   * Retrieving language for current user, which is necessary to filter our results.
    */
-  .defaults
-    voice:Karen,en-AU
-  p5.auth.my-settings.get
-  split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
-    =:,
-  split:x:/@split/0/-?name
-    =:-
+  hyperlang.language.get
 
   /*
    * Looks up command from database.
@@ -60,8 +54,8 @@ order by `global` limit 1"
           :x:/../*/_arg?value
         @parent:x:/@hyperlang.position.get?value
         @username:x:/@whoami/*/username?value
-        @lang:x:/@split/@split/0/-?name
-        @sublang:x:/@split/0?name
+        @lang:x:/@hyperlang.language.get/*/lang?value
+        @sublang:x:/@hyperlang.language.get/*/sublang?value
 
       /*
        * Adding command to buffer above.
@@ -84,8 +78,8 @@ order by `global` limit 1"
         @command2:%{0}%
           :x:/../*/_arg?value
         @username:x:/@whoami/*/username?value
-        @lang:x:/@split/@split/0/-?name
-        @sublang:x:/@split/0?name
+        @lang:x:/@hyperlang.language.get/*/lang?value
+        @sublang:x:/@hyperlang.language.get/*/sublang?value
 
       /*
        * Adding command to buffer above.
@@ -135,6 +129,10 @@ order by `global` limit 1"
 
       /*
        * Updating "lastused" for phrase.
+       *
+       * This is done, since we always "prioritize" the last used phrase, when
+       * suggesting phrases, and selecting from our phrases table. Such that the
+       * most commonly used phrases will always appear first.
        */
       p5.types.date.now
       p5.mysql.update:@"update phrases set lastused = @lastused where id = @id"

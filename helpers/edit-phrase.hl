@@ -195,15 +195,9 @@ create-widget
                                 @commandid:x:/@p5.mysql.scalar?value
 
                               /*
-                               * Figuring out language for current user, which is necessary to filter our results.
+                               * Retrieving language for current user, which is necessary to filter our results.
                                */
-                              .defaults
-                                voice:Karen,en-AU
-                              p5.auth.my-settings.get
-                              split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
-                                =:,
-                              split:x:/@split/1?name
-                                =:-
+                              hyperlang.language.get
 
                               /*
                                * Inserting new synonyms.
@@ -240,7 +234,7 @@ create-widget
                                   add:x:/..for-each/*/p5.mysql.insert
                                     src
                                       @command:x:/@_dp?value
-                                      @lang:x:/..for-each/@split/@split/0?name
+                                      @lang:x:/@hyperlang.language.get/*/lang?value
 
                                 else
 

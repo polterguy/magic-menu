@@ -70,7 +70,7 @@ create-widget:hyperlang-main-container
                                   :x:/@_dp/#?value
 
                             /*
-                             * Setting widget's initial value to settings for user, if possible.
+                             * Setting widget's initial value to language setting for user, if possible.
                              */
                             p5.auth.my-settings.get
                             if:x:/@p5.auth.my-settings.get/*/hyperlang/*/voice?value
