@@ -1,12 +1,13 @@
 ﻿
 /*
  * File responsible for databinding phrases grid.
- * Optionally pass in [filter] and/or [offset].
+ *
+ * Optionally pass in [filter] to only show items containing specified filter,
+ * and/or [offset], to list items from a specific offset.
+ *
  * You can also pass in [keep-items], at which the old items in your grid will
  * be kept, and the databind operation will "append" the databound items to 
  * your grid instead.
- *
- * Selects 25 phrases from database.
  */
 
 
@@ -39,6 +40,7 @@ micro.lambda.contract.optional:x:/..
  * Building our filter condition, if one is specified.
  */
 _where
+_where-commands
 if:x:/../*/filter?value
   and:x:/../*/filter?value
     !=:
@@ -48,6 +50,9 @@ if:x:/../*/filter?value
    */
   set:x:/@_where?value
     src:"and command like @filter"
+  set:x:/@_where-commands?value
+    src:@"or (p.commandid in (select id from commands where hyperlambda like @filter)
+  and p.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) group by commandid))"
   eval-x:x:/+/*/*
   add:x:/../*/p5.mysql.connect/*/p5.mysql.select/[0,1]
     src
@@ -75,16 +80,19 @@ p5.mysql.connect:[hyperlang]
 select p.*, p2.command as parentphrase, c.username, c.global from 
   phrases p join commands c on c.id = p.commandid,
   phrases p2 join commands c2 on c2.id = p2.commandid
-    where p.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) {0} group by commandid)
-      and p2.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) group by commandid)
-      and c.parent = c2.id
+  where (p.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) {0} group by commandid)
+      {1})
+    and p2.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) group by commandid)
+    and c.parent = c2.id
 union all
-select p3.*, null as parentphrase, c3.username, c3.global from
-  phrases p3 join commands c3 on c3.id = p3.commandid
-    where p3.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) {0} group by commandid)
-      and c3.parent is null
+select p.*, null as parentphrase, c.username, c.global from
+  phrases p join commands c on c.id = p.commandid
+  where (p.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) {0} group by commandid)
+      {1})
+    and c.parent is null
 order by lastused desc, id desc limit 25 offset @offset"
     :x:/@_where?value
+    :x:/@_where-commands?value
     @lang:x:/@hyperlang.language.get/*/lang?value
     @sublang:x:/@hyperlang.language.get/*/sublang?value
     @offset:x:(/../*/offset|/../*/.defaults/*/offset)/$?value

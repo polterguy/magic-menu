@@ -1,10 +1,10 @@
-
+﻿
 /*
  * Creates the event that sets the current position in our command hierarchy.
  *
  * Requires [_arg] being the database ID of a "command" from hyperlang.
  */
-create-event:hyperlang.position.push
+create-event:hyperlang.grammar-position.push
 
   /*
    * Sets the current position to the specified [_arg].

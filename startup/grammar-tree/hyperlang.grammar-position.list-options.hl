@@ -1,11 +1,11 @@
-
+﻿
 /*
  * Creates the event that will return the possible options that user has from his
  * current position.
  *
  * Optionally pass in [limit], [offset] and [filter] to further filter your results.
  */
-create-event:hyperlang.position.list-options
+create-event:hyperlang.grammar-position.list-options
 
   /*
    * Sanity checking arguments.
@@ -55,19 +55,19 @@ create-event:hyperlang.position.list-options
    * Retrieves the current position, username, and current language to parametrise SQL.
    */
   whoami
-  hyperlang.position.get
+  hyperlang.grammar-position.get
   hyperlang.language.get
 
   /*
    * Checking parent, and parametrizing SQL accordingly.
    */
   _parent
-  if:x:/@hyperlang.position.get?value
+  if:x:/@hyperlang.grammar-position.get?value
     set:x:/@_parent?value
       src:"c.parent = @parent"
     add:x:/../*/p5.mysql.connect/*/p5.mysql.select
       src
-        @parent:x:/@hyperlang.position.get?value
+        @parent:x:/@hyperlang.grammar-position.get?value
   else
     set:x:/@_parent?value
       src:"c.parent is null"

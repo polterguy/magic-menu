@@ -1,10 +1,10 @@
-
+﻿
 /*
  * Creates the event that pops one position off from the hierarchy.
  *
  * Optionally pass in [no-post] to avoid broadcasting change of position.
  */
-create-event:hyperlang.position.pop
+create-event:hyperlang.grammar-position.pop
 
   /*
    * Removes the last position from our chain, if any, and returns the new 

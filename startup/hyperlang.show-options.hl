@@ -77,9 +77,9 @@ create-event:hyperlang.show-options
         /*
          * Lists options, and creates one "li" element for each.
          */
-        hyperlang.position.list-options
+        hyperlang.grammar-position.list-options
           limit:25
-        for-each:x:/@hyperlang.position.list-options/*
+        for-each:x:/@hyperlang.grammar-position.list-options/*
           eval-x:x:/+/**/.text
           create-widget
             element:li
@@ -105,10 +105,10 @@ create-event:hyperlang.show-options
         +:x:/@p5.web.viewstate.get/*?value.long
           _:25
         eval-x:x:/+/*/offset
-        hyperlang.position.list-options
+        hyperlang.grammar-position.list-options
           limit:25
           offset:x:/@+?value.long
-        if:x:/@hyperlang.position.list-options/*?count
+        if:x:/@hyperlang.grammar-position.list-options/*?count
           =:int:0
 
           /*
@@ -122,7 +122,7 @@ create-event:hyperlang.show-options
         clear-widget:hyperlang-help-list
         p5.web.viewstate.set:hyperlang.show-options._databind.offset
           src:x:/@+?value
-        for-each:x:/@hyperlang.position.list-options/*
+        for-each:x:/@hyperlang.grammar-position.list-options/*
           eval-x:x:/+/**/.text
           create-widget
             element:li

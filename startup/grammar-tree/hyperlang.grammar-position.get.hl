@@ -1,8 +1,8 @@
-
+﻿
 /*
  * Creates the event that returns the current position in our command hierarchy.
  */
-create-event:hyperlang.position.get
+create-event:hyperlang.grammar-position.get
 
   /*
    * Returns the current position to caller.

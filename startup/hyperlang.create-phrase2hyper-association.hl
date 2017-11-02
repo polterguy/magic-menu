@@ -1,4 +1,4 @@
-
+﻿
 /*
  * Creates the event that allows the user to configure a phrase to a piece of
  * Hyperlambda. User is expected to be "root" to be allowed evaluating this lambda.
@@ -16,11 +16,19 @@ create-event:hyperlang.create-phrase2hyper-association
    */
   .defaults
     hyperlambda:@"/*
+ * To simply speak something, and listen for input afterwards, you can use something
+ * such as the following.
+ *
+ * Optionally, to handle the input yourself, pass in an [onfinish] lambda callback.
+ */
+hyperlang.listen:OK, I did that. What do you want me to do now?
+
+/*
  * If you return ""false"", the ""current position stack"" is not changed,
  * if you return ""true"", or nothing at all, the stack is updated, and the
- * current command becomes the ""current position"".
+ * current command becomes the ""current position"" in your ""grammar tree"".
  */
-return:bool:true
+//return:bool:true
 "
 
   /*
@@ -52,7 +60,7 @@ return:bool:true
    * Checking to see if we're in some specific point in our "grammar tree".
    */
   _pos
-  hyperlang.position.get
+  hyperlang.grammar-position.get
   if:x:/../*/pos?value
 
     /*
@@ -61,14 +69,14 @@ return:bool:true
     set:x:/@_pos?value
       src:x:/../*/pos?value
 
-  else-if:x:/@hyperlang.position.get?value
+  else-if:x:/@hyperlang.grammar-position.get?value
 
     /*
      * We're in some specific position in our tree, selecting the first phrase
      * matching our command.
      */
     set:x:/@_pos?value
-      src:x:/@hyperlang.position.get?value
+      src:x:/@hyperlang.grammar-position.get?value
 
   /*
    * Checking if user provided [force-parent], and if so, deleting the "Global"

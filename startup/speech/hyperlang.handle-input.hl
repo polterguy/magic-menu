@@ -1,4 +1,4 @@
-
+﻿
 /*
  * Invoked when a new voice command is given.
  *
@@ -35,9 +35,9 @@ create-event:hyperlang.handle-input
    */
   .command
   p5.mysql.connect:[hyperlang]
-    hyperlang.position.get
+    hyperlang.grammar-position.get
     whoami
-    if:x:/@hyperlang.position.get?value
+    if:x:/@hyperlang.grammar-position.get?value
 
       /*
        * Current position exists, retrieving command having current position 
@@ -52,7 +52,7 @@ order by `global` limit 1"
         @command:x:/../*/_arg?value
         @command2:%{0}%
           :x:/../*/_arg?value
-        @parent:x:/@hyperlang.position.get?value
+        @parent:x:/@hyperlang.grammar-position.get?value
         @username:x:/@whoami/*/username?value
         @lang:x:/@hyperlang.language.get/*/lang?value
         @sublang:x:/@hyperlang.language.get/*/sublang?value
@@ -116,7 +116,7 @@ order by `global` limit 1"
            * Notice, if lambda returns "false", we do not push the id of the current
            * command unto our stack.
            */
-          hyperlang.position.push:x:/@.command/*/id?value
+          hyperlang.grammar-position.push:x:/@.command/*/id?value
 
       catch
 
