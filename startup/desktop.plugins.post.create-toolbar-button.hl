@@ -6,6 +6,10 @@
  * Notice, this button is only created if there exists a widget with a 
  * CSS class containing the string "toolbar" on the page, and the button 
  * is automatically injected into the first matching widget.
+ *
+ * Notice, this toolbar button is also only created if user is logged in,
+ * which implies that Hyperlang is only available for "actual users" in
+ * your system, and not guest accounts or guest visitors.
  */
 create-event:desktop.plugins.post.create-toolbar-button
 
@@ -56,18 +60,16 @@ create-event:desktop.plugins.post.create-toolbar-button
         if:x:/@p5.web.session.get/*?value
 
           /*
-           * Hyperlang is supposed to be load initially during pageload.
-           *
-           * Making sure we destroy session variable, to avoid it from loading
-           * on every pageload, before we start Hyperlang.
-           */
-          p5.web.session.set:hyperlang.keep-alive
-
-          /*
            * Starts Hyperlang.
            */
           hyperlang.start
             greeting:OK
+
+        /*
+         * Clearing session variable, to avoid automatically starting it during
+         * the next page load.
+         */
+        p5.web.session.set:hyperlang.keep-alive
 
       onclick
 
