@@ -45,7 +45,7 @@ create-event:hyperlang.show-options
         clear-widget:hyperlang-help-list
         p5.web.viewstate.set:hyperlang.show-options._databind.offset
           src:0
-        for-each:x:/@.signal/--(!/_arg!/_event)?name
+        for-each:x:/@.signal/--(!/_arg!/_event)?value
           create-widget
             element:li
             parent:hyperlang-help-list
