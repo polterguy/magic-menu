@@ -25,6 +25,7 @@
     bottom:0;
     left:1rem;
     background-color:#fefefe;
+    z-index:10000;
 }
 .hyperlang-listening {
     animation-name: hyperlang-listener;
