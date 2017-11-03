@@ -50,7 +50,7 @@ label.hyperlang-tip {
     font-style:italic;
 }
 .hyperlang-help {
-    position:absolute;
+    position:fixed;
     top:1rem;
     right:1rem;
     min-width:40%;
