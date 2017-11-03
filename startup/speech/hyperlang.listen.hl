@@ -56,7 +56,22 @@ create-event:hyperlang.listen
         micro.listen
           lang:x:/@hyperlang.language.get/*/lang?value
           onfinish
+
+            /*
+             * Contains the lambda [onfinish] callback to be evaluated once speach
+             * has been captured.
+             */
             .lambda
+
+            /*
+             * Deletes the visual clue, indicating we're listening for input.
+             */
+            micro.css.delete:hyperlang-listener
+              class:hyperlang-listening
+
+            /*
+             * Making sure we can intelligently handle exceptions.
+             */
             try
               eval-x:x:/+/*/text
               eval:x:/@.lambda
@@ -82,7 +97,22 @@ create-event:hyperlang.listen
     micro.listen
       lang:x:/@hyperlang.language.get/*/lang?value
       onfinish
+
+        /*
+         * Contains the lambda [onfinish] callback to be evaluated once speach
+         * has been captured.
+         */
         .lambda
+
+        /*
+         * Deletes the visual clue, indicating we're listening for input.
+         */
+        micro.css.delete:hyperlang-listener
+          class:hyperlang-listening
+
+        /*
+         * Making sure we can intelligently handle exceptions.
+         */
         try
           eval-x:x:/+/*/text
           eval:x:/@.lambda
