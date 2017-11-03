@@ -55,7 +55,7 @@ label.hyperlang-tip {
     right:1rem;
     min-width:40%;
     display:inline-block;
-    z-index:5000;
+    z-index:1000;
 }
 .hyperlang-help ul {
     margin:0;
@@ -70,6 +70,9 @@ label.hyperlang-tip {
 label.input-label {
     min-width:0;
 }
+.hyperlang-grid {
+    table-layout:fixed;
+}
 .hyperlang-grid tr th:nth-child(2),
 .hyperlang-grid tr td:nth-child(2),
 .hyperlang-grid tr th:nth-child(3),
@@ -78,18 +81,21 @@ label.input-label {
 .hyperlang-grid tr td:nth-child(4) {
     display: none;
 }
-.hyperlang-grid tr th:nth-child(4),
-.hyperlang-grid tr td:nth-child(4) {
-    width: 5px;
-    text-align: right;
-    white-space:nowrap;
-}
 .hyperlang-grid tr th:nth-child(2),
 .hyperlang-grid tr td:nth-child(2),
 .hyperlang-grid tr th:nth-child(3),
 .hyperlang-grid tr td:nth-child(3) {
     white-space: nowrap;
-    width: 5px;
+}
+.hyperlang-grid tr th:nth-child(3),
+.hyperlang-grid tr td:nth-child(3) {
+    width: 125px;
+}
+.hyperlang-grid tr th:nth-child(4),
+.hyperlang-grid tr td:nth-child(4) {
+    width: 50px;
+    text-align: right;
+    white-space:nowrap;
 }
 @media screen and (min-width: 450px) {
     .hyperlang-grid tr th:nth-child(4),

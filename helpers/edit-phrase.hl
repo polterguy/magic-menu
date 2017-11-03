@@ -127,7 +127,7 @@ create-widget
   class:no-hover
   widgets
     td
-      colspan:5
+      colspan:4
       style:"background-color:#fefefe;"
       widgets
         container
