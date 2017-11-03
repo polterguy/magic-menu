@@ -25,14 +25,6 @@ create-event:hyperlang.grammar-position.reinvoke
     eval-x:x:/+/*
     eval:x:/@hyper2lambda
       id:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/id?value
-    if:x:/@eval?value
-      !=:bool:false
-
-      /*
-       * Notice, if lambda returns "false", we do not push the id of the current
-       * command unto our stack.
-       */
-      hyperlang.grammar-position.push:x:/@.command/*/id?value
 
   catch
 
