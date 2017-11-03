@@ -12,6 +12,9 @@ create-event:hyperlang.goodbye
   hyperlang.speak:[Goodbye]
 
   /*
-   * Deletes main Hyperlang widget.
+   * Deletes main Hyperlang widget, if it exists.
    */
-  delete-widget:hyperlang-listener
+  if
+    fetch:x:/0/0?value
+      widget-exists:hyperlang-listener
+    delete-widget:hyperlang-listener

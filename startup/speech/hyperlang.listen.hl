@@ -43,6 +43,15 @@ create-event:hyperlang.listen
       onfinish
 
         /*
+         * If widget was closed, we simply abort.
+         */
+        if
+          fetch:x:/0/0?value
+            widget-exists:hyperlang-listener
+          not
+          return
+
+        /*
          * Making sure we add "active" CSS class when speech recognition is initiated.
          */
         micro.css.add:hyperlang-listener
@@ -62,6 +71,15 @@ create-event:hyperlang.listen
              * has been captured.
              */
             .lambda
+
+            /*
+             * If widget was closed, we simply abort.
+             */
+            if
+              fetch:x:/0/0?value
+                widget-exists:hyperlang-listener
+              not
+              return
 
             /*
              * Deletes the visual clue, indicating we're listening for input.
@@ -103,6 +121,15 @@ create-event:hyperlang.listen
          * has been captured.
          */
         .lambda
+
+        /*
+         * If widget was closed, we simply abort.
+         */
+        if
+          fetch:x:/0/0?value
+            widget-exists:hyperlang-listener
+          not
+          return
 
         /*
          * Deletes the visual clue, indicating we're listening for input.
