@@ -66,7 +66,6 @@ hyperlang.listen:OK, I did that. What do you want me to do now?
    * Checking to see if we're in some specific point in our "grammar tree".
    */
   _pos
-  hyperlang.grammar-position.get
   if:x:/../*/pos?value
 
     /*
@@ -74,15 +73,6 @@ hyperlang.listen:OK, I did that. What do you want me to do now?
      */
     set:x:/@_pos?value
       src:x:/../*/pos?value
-
-  else-if:x:/@hyperlang.grammar-position.get?value
-
-    /*
-     * We're in some specific position in our tree, selecting the first phrase
-     * matching our command.
-     */
-    set:x:/@_pos?value
-      src:x:/@hyperlang.grammar-position.get?value
 
   /*
    * Checking if user provided [force-parent], and if so, deleting the "Global"
