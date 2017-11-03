@@ -105,10 +105,14 @@ order by `global` limit 1"
       hyper2lambda:x:/@.command/*/hyperlambda?value
 
       /*
-       * Making sure we wrap evaluation in a try/catch block.
+       * Making sure we wrap evaluation in a try/catch block, and that we pass
+       * in the command's id.
        */
       try
+        eval-x:x:/+/*
         eval:x:/@hyper2lambda
+          id:x:/@.command/*/id?value
+          phraseid:x:/@.command/*/phraseid?value
         if:x:/@eval?value
           !=:bool:false
 
@@ -175,7 +179,7 @@ order by `global` limit 1"
 
 
           /*
-           * Checking if user said "teach".
+           * Checking if user said "I will teach you".
            */
           hyperlang.get-localized-phrase:[Teach]
           set:x:/./*/switch/*/case/=teach?value
@@ -185,8 +189,15 @@ order by `global` limit 1"
 
               /*
                * Invoking Active Event responsible for creating a "phrase2hyper"
-               * association, making sure we first retrieve what was spoken.
+               * association, making sure we pass in what was actually spoken,
+               * and the current "grammar position" if any.
                */
+              hyperlang.grammar-position.get
+              if:x:/@hyperlang.grammar-position.get?value
+                eval-x:x:/+/*/*
+                add:x:/..case/*/hyperlang.create-phrase2hyper-association
+                  src
+                    pos:x:/@hyperlang.grammar-position.get?value
               hyperlang.create-phrase2hyper-association:x:/../*/_arg?value
 
             default
