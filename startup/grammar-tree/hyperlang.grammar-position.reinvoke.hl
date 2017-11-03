@@ -1,0 +1,44 @@
+﻿
+/*
+ * Creates the event that re invokes the current position.
+ */
+create-event:hyperlang.grammar-position.reinvoke
+
+  /*
+   * Retrieves the current position, and reinvokes it.
+   */
+  hyperlang.grammar-position.get
+  p5.mysql.connect:[hyperlang]
+    p5.mysql.select:@"select id, hyperlambda from commands where id = @id"
+      @id:x:/@hyperlang.grammar-position.get?value
+
+  /*
+   * Turns Hyperlambda into a lambda object.
+   */
+  hyper2lambda:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/hyperlambda?value
+
+  /*
+   * Making sure we wrap evaluation in a try/catch block, and that we pass
+   * in the command's id.
+   */
+  try
+    eval-x:x:/+/*
+    eval:x:/@hyper2lambda
+      id:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/id?value
+    if:x:/@eval?value
+      !=:bool:false
+
+      /*
+       * Notice, if lambda returns "false", we do not push the id of the current
+       * command unto our stack.
+       */
+      hyperlang.grammar-position.push:x:/@.command/*/id?value
+
+  catch
+
+    /*
+     * Giving feedback to user.
+     */
+    hyperlang.listen:An exception occurred
+    micro.windows.info:x:/..catch/*/message?value
+      class:micro-windows-info warning
