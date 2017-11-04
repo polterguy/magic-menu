@@ -13,7 +13,7 @@
  * You can also optionally pass in [global] and [private] to set the initial values for both of these
  * values. However, the user can still explicitly change these if he wants to.
  */
-create-event:hyperlang.create-phrase2hyper-association
+create-event:hyperlang.command.create
 
   /*
    * Default values.

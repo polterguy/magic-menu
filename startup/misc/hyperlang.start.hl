@@ -7,6 +7,12 @@
 create-event:hyperlang.start
 
   /*
+   * Defaults.
+   */
+  .defaults
+    greeting:[Hello]
+
+  /*
    * Checking if Hyperlang is already initiated from before, and if so, making
    * sure we close any previous instances first.
    */
@@ -23,9 +29,7 @@ create-event:hyperlang.start
   /*
    * Greets user, and asks for input.
    */
-  add:x:/../*/hyperlang.greet-user
-    src:x:/../*/greeting
-  hyperlang.greet-user
+  hyperlang.listen:x:(/../*/greeting|/@.defaults/*/greeting)/$?value
 
   /*
    * Creating main Hyperlang widget.
@@ -40,10 +44,15 @@ create-event:hyperlang.start
       hyperlang.quit
 
         /*
-         * Says goodbye, and stops input loop.
+         * Says goodbye, close options, and deletes main Hyperlang input widget,
+         * if it exists.
          */
-        hyperlang.goodbye
+        hyperlang.speak:[Goodbye]
         hyperlang.show-options.close
+        if
+          fetch:x:/0/0?value
+            widget-exists:hyperlang-listener
+          delete-widget:hyperlang-listener
 
       /*
        * Attempts to restart the listening loop.

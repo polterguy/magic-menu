@@ -2,7 +2,7 @@
 /*
  * Returns the localized specified phrase.
  */
-create-event:hyperlang.get-localized-phrase
+create-event:hyperlang.language.get-localized-phrase
 
   /*
    * Retrieving settings for user, to figure out language to listen for, etc.

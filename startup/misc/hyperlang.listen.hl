@@ -16,7 +16,7 @@ create-event:hyperlang.listen
       /*
        * Invokes default event responsible for handling input.
        */
-      hyperlang.handle-input:x:/../*/text?value
+      hyperlang.command.handle:x:/../*/text?value
 
   /*
    * Retrieving language for user, to figure out language to listen for, etc.

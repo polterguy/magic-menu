@@ -32,9 +32,9 @@ create-event:hyperlang.speak
      * Referenced word, doing a lookup into language file, and changing spoken
      * phrase accordingly.
      */
-    hyperlang.get-localized-phrase:x:/../*/_arg?value
+    hyperlang.language.get-localized-phrase:x:/../*/_arg?value
     set:x:/../*/_arg?value
-      src:x:/@hyperlang.get-localized-phrase?value
+      src:x:/@hyperlang.language.get-localized-phrase?value
         :x:/../*/_arg?value
 
   else
@@ -54,10 +54,10 @@ create-event:hyperlang.speak
        * Making sure we do our substitution.
        */
       for-each:x:/@split/*/%2
-        hyperlang.get-localized-phrase:[{0}]
+        hyperlang.language.get-localized-phrase:[{0}]
           :x:/@_dp/#?name
         set:x:/@_dp/#?name
-          src:x:/@hyperlang.get-localized-phrase?value
+          src:x:/@hyperlang.language.get-localized-phrase?value
       join:x:/@split/*?name
       set:x:/../*/_arg?value
         src:x:/@join?value

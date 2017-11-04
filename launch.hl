@@ -213,7 +213,7 @@ create-widget:hyperlang-main-container
                     /*
                      * Creates a new command, by invoking file responsible for doing just that..
                      */
-                    hyperlang.create-phrase2hyper-association
+                    hyperlang.command.create
 
                 button
                   innerValue:@"<span class=""icon-download""></span>"
@@ -223,6 +223,7 @@ create-widget:hyperlang-main-container
                     /*
                      * Downloads a backup of entire database as a zip file.
                      */
+                    micro.evaluate.file:@HYPERLANG/helpers/export-dictionary.hl
                     hyperlang.backup.download
 
                 button

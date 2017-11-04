@@ -91,7 +91,7 @@ create-event:hyperlang.show-options
                * Forward evaluated above.
                */
               .text:x:/@_dp/#?value
-              hyperlang.handle-input:x:/@.text?value
+              hyperlang.command.handle:x:/@.text?value
 
       /*
        * Loads the 25 next options.
@@ -134,7 +134,7 @@ create-event:hyperlang.show-options
                * Forward evaluated above.
                */
               .text:x:/@_dp/#?value
-              hyperlang.handle-input:x:/@.text?value
+              hyperlang.command.handle:x:/@.text?value
 
         /*
          * Returning success to caller.

@@ -368,7 +368,7 @@ create-widget
                          * making sure we pass in [pos] to explicitly override the default positioning logic.
                          */
                         eval-x:x:/+/*
-                        hyperlang.create-phrase2hyper-association:New child command
+                        hyperlang.command.create:New child command
                           pos:x:/@p5.mysql.connect/*/p5.mysql.scalar?value
                           force-parent:bool:true
 
@@ -402,21 +402,21 @@ create-widget
                          * if current command actually has a parent.
                          */
                         if:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/parent?value
-                          add:x:/../*/hyperlang.create-phrase2hyper-association
+                          add:x:/../*/hyperlang.command.create
                             src
                               pos:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/parent?value
                         if:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/global?value.int
                           =:int:1
-                          add:x:/../*/hyperlang.create-phrase2hyper-association
+                          add:x:/../*/hyperlang.command.create
                             src
                               global:bool:true
                         if:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/username?value
                           not
-                          add:x:/../*/hyperlang.create-phrase2hyper-association
+                          add:x:/../*/hyperlang.command.create
                             src
                               private:bool:false
                         eval-x:x:/+/*
-                        hyperlang.create-phrase2hyper-association:New cloned command
+                        hyperlang.command.create:New cloned command
                           hyperlambda:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/hyperlambda?value
                           force-parent:bool:true
 
