@@ -15,6 +15,7 @@ create table if not exists `commands` (
   primary key (`id`),
   unique key `id_UNIQUE` (`id`),
   key `commands_commands_idx` (`parent`),
+  unique key `global_id_UNIQUE` (`global_id`),
   constraint `fk_commands_commands` foreign key (`parent`) references `commands` (`id`) on delete cascade on update cascade
 ) engine=InnoDB auto_increment=0 default charset=utf8mb4 collate=utf8mb4_unicode_ci;
 
@@ -22,7 +23,7 @@ create table if not exists `phrases` (
   `id` int(10) unsigned not null auto_increment,
   `command` varchar(256) collate utf8mb4_unicode_ci not null,
   `lang` varchar(20) collate 'utf8mb4_unicode_ci' not null,
-  `commandid` int(10) unsigned null,
+  `commandid` int(10) unsigned not null,
   `lastused` datetime null,
   primary key (`id`),
   unique key `id_UNIQUE` (`id`),

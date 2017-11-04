@@ -127,7 +127,7 @@ create-widget
   class:no-hover
   widgets
     td
-      colspan:4
+      colspan:100
       style:"background-color:#fefefe;"
       widgets
         container
@@ -137,11 +137,13 @@ create-widget
               label
                 innerValue:Phrase(s)
                 style:"margin-bottom:0;"
+              br
               textarea
                 info:Phrase(s), one for each line
                 rows:5
                 value:x:/@join?value
                 .data-field:synonyms
+              br
               label
                 innerValue:Hyperlambda
                 style:"margin-bottom:0;"

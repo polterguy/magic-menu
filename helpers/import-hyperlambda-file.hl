@@ -1,0 +1,131 @@
+﻿
+
+/*
+ * File responsible for importing a single Hyperlambda file.
+ *
+ * Requires [filename] being filename of file to import.
+ * Expects an open database connection to "hyperlang" database.
+ */
+
+
+
+
+
+/*
+ * Sanity checking arguments.
+ */
+micro.lambda.contract.min:x:/..
+  filename:string
+
+
+
+
+
+/*
+ * Loading file.
+ */
+load-file:x:/../*/filename?value
+
+
+
+
+
+/*
+ * Iterating through each [command] entry found in our file.
+ */
+for-each:x:/@load-file/*/*/command
+
+  /*
+   * Sanity checking command, by making sure it contains at least one phrase.
+   */
+  if:x:/@_dp/#/*/phrase?count
+    =:int:0
+    throw:No [phrase] found in [command] in file {0}
+      :x:/@_dp/#/.?name
+
+  /*
+   * Inserting into "commands" table, making sure we get parent correctly.
+   *
+   * Notice, the [parent] node in a [command] object, is actually not the
+   * database "id", but rather the "global_id".
+   *
+   * This allows us to synchronize multiple databases, such that when we insert 
+   * data from one database, into another, we are not depending upon that the
+   * commands have the same database ID, which is an auto_increment number, and
+   * cannot be relied upon being unique across multiple different databases.
+   *
+   * Hence, the "global_id" is (supposed to be) a globally unique identifier,
+   * allowing us to uniquely identify commands, across all servers in the world.
+   * Since its default value is created as a GUID, this should not be a problem,
+   * and should be globally unique anyways - Unless user has hand-edited it,
+   * which is not possible in the UI of Hyperlang anyways.
+   */
+  _parent
+  if:x:/@_dp/#/*/parent?value
+
+    /*
+     * Selecting database "id" of record with the "global_id" being the value of
+     * our [parent] node from our [command], to get the parent relationship correctly.
+     */
+    p5.mysql.scalar:@"select id from commands where global_id = @global_id"
+      @global_id:x:/@_dp/#/*/parent?value
+    set:x:/@_parent?value
+      src:x:/@p5.mysql.scalar?value
+
+  /*
+   * Checking if command already exists in our database, at which point we DO NOT
+   * update it.
+   */
+  _id
+  p5.mysql.scalar:@"select id from commands where global_id = @global_id"
+    @global_id:x:/@_dp/#/*/global-id?value
+  if:x:/@p5.mysql.scalar?value
+
+    /*
+     * Command already exists, hence we do not import it, but we do (potentially)
+     * import the phrases in it, to allow for "merging" dictionary files.
+     */
+    set:x:/@_id?value
+      src:x:/@p5.mysql.scalar?value
+
+  else
+
+    /*
+     * Command did not exist, hence we insert it into "commands".
+     */
+    p5.mysql.insert:@"insert into commands (parent, hyperlambda, username, global, global_id) values (@parent, @hyperlambda, @username, @global, @global_id)"
+      @parent:x:/@_parent?value
+      @hyperlambda:x:/@_dp/#/*/hyperlambda?value
+      @username:x:/@_dp/#/*/username?value
+      @global:x:/@_dp/#/*/global?value
+      @global_id:x:/@_dp/#/*/global-id?value
+    set:x:/@_id?value
+      src:x:/@p5.mysql.insert/*/id?value
+
+  /*
+   * Iterating through each [phrase] in file, and inserting into "phrases" table.
+   */
+  for-each:x:/@_dp/#/*/phrase
+
+    /*
+     * Checking if phrase exists from before, at which point we ignore it.
+     */
+    p5.mysql.scalar:@"select count(*) from phrases where command = @command and commandid = @commandid and lang = @lang"
+      @command:x:/@_dp/#/*/command?value
+      @commandid:x:/@_id?value
+      @lang:x:/@_dp/#/*/lang?value
+    if:x:/@p5.mysql.scalar?value.long
+      !=:long:0
+
+      /*
+       * Phrase already exists.
+       */
+      continue
+
+    /*
+     * Inserting into "phrases" table.
+     */
+    p5.mysql.insert:@"insert into phrases (command, commandid, lang) values (@command, @commandid, @lang)"
+      @command:x:/@_dp/#/*/command?value
+      @commandid:x:/@_id?value
+      @lang:x:/@_dp/#/*/lang?value

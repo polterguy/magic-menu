@@ -185,7 +185,7 @@ select p.*, p2.command as parentphrase, c.username, c.global from
     and c.parent = c2.id
     {2}
 {3}
-order by global desc, lastused desc limit 25 offset @offset"
+order by global desc, lastused desc, id desc limit 25 offset @offset"
     :x:/@_where?value
     :x:/@_where-commands?value
     :x:/@_parent-filter?value

@@ -13,7 +13,7 @@ create-event:hyperlang.language.get
    * Figuring out language for user, defaulting to "English, Australian, Karen".
    */
   .defaults
-    voice:Karen,en-AU
+    voice:Daniel,en-GB
   p5.auth.my-settings.get
   split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
     =:,

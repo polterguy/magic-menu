@@ -72,7 +72,11 @@ label.input-label {
     min-width:0;
 }
 .hyperlang-grid {
-    table-layout:fixed;
+}
+.hyperlang-grid tr th:nth-child(1),
+.hyperlang-grid tr td:nth-child(1) {
+    white-space: nowrap;
+    width:50%;
 }
 .hyperlang-grid tr th:nth-child(2),
 .hyperlang-grid tr td:nth-child(2),
@@ -87,6 +91,7 @@ label.input-label {
 .hyperlang-grid tr th:nth-child(3),
 .hyperlang-grid tr td:nth-child(3) {
     white-space: nowrap;
+    width:50%;
 }
 .hyperlang-grid tr th:nth-child(3),
 .hyperlang-grid tr td:nth-child(3) {
