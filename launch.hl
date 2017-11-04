@@ -38,6 +38,20 @@ create-widget:hyperlang-main-container
                   placeholder:Filter ...
                   onkeydown:@"if (event.keyCode == 13) {p5.$('hyperlang-search-button').raise('onclick');return false;}"
 
+                button:hyperlang-clear-search-button
+                  innerValue:@"<span class=""icon-remove""></span>"
+                  title:Clears filter
+                  disabled
+                  onclick
+
+                    /*
+                     * Clears filter and invokes Ajax event for search button.
+                     */
+                    set-widget-property:hyperlang-search-textbox
+                      value:
+                    p5.web.widgets.ajax-events.raise:hyperlang-search-button
+                      onclick
+
                 container:hyperlang-select-language
                   element:select
                   style:"width:40%;"
@@ -129,6 +143,17 @@ create-widget:hyperlang-main-container
                      */
                     p5.web.viewstate.set:hyperlang.grid-filter
                       src:x:/@get-widget-property/*/*?value
+
+                    /*
+                     * Enabling clear button, if we have a filter, otherwise disabling it.
+                     */
+                    if:x:/@get-widget-property/*/*?value
+                      !=:
+                      delete-widget-property:hyperlang-clear-search-button
+                        disabled
+                    else
+                      set-widget-property:hyperlang-clear-search-button
+                        disabled
 
         div
           class:col right

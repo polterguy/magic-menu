@@ -41,23 +41,123 @@ micro.lambda.contract.optional:x:/..
  */
 _where
 _where-commands
+_parent-filter
+_union
 if:x:/../*/filter?value
   and:x:/../*/filter?value
     !=:
 
   /*
-   * Caller supplied a filter.
+   * We have a filter.
+   *
+   * Checking if user is doing a "parent search".
    */
-  set:x:/@_where?value
-    src:"and command like @filter"
-  set:x:/@_where-commands?value
-    src:@"or (p.commandid in (select id from commands where hyperlambda like @filter)
-  and p.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) group by commandid))"
-  eval-x:x:/+/*/*
-  add:x:/../*/p5.mysql.connect/*/p5.mysql.select/[0,1]
-    src
-      @filter:%{0}%
-        :x:/../*/filter?value
+  split:x:/../*/filter?value
+    =:":"
+    trim:true
+  if:x:/@split/*?count
+    =:int:2
+
+    /*
+     * Column search.
+     */
+    if:x:/@split/0?name
+      =:parent
+
+      /*
+       * Parent filter.
+       */
+      set:x:/@_parent-filter?value
+        src:@"and p2.command like @filter"
+      eval-x:x:/+/*/*
+      add:x:/../*/p5.mysql.connect/*/p5.mysql.select/[0,1]
+        src
+          @filter:%{0}%
+            :x:/@split/1?name?value
+
+    else-if:x:/@split/0?name
+      =:username
+
+      /*
+       * Username filter.
+       */
+      if:x:/@split/1?name
+        =:null
+
+        /*
+         * Empty username.
+         */
+        set:x:/@_parent-filter?value
+          src:@"and c.username is null"
+        set:x:/@_union?value
+          src:@"union all
+select p.*, null as parentphrase, c.username, c.global from
+  phrases p join commands c on c.id = p.commandid
+  where (p.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) group by commandid))
+    and c.parent is null and c.username is null"
+
+      else
+
+        /*
+         * Non empty username
+         */
+        set:x:/@_parent-filter?value
+          src:@"and c.username = @username"
+        eval-x:x:/+/*/*
+        add:x:/../*/p5.mysql.connect/*/p5.mysql.select/[0,1]
+          src
+            @username:x:/@split/1?name?value
+        set:x:/@_union?value
+          src:@"union all
+select p.*, null as parentphrase, c.username, c.global from
+  phrases p join commands c on c.id = p.commandid
+  where (p.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) group by commandid))
+    and c.parent is null and c.username = @username"
+
+    else
+
+      /*
+       * Warning user that we only accept parent and username column filters.
+       */
+      micro.windows.info:I don't recognize that filter
+        class:micro-windows-info warning
+      return
+
+  else
+
+    /*
+     * Caller supplied a filter, and it was not a column search.
+     */
+    set:x:/@_where?value
+      src:"and command like @filter"
+    set:x:/@_where-commands?value
+      src:@"or (p.commandid in (select id from commands where hyperlambda like @filter)
+    and p.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) group by commandid))"
+    eval-x:x:/+/*/*
+    add:x:/../*/p5.mysql.connect/*/p5.mysql.select/[0,1]
+      src
+        @filter:%{0}%
+          :x:/../*/filter?value
+    set:x:/@_union?value
+      src:@"union all
+select p.*, null as parentphrase, c.username, c.global from
+  phrases p join commands c on c.id = p.commandid
+  where (p.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) {0} group by commandid) {1})
+    and c.parent is null"
+        :x:/@_where?value
+        :x:/@_where-commands?value
+
+else
+
+  /*
+   * No filter, still needs union for commands not having parent commands.
+   */
+  set:x:/@_union?value
+    src:@"union all
+select p.*, null as parentphrase, c.username, c.global from
+  phrases p join commands c on c.id = p.commandid
+  where (p.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) group by commandid))
+    and c.parent is null"
 
 
 
@@ -80,19 +180,16 @@ p5.mysql.connect:[hyperlang]
 select p.*, p2.command as parentphrase, c.username, c.global from 
   phrases p join commands c on c.id = p.commandid,
   phrases p2 join commands c2 on c2.id = p2.commandid
-  where (p.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) {0} group by commandid)
-      {1})
+  where (p.id in (select max(id) from phrases where (lang = @lang or lang = @sublang) {0} group by commandid) {1})
     and p2.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) group by commandid)
     and c.parent = c2.id
-union all
-select p.*, null as parentphrase, c.username, c.global from
-  phrases p join commands c on c.id = p.commandid
-  where (p.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) {0} group by commandid)
-      {1})
-    and c.parent is null
-order by lastused desc, id desc limit 25 offset @offset"
+    {2}
+{3}
+order by global desc, lastused desc limit 25 offset @offset"
     :x:/@_where?value
     :x:/@_where-commands?value
+    :x:/@_parent-filter?value
+    :x:/@_union?value
     @lang:x:/@hyperlang.language.get/*/lang?value
     @sublang:x:/@hyperlang.language.get/*/sublang?value
     @offset:x:(/../*/offset|/../*/.defaults/*/offset)/$?value
