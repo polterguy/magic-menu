@@ -10,7 +10,7 @@
 create-event:hyperlang.language.get
 
   /*
-   * Figuring out language for user, defaulting to "English, Australian, Karen".
+   * Figuring out language and voice for user, defaulting to "English, Great Britain, Daniel".
    */
   .defaults
     voice:Daniel,en-GB

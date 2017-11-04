@@ -1,0 +1,27 @@
+
+/*
+ * Returns the name of user, defaulting to "John Doe" if he hasn't
+ * formally introduced himself.
+ */
+create-event:hyperlang.settings.get-name
+
+  /*
+   * Returns the name of user, defaulting to [Name] from language file,
+   * if user hasn't formally introduced himself.
+   */
+  .defaults
+    name
+  p5.auth.my-settings.get
+
+  /*
+   * Checking if we have a name for user.
+   */
+  if:x:/@p5.auth.my-settings.get/*/hyperlang/*/name
+    not
+    set:x:/@.defaults/*/name?value
+      hyperlang.language.get-localized-phrase:[Name]
+
+  /*
+   * Returning only voice.
+   */
+  return:x:(/@p5.auth.my-settings.get/*/hyperlang/*/name|/@.defaults/*/name)/$?value

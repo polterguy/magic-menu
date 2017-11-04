@@ -19,48 +19,51 @@ create-event:hyperlang.speak
   hyperlang.language.get
 
   /*
-   * Checking if this is a referenced word, implying a word that should be translated.
+   * Checking if there are referenced word(s) inside specified word or phrase.
    */
-  if
-    starts-with:x:/../*/_arg?value
-      src:[
-    and
-      ends-with:x:/../*/_arg?value
-        src:]
+  match:x:/../*/_arg?value
+    src:regex:/\[[^\]]*\]/i
+
+  /*
+   * Making sure we do any substitutions found inside of [_arg].
+   */
+  for-each:x:/@match/*/$?name
 
     /*
-     * Referenced word, doing a lookup into language file, and changing spoken
-     * phrase accordingly.
+     * Checking if this is an event invocation, or a localized phrase.
      */
-    hyperlang.language.get-localized-phrase:x:/../*/_arg?value
-    set:x:/../*/_arg?value
-      src:x:/@hyperlang.language.get-localized-phrase?value
-        :x:/../*/_arg?value
-
-  else
-
-    /*
-     * Checking if there are referenced word(s) inside specified word or phrase.
-     */
-    split:x:/../*/_arg?value
-      =:[
-      =:]
+    split:x:/@_dp?value
+      =:"."
     if:x:/@split/*?count
       >:int:1
 
       /*
-       * There is at least one referenced word or phrase inside specified phrase.
-       *
-       * Making sure we do our substitution.
+       * Active event invocation to retrieve value.
        */
-      for-each:x:/@split/*/%2
-        hyperlang.language.get-localized-phrase:[{0}]
-          :x:/@_dp/#?name
-        set:x:/@_dp/#?name
-          src:x:/@hyperlang.language.get-localized-phrase?value
-      join:x:/@split/*?name
+      set:x:/+?name
+        trim:x:/@_dp?value
+          chars:[]
+      foo
+
+      /*
+       * Replacing all occurrencies of currently iterated [match] inside of
+       * [_arg] to result of event invocation.
+       */
       set:x:/../*/_arg?value
-        src:x:/@join?value
+        replace:x:/../*/_arg?value
+          src:x:/@_dp?value
+          dest:x:/..set/-?value
+
+    else
+
+      /*
+       * Localized phrase, doing lookup into language file(s).
+       */
+      hyperlang.language.get-localized-phrase:x:/@_dp?value
+      set:x:/../*/_arg?value
+        replace:x:/../*/_arg?value
+          src:x:/@_dp?value
+          dest:x:/@hyperlang.language.get-localized-phrase?value
 
   /*
    * Applies arguments.

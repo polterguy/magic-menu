@@ -1,0 +1,24 @@
+
+/*
+ * Creates the event that returns the currently configured voice for user.
+ *
+ * Will return e.g. "Daniel" or "Karen", depending upon which voice user has 
+ * configured to use.
+ */
+create-event:hyperlang.language.get-voice
+
+  /*
+   * Figuring out voice for user, defaulting to "Daniel".
+   */
+  .defaults
+    voice:Daniel
+  p5.auth.my-settings.get
+  split:x:(/@p5.auth.my-settings.get/*/hyperlang/*/voice|/@.defaults/*/voice)/$?value
+    =:,
+  split:x:/@split/0/-?name
+    =:-
+
+  /*
+   * Returning only voice.
+   */
+  return:x:/@split/@split/0?name

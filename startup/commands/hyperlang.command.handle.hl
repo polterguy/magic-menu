@@ -20,7 +20,7 @@ create-event:hyperlang.command.handle
      * Stopping Hyperlang, and returning early to avoid evaluating the rest 
      * of our event.
      */
-    hyperlang.quit
+    hyperlang.listen:[Waiting]
     return
 
   /*
