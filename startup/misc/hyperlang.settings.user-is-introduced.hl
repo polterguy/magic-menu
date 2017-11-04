@@ -1,0 +1,26 @@
+
+/*
+ * Returns true if user hasn't formally introduced himself.
+ */
+create-event:hyperlang.settings.user-is-introduced
+
+  /*
+   * Retrieving settings, and checking if name is default or not.
+   */
+  p5.auth.my-settings.get
+
+  /*
+   * Checking if we have a name for user.
+   */
+  if:x:/@p5.auth.my-settings.get/*/hyperlang/*/name?value
+    not
+
+    /*
+     * User hasn't introduced himself.
+     */
+    return:bool:true
+
+  /*
+   * User has introduced himself.
+   */
+  return:bool:false
