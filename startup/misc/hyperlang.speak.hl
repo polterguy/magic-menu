@@ -40,9 +40,14 @@ create-event:hyperlang.speak
       /*
        * Active event invocation to retrieve value.
        */
-      set:x:/+?name
-        trim:x:/@_dp?value
-          chars:[]
+      trim:x:/@_dp?value
+        chars:[]
+      split:x:/@trim?value
+        =:":"
+      set:x:/+2?name
+        src:x:/@split/0?name
+      set:x:/+?value
+        src:x:/@split/1?name
       foo
 
       /*
