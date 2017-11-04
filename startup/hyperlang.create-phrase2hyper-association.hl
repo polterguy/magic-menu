@@ -276,19 +276,23 @@ hyperlang.listen:OK, I did that. What do you want me to do now?
                               /*
                                * Global command, implying no "parent" relationship.
                                */
-                              p5.mysql.insert:@"insert into commands (hyperlambda, username, global) values (@hyperlambda, @username, 1)"
+                              p5.types.guid.new
+                              p5.mysql.insert:@"insert into commands (hyperlambda, username, global, global_id) values (@hyperlambda, @username, 1, @globalid)"
                                 @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
                                 @username:x:/@whoami/*/username?value
+                                @globalid:x:/@p5.types.guid.new?value.string
 
                             else
 
                               /*
                                * Not a global command, inserting also "parent"
                                */
-                              p5.mysql.insert:@"insert into commands (hyperlambda, username, parent) values (@hyperlambda, @username, @parent)"
+                              p5.types.guid.new
+                              p5.mysql.insert:@"insert into commands (hyperlambda, username, parent, global_id) values (@hyperlambda, @username, @parent, @globalid)"
                                 @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
                                 @username:x:/@whoami/*/username?value
                                 @parent:x:/@_pos?value
+                                @globalid:x:/@p5.types.guid.new?value.string
 
                           else
 
@@ -300,17 +304,21 @@ hyperlang.listen:OK, I did that. What do you want me to do now?
                               /*
                                * Global command, implying no "parent" relationship.
                                */
-                              p5.mysql.insert:@"insert into commands (hyperlambda, global) values (@hyperlambda, 1)"
+                              p5.types.guid.new
+                              p5.mysql.insert:@"insert into commands (hyperlambda, global, global_id) values (@hyperlambda, 1, @globalid)"
                                 @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
+                                @globalid:x:/@p5.types.guid.new?value.string
 
                             else
 
                               /*
                                * Not a global command, inserting also "parent"
                                */
-                              p5.mysql.insert:@"insert into commands (hyperlambda, parent) values (@hyperlambda, @parent)"
+                              p5.types.guid.new
+                              p5.mysql.insert:@"insert into commands (hyperlambda, parent, global_id) values (@hyperlambda, @parent, @globalid)"
                                 @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
                                 @parent:x:/@_pos?value
+                                @globalid:x:/@p5.types.guid.new?value.string
 
                           /*
                            * Splitting synonyms, and inserting one 'phrase' for each.

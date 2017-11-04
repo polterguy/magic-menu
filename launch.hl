@@ -28,7 +28,7 @@ create-widget:hyperlang-main-container
       class:row
       widgets
         div
-          class:col-70 right
+          class:col-67 right
           widgets
             div
               class:strip fill
@@ -173,6 +173,16 @@ create-widget:hyperlang-main-container
                      * Creates a new command, by invoking file responsible for doing just that..
                      */
                     hyperlang.create-phrase2hyper-association
+
+                button
+                  innerValue:@"<span class=""icon-download""></span>"
+                  title:Download backup
+                  onclick
+
+                    /*
+                     * Downloads a backup of entire database as a zip file.
+                     */
+                    hyperlang.backup.download
 
                 button
                   innerValue:@"<span class=""icon-home""></span>"
