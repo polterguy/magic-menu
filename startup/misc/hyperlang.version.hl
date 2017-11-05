@@ -1,0 +1,7 @@
+
+/*
+ * Creates version Active Event.
+ */
+create-event:hyperlang.version
+
+  return:decimal:1.0

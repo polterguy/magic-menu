@@ -206,7 +206,7 @@ create-widget:hyperlang-main-container
 
                 button
                   innerValue:@"<span class=""icon-download""></span>"
-                  title:Download backup
+                  title:Download dictionary
                   onclick
 
                     /*
@@ -215,6 +215,10 @@ create-widget:hyperlang-main-container
                     micro.evaluate.file:@HYPERLANG/helpers/export-dictionary.hl
                     hyperlang.backup.download
 
+                button
+                  innerValue:@"<span class=""icon-upload""></span>"
+                  title:Upload dictionary file
+                  onclick:@"p5.dropzone.browse();event.stopPropagation(true);return false;"
                 button
                   innerValue:@"<span class=""icon-home""></span>"
                   title:Close Hyperlang
