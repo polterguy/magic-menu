@@ -129,10 +129,11 @@ create-widget:hyperlang-main-container
                         /*
                          * Setting widget's initial value to language setting for user, if possible.
                          */
-                        p5.auth.my-settings.get
-                        if:x:/@p5.auth.my-settings.get/*/hyperlang/*/voice?value
-                          set-widget-property:hyperlang-select-language
-                            value:x:/@p5.auth.my-settings.get/*/hyperlang/*/voice?value
+                        hyperlang.settings.get-language
+                        set-widget-property:hyperlang-select-language
+                          value:{0},{1}
+                            :x:/@hyperlang.settings.get-language/*/voice?value
+                            :x:/@hyperlang.settings.get-language/*/sublang?value
 
                   onchange
 

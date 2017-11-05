@@ -1,0 +1,18 @@
+
+/*
+ * Creates the event that returns the currently configured voice for user.
+ *
+ * Will return e.g. "Daniel" or "Karen", depending upon which voice user has 
+ * configured to use.
+ */
+create-event:hyperlang.settings.get-voice
+
+  /*
+   * Figuring out voice for user, defaulting to "Daniel".
+   */
+  hyperlang.settings.get-language
+
+  /*
+   * Returning voice to caller.
+   */
+  return:x:/@hyperlang.settings.get-language/*/voice?value

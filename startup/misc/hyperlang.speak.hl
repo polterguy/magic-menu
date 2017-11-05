@@ -16,7 +16,7 @@ create-event:hyperlang.speak
   /*
    * Retrieving language for user, to figure out voice to use, etc.
    */
-  hyperlang.language.get
+  hyperlang.settings.get-language
 
   /*
    * Checking if there are referenced word(s) inside specified word or phrase.
@@ -82,6 +82,6 @@ create-event:hyperlang.speak
   eval-x:x:/+/*/voice
   micro.speak:x:/../*/_arg?value
     voice:{0},{1}-{2}
-      :x:/@hyperlang.language.get/*/voice?value
-      :x:/@hyperlang.language.get/*/lang?value
-      :x:/@hyperlang.language.get/*/sublang?value
+      :x:/@hyperlang.settings.get-language/*/voice?value
+      :x:/@hyperlang.settings.get-language/*/lang?value
+      :x:/@hyperlang.settings.get-language/*/sublang?value

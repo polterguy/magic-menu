@@ -1,0 +1,74 @@
+
+/*
+ * Sets the sepcified [_arg] setting to the given [value].
+ *
+ * Notice, if you don't supply a [value], any existing settings value for the
+ * [_arg] setting will simply be removed.
+ */
+create-event:hyperlang.settings.set
+
+  /*
+   * Sanity checking arguments.
+   */
+  micro.lambda.contract.min:x:/..
+    _arg:string
+  micro.lambda.contract.optional:x:/..
+    value:string
+
+  /*
+   * Retrieves settings for user.
+   */
+  p5.auth.my-settings.get
+
+  /*
+   * Making sure we pass in all old settings to our "set settings" invocation 
+   * below.
+   */
+  add:x:/../*/p5.auth.my-settings.set
+    src:x:/@p5.auth.my-settings.get/*
+
+  /*
+   * Making sure we remove the specified [_arg] setting from our set invocation below.
+   *
+   * And also making sure we create a [hyperlang] setting section, if it doesn't 
+   * exist from before.
+   */
+  set:x:/../*/p5.auth.my-settings.set/*/hyperlang/*/{0}
+    :x:/@_arg?value
+  if:x:/../*/p5.auth.my-settings.set/*/hyperlang
+    not
+
+    /*
+     * Since not Hyperlang settings existed, we make sure we explicitly add the
+     * section for Hyperlang in the user's settings.
+     */
+    add:x:/../*/p5.auth.my-settings.set
+      src
+        hyperlang
+
+  /*
+   * Adding specified [_arg] setting, with the specified [value].
+   *
+   * But only if caller supplied a [value] argument, otherwise this is a remove
+   * invocation.
+   */
+  if:x:/../*/value?value
+
+    /*
+     * Caller supplied a [value].
+     */
+    add:x:/../*/p5.auth.my-settings.set/*/hyperlang
+      src:x:/../*/_arg?value
+    set:x:/../*/p5.auth.my-settings.set/*/hyperlang/0/-?value
+      src:x:/../*/value?value
+
+  else
+
+    /*
+     * Checking if Hyperlang section is empty, at which we remove it entirely.
+     */
+    if:x:/../*/p5.auth.my-settings.set/*/hyperlang/*?count
+      =:int:0
+      set:x:/../*/p5.auth.my-settings.set/*/hyperlang
+
+  p5.auth.my-settings.set

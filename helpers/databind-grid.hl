@@ -166,7 +166,7 @@ select p.*, null as parentphrase, c.username, c.global from
 /*
  * Retrieving language for user, such that we can parametrize SQL.
  */
-hyperlang.language.get
+hyperlang.settings.get-language
 
 
 
@@ -190,8 +190,8 @@ order by global desc, lastused desc, id desc limit 25 offset @offset"
     :x:/@_where-commands?value
     :x:/@_parent-filter?value
     :x:/@_union?value
-    @lang:x:/@hyperlang.language.get/*/lang?value
-    @sublang:x:/@hyperlang.language.get/*/sublang?value
+    @lang:x:/@hyperlang.settings.get-language/*/lang?value
+    @sublang:x:/@hyperlang.settings.get-language/*/sublang?value
     @offset:x:(/../*/offset|/../*/.defaults/*/offset)/$?value
 
   /*

@@ -26,7 +26,7 @@ create-event:hyperlang.command.handle
   /*
    * Retrieving language for current user, which is necessary to filter our results.
    */
-  hyperlang.language.get
+  hyperlang.settings.get-language
 
   /*
    * Looks up command from database.
@@ -55,8 +55,8 @@ order by `global` limit 1"
           :x:/../*/_arg?value
         @parent:x:/@hyperlang.grammar-position.get?value
         @username:x:/@whoami/*/username?value
-        @lang:x:/@hyperlang.language.get/*/lang?value
-        @sublang:x:/@hyperlang.language.get/*/sublang?value
+        @lang:x:/@hyperlang.settings.get-language/*/lang?value
+        @sublang:x:/@hyperlang.settings.get-language/*/sublang?value
 
       /*
        * Adding command to buffer above.
@@ -79,8 +79,8 @@ order by `global` limit 1"
         @command2:%{0}%
           :x:/../*/_arg?value
         @username:x:/@whoami/*/username?value
-        @lang:x:/@hyperlang.language.get/*/lang?value
-        @sublang:x:/@hyperlang.language.get/*/sublang?value
+        @lang:x:/@hyperlang.settings.get-language/*/lang?value
+        @sublang:x:/@hyperlang.settings.get-language/*/sublang?value
 
       /*
        * Adding command to buffer above.

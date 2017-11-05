@@ -21,7 +21,7 @@ create-event:hyperlang.listen
   /*
    * Retrieving language for user, to figure out language to listen for, etc.
    */
-  hyperlang.language.get
+  hyperlang.settings.get-language
 
   /*
    * Applying [onfinish], or default value if none was given.
@@ -63,7 +63,7 @@ create-event:hyperlang.listen
          * Making sure we evaluate [onfinish] inside a try/catch block.
          */
         micro.listen
-          lang:x:/@hyperlang.language.get/*/lang?value
+          lang:x:/@hyperlang.settings.get-language/*/lang?value
           onfinish
 
             /*
@@ -113,7 +113,7 @@ create-event:hyperlang.listen
      * Making sure we evaluate [onfinish] in a try/catch block.
      */
     micro.listen
-      lang:x:/@hyperlang.language.get/*/lang?value
+      lang:x:/@hyperlang.settings.get-language/*/lang?value
       onfinish
 
         /*

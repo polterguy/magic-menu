@@ -1,0 +1,40 @@
+
+/*
+ * Returns the specified [_arg] setting value, if any.
+ *
+ * Optionally pass in [default], who's value will be returned if the setting doesn't exist.
+ */
+create-event:hyperlang.settings.get
+
+  /*
+   * Sanity checking arguments.
+   */
+  micro.lambda.contract.min:x:/..
+    _arg:string
+  micro.lambda.contract.optional:x:/..
+    default:string
+
+  /*
+   * Retrieving settings for user.
+   */
+  p5.auth.my-settings.get
+
+  /*
+   * Checking if setting didn't exist, and caller supplied a [default], at which
+   * point we return the value of [default].
+   */
+  if:x:/@p5.auth.my-settings.get/*/hyperlang/*/{0}
+    :x:/../*/_arg?value
+    not
+
+    /*
+     * Returning default value specified by caller.
+     */
+    and:x:/../*/default?value
+    return:x:/../*/default?value
+
+  /*
+   * Returning specified setting.
+   */
+  return:x:/@p5.auth.my-settings.get/*/hyperlang/*/{0}?value
+    :x:/../*/_arg?value

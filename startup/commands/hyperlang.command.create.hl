@@ -112,7 +112,7 @@ hyperlang.listen:OK
   /*
    * Retrieving language for user, to parametrise SQL.
    */
-  hyperlang.language.get
+  hyperlang.settings.get-language
 
   /*
    * Creating a modal widget, which asks user to type in Hyperlambda, and configure
@@ -200,12 +200,12 @@ hyperlang.listen:OK
                * Figuring out the first relevant phrase, and displaying it as
                * widget's innerValue.
                */
-              hyperlang.language.get
+              hyperlang.settings.get-language
               p5.mysql.connect:[hyperlang]
                 p5.mysql.scalar:@"select command from phrases where commandid in (select id from commands where id = @id) and (lang = @lang or lang = @sublang) order by lastused, id limit 1"
                   @id:x:/@_pos?value
-                  @lang:x:/@hyperlang.language.get/*/lang?value
-                  @sublang:x:/@hyperlang.language.get/*/sublang?value
+                  @lang:x:/@hyperlang.settings.get-language/*/lang?value
+                  @sublang:x:/@hyperlang.settings.get-language/*/sublang?value
                 set-widget-property:x:/../*/_event?value
                   innerValue:@"Parent: '{0}'"
                     :x:/@p5.mysql.scalar?value
@@ -328,7 +328,7 @@ hyperlang.listen:OK
                            * Defaulting language to user's configure language, and only overriding the language,
                            * if user explicitly chose to override it, with a ":".
                            */
-                          hyperlang.language.get
+                          hyperlang.settings.get-language
                           split:x:/@micro.form.serialize/*/synonyms?value
                             =:"\r\n"
                           p5.types.date.now
@@ -359,7 +359,7 @@ hyperlang.listen:OK
                                * Using default language.
                                */
                               set:x:/@_lang?value
-                                src:x:/@hyperlang.language.get/*/lang?value
+                                src:x:/@hyperlang.settings.get-language/*/lang?value
 
                             else
 

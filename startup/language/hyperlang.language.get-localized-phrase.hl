@@ -7,7 +7,7 @@ create-event:hyperlang.language.get-localized-phrase
   /*
    * Retrieving settings for user, to figure out language to listen for, etc.
    */
-  hyperlang.language.get
+  hyperlang.settings.get-language
 
   /*
    * Making sure we prioritize "sublang" if it exists.
@@ -15,13 +15,13 @@ create-event:hyperlang.language.get-localized-phrase
   if
     fetch:x:/0/0?value
       file-exists:@HYPERLANG/configuration/lang-{0}.hl
-        :x:/@hyperlang.language.get/*/sublang?value
+        :x:/@hyperlang.settings.get-language/*/sublang?value
 
     /*
      * Localized file exists.
      */
     load-file:@HYPERLANG/configuration/lang-{0}.hl
-      :x:/@hyperlang.language.get/*/sublang?value
+      :x:/@hyperlang.settings.get-language/*/sublang?value
     return:x:/@load-file/*/*/\{0}?value
       :x:/../*/_arg?value
 
@@ -33,13 +33,13 @@ create-event:hyperlang.language.get-localized-phrase
     if
       fetch:x:/0/0?value
         file-exists:@HYPERLANG/configuration/lang-{0}.hl
-          :x:/@hyperlang.language.get/*/lang?value
+          :x:/@hyperlang.settings.get-language/*/lang?value
 
       /*
        * Localized "root" language file exists.
        */
       load-file:@HYPERLANG/configuration/lang-{0}.hl
-        :x:/@hyperlang.language.get/*/lang?value
+        :x:/@hyperlang.settings.get-language/*/lang?value
       return:x:/@load-file/*/*/\{0}?value
         :x:/../*/_arg?value
 

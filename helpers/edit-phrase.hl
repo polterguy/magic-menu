@@ -50,7 +50,7 @@ p5.mysql.connect:[hyperlang]
 /*
  * Preparing all synonyms for databind operation.
  */
-hyperlang.language.get
+hyperlang.settings.get-language
 .synonyms
 for-each:x:/@p5.mysql.connect/*/p5.mysql.select/[1,2]/*
 
@@ -59,7 +59,7 @@ for-each:x:/@p5.mysql.connect/*/p5.mysql.select/[1,2]/*
    * main language for user, at which point we do not prepend the language declaration
    * for it.
    */
-  if:x:/@hyperlang.language.get/*/lang?value
+  if:x:/@hyperlang.settings.get-language/*/lang?value
     =:x:/@_dp/#/*/lang?value
 
     /*
@@ -225,7 +225,7 @@ create-widget
                               /*
                                * Retrieving language for current user, which is necessary to filter our results.
                                */
-                              hyperlang.language.get
+                              hyperlang.settings.get-language
 
                               /*
                                * Inserting new phrases.
@@ -264,7 +264,7 @@ create-widget
                                   add:x:/..for-each/*/p5.mysql.insert
                                     src
                                       @command:x:/@_dp?value
-                                      @lang:x:/@hyperlang.language.get/*/lang?value
+                                      @lang:x:/@hyperlang.settings.get-language/*/lang?value
 
                                 else
 

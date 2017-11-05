@@ -56,7 +56,7 @@ create-event:hyperlang.grammar-position.list-options
    */
   whoami
   hyperlang.grammar-position.get
-  hyperlang.language.get
+  hyperlang.settings.get-language
 
   /*
    * Checking parent, and parametrizing SQL accordingly.
@@ -85,8 +85,8 @@ group by c.id, p.lastused order by c.`global`, p.lastused, c.id {1}"
       :x:/@_tail?value
       :x:/@_parent?value
       @username:x:/@whoami/*/username?value
-      @lang:x:/@hyperlang.language.get/*/lang?value
-      @sublang:x:/@hyperlang.language.get/*/sublang?value
+      @lang:x:/@hyperlang.settings.get-language/*/lang?value
+      @sublang:x:/@hyperlang.settings.get-language/*/sublang?value
 
     /*
      * Parametrizing return invocation below.
