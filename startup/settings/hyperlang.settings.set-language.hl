@@ -1,0 +1,21 @@
+
+/*
+ * Creates the event that sets the current language for user.
+ *
+ * Expects language to be in "Daniel,en-GB" format and that the language is given
+ * as [_arg].
+ */
+create-event:hyperlang.settings.set-language
+
+  /*
+   * Sanity checking arguments.
+   */
+  micro.lambda.contract.min:x:/..
+    _arg:string
+
+  /*
+   * Updating settings for user.
+   */
+  eval-x:x:/+/*
+  hyperlang.settings.set:voice
+    value:x:/../*/_arg?value

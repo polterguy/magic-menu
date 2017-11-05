@@ -142,19 +142,7 @@ create-widget:hyperlang-main-container
                      */
                     get-widget-property:x:/../*/_event?value
                       value
-                    p5.auth.my-settings.get
-                    if:x:/@p5.auth.my-settings.get/*/hyperlang
-                      not
-                      add:x:/@p5.auth.my-settings.get
-                        src:hyperlang
-                    set:x:/@p5.auth.my-settings.get/*/hyperlang/*/voice
-                    eval-x:x:/+/*/*
-                    add:x:/@p5.auth.my-settings.get/*/hyperlang
-                      src
-                        voice:x:/@get-widget-property/*/*?value
-                    add:x:/../*/p5.auth.my-settings.set
-                      src:x:/@p5.auth.my-settings.get/*
-                    p5.auth.my-settings.set
+                    hyperlang.settings.set-language:x:/@get-widget-property/*/*?value
 
                     /*
                      * Re-databinding grid.
