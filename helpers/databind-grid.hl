@@ -72,7 +72,7 @@ if:x:/../*/filter?value
   set:x:/@_sql?value
     replace:x:/@_sql?value
       src:{{filter2}}
-      dest:"or c.hyperlambda like @filter"
+      dest:"or (c.hyperlambda like @filter and p.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) group by commandid))"
 
 else
 
@@ -92,6 +92,8 @@ else
 
 /*
  * Adding "tail" to SQL.
+ *
+ * Notice, we show "Global" commands first.
  */
 set:x:/@_sql?value
   src:"{0} order by global desc, lastused desc, id desc limit 25 offset @offset"
@@ -117,7 +119,8 @@ p5.mysql.connect:[hyperlang]
   p5.mysql.select:x:/@_sql?value
     @lang:x:/@hyperlang.settings.get-language/*/lang?value
     @sublang:x:/@hyperlang.settings.get-language/*/sublang?value
-    @filter:x:/../*/filter?value
+    @filter:%{0}%
+      :x:/../*/filter?value
     @offset:x:(/../*/offset|/../*/.defaults/*/offset)/$?value
 
   /*

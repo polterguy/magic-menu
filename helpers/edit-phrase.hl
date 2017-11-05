@@ -20,12 +20,17 @@ micro.lambda.contract.min:x:/..
 
 
 /*
- * Checking if item is alread being edited, at which point we simply return early,
- * doing nothing.
+ * Checking if item is alread being edited, at which point we delete editor 
+ * for item, and return early.
+ *
+ * This simple little "trick", makes it far easier to "sneak peek" at the content
+ * of an item, as the user is browsing his items.
  */
 p5.web.widgets.find:hyperlang-phrases-grid
   .edit:x:/../*/id?value
 if:x:/@p5.web.widgets.find/*/*?value
+
+  delete-widget:x:/@p5.web.widgets.find/*/*?value
   return
 
 
@@ -128,7 +133,15 @@ create-widget
   widgets
     td
       colspan:100
-      style:"background-color:#fefefe;"
+
+      /*
+       * Notice, the "max width" below, is a little trick, necessary to avoid having
+       * CodeMirror resize itself, beyond the width of the table size.
+       *
+       * However, this does add vertical scrolling on CodeMirror, but rather that, than
+       * having the grid "pop in and out" of "random widths" ...
+       */
+      style:"background-color:#fefefe;max-width:50px;"
       widgets
         container
           class:rounded shaded bg air-inner air-top
