@@ -2,20 +2,17 @@
 /*
  * Creates the event that shows all available options to user.
  */
-create-event:hyperlang.show-options
+create-event:hyperlang.options.show
 
   /*
-   * Checking if widget exists from before, and if so, we return early.
+   * Ensuring that "options" window is created.
    */
-  if
-    fetch:x:/0/0?value
-      widget-exists:hyperlang-help
-    delete-widget:hyperlang-help
+  hyperlang.options._ensure-window
 
   /*
-   * Creates our "help" widget, making sure we reset the "pager".
+   * Clearing out "current page" viewstate value.
    */
-  p5.web.viewstate.set:hyperlang.show-options._databind.offset
+  p5.web.viewstate.set:hyperlang.options.offset
     src:0
   create-container-widget:hyperlang-help
     class:hyperlang-help rounded shaded bg air-inner

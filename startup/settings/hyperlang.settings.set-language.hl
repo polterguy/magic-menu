@@ -2,7 +2,7 @@
 /*
  * Creates the event that sets the current language for user.
  *
- * Expects language to be in "Daniel,en-GB" format and that the language is given
+ * Expects language to be in "Daniel,en-GB" format, and that the language is given
  * as [_arg].
  */
 create-event:hyperlang.settings.set-language

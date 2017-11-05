@@ -1,0 +1,13 @@
+
+/*
+ * Creates the event that closes the "help" window.
+ */
+create-event:hyperlang.options.close
+
+  /*
+   * Checking if widget exists already, and if so, deleting it.
+   */
+  if
+    fetch:x:/0/0?value
+      widget-exists:hyperlang-help
+    delete-widget:hyperlang-help

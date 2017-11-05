@@ -54,16 +54,16 @@ label.hyperlang-tip {
     position:fixed;
     top:1rem;
     right:1rem;
-    min-width:40%;
+    min-width:25%;
     display:inline-block;
     z-index:1000;
 }
 .hyperlang-help ul {
-    margin:0;
+    margin-bottom:0;
 }
 .hyperlang-help ul li {
-    list-style-type:none;
     cursor:pointer;
+    list-style-type:circle;
 }
 .hyperlang-help ul li:hover {
     background-color:rgba(0,0,0,.1);

@@ -1,0 +1,65 @@
+
+/*
+ * Creates the event that shows the previous page of available options to user.
+ */
+create-event:hyperlang.options.show-previous
+
+  /*
+   * Ensuring that "options" window is created.
+   */
+  hyperlang.options._ensure-window
+
+  /*
+   * Retrieves current "page" for options.
+   */
+  p5.web.viewstate.get:hyperlang.options.offset
+
+  /*
+   * Checking if we have no more previous options.
+   */
+  if:x:/@p5.web.viewstate.get/*/hyperlang.options.offset?value.long
+    =:long:0
+    or:x:/@p5.web.viewstate.get/*/hyperlang.options.offset
+      not
+
+    /*
+     * We're at the beginning of our options dataset, returning false to caller,
+     * to signal "failure".
+     */
+    return:bool:false
+
+  /*
+   * Decrements current page.
+   */
+  hyperlang.settings.get:no-options
+    default:10
+  -:x:/@p5.web.viewstate.get/*?value.long
+    _:x:/@hyperlang.settings.get?value
+
+  /*
+   * Retrieving options with offset incremented now.
+   */
+  eval-x:x:/+/*
+  hyperlang.grammar-position.list-options
+    limit:x:/@hyperlang.settings.get?value
+    offset:x:/@-?value.long
+
+  /*
+   * Updating "current page" value.
+   */
+  p5.web.viewstate.set:hyperlang.options.offset
+    src:x:/@-?value
+
+  /*
+   * Parametrising and invoking event responsible for "data binding" options window.
+   */
+  add:x:/../*/hyperlang.options._create-options/*/options
+    src:x:/@hyperlang.grammar-position.list-options/*
+  hyperlang.options._create-options
+    parent:hyperlang-help-list
+    options
+
+  /*
+   * Returning success to caller.
+   */
+  return:bool:true

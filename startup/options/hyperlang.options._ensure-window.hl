@@ -1,0 +1,22 @@
+
+/*
+ * Private event that ensures that our common "options" window is created.
+ */
+create-event:hyperlang.options._ensure-window
+
+  /*
+   * Checking if widget exists already, and if so, returning early.
+   */
+  if
+    fetch:x:/0/0?value
+      widget-exists:hyperlang-help
+    return
+
+  /*
+   * Creates common helper window, that displays options.
+   */
+  create-container-widget:hyperlang-help
+    class:hyperlang-help rounded shaded bg air-inner
+    widgets
+      container:hyperlang-help-list
+        element:ul

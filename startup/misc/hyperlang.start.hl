@@ -48,7 +48,7 @@ create-event:hyperlang.start
          * if it exists.
          */
         hyperlang.speak:[Goodbye]
-        hyperlang.show-options.close
+        hyperlang.options.close
         if
           fetch:x:/0/0?value
             widget-exists:hyperlang-listener

@@ -1,0 +1,44 @@
+
+/*
+ * Internal event for creating options elements.
+ *
+ * Requires [parent] and [options] being collection of options to display.
+ */
+create-event:hyperlang.options._create-options
+
+  /*
+   * Sanity checking arguments.
+   */
+  micro.lambda.contract.min:x:/..
+    parent:string
+    options
+
+  /*
+   * Clears previous "li" elements.
+   */
+  clear-widget:x:/../*/parent?value
+
+  /*
+   * Looping through each return value from above invocation.
+   */
+  for-each:x:/../*/options/*
+
+    /*
+     * Creating an "li" element for currently iterated option.
+     */
+    eval-x:x:/+/**/.text
+    create-widget
+      element:li
+      parent:x:/../*/parent?value
+      widgets
+        a
+          href:#
+          role:button
+          innerValue:x:/@_dp/#?value
+          onclick
+
+            /*
+             * Forward evaluated above.
+             */
+            .text:x:/@_dp/#?value
+            hyperlang.command.handle:x:/@.text?value
