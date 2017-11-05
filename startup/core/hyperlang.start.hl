@@ -54,6 +54,11 @@ create-event:hyperlang.start
                */
               hyperlang.stop
 
+          literal:hyperlang-current-text
+            element:label
+            class:hyperlang-tip
+            visible:false
+
           button
             style:"margin-bottom:0;"
             innerValue:@"<span class=""icon-question-circle""></span>"
@@ -64,11 +69,6 @@ create-event:hyperlang.start
                * Showing options for Hyperlang.
                */
               hyperlang.options.show
-
-          literal:hyperlang-current-text
-            element:label
-            class:hyperlang-tip
-            visible:false
 
   /*
    * Greets user, and asks for input.

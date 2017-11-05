@@ -2,8 +2,8 @@
 /*
  * Creates the event that pops one position off from the hierarchy.
  *
- * Optionally pass in [no-post] to avoid broadcasting change of position,
- * or [_arg] being an integer value, to pop [_arg] positions in one invocation.
+ * Optionally pass in [_arg] being an integer value, to pop [_arg] number of
+ * positions in one invocation.
  */
 create-event:hyperlang.grammar-position.pop
 
@@ -50,9 +50,6 @@ create-event:hyperlang.grammar-position.pop
     src
 
   /*
-   * Posting "changed" event, but only if caller did not explicitly stop 
-   * us from doing such.
+   * Posting "changed" event.
    */
-  if:x:/../*/no-post?value
-    !=:bool:true
-    hyperlang.position.changed
+  hyperlang.position.changed
