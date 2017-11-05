@@ -42,6 +42,18 @@ create-event:hyperlang.options._ensure-window
                   container:hyperlang-help-list-custom
                     element:ul
                     class:hyperlang-custom-options
+                    events
+
+                      /*
+                       * Helper active event to clear custom options
+                       */
+                      hyperlang.options.clear-custom
+
+                        /*
+                         * Clearing custom options.
+                         */
+                        clear-widget:x:/../*/_event?value
+
                   container:hyperlang-help-list
                     element:ul
                     class:hyperlang-options
