@@ -1,0 +1,15 @@
+
+/*
+ * Creates the event that returns the current text.
+ */
+create-event:hyperlang.get-text
+
+  /*
+   * Verifying widget exists before we return its value.
+   */
+  if
+    fetch:x:/0/0?value
+      widget-exists:hyperlang-current-text
+    get-widget-property:hyperlang-current-text
+      innerValue
+    return:x:/@get-widget-property/*/*?value

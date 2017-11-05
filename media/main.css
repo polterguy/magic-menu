@@ -54,18 +54,39 @@ label.hyperlang-tip {
     position:fixed;
     top:1rem;
     right:1rem;
-    min-width:25%;
+    min-width:20%;
+    max-width:50%;
     display:inline-block;
     z-index:1000;
 }
 .hyperlang-help ul {
     margin-bottom:0;
+    margin-top:.5rem;
 }
 .hyperlang-help ul li {
     cursor:pointer;
     list-style-type:circle;
 }
 .hyperlang-help ul li:hover {
+    background-color:rgba(0,0,0,.1);
+}
+.hyperlang-help ul.hyperlang-options {
+}
+.hyperlang-help ul li a {
+    display:block;
+}
+.hyperlang-help-close {
+    position:absolute;
+    top:.5rem;
+    right:.5rem;
+}
+.hyperlang-help-pager {
+    padding-left: 15px;
+    padding-right: 15px;
+    display:inline-block;
+    margin-top:.5rem;
+}
+.hyperlang-help-pager:hover {
     background-color:rgba(0,0,0,.1);
 }
 label.input-label {

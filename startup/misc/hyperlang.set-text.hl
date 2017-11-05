@@ -1,0 +1,53 @@
+
+/*
+ * Creates the event that sets the "current text" (tip).
+ *
+ * Expects [_arg] being the new text to display.
+ */
+create-event:hyperlang.set-text
+
+  /*
+   * Sanity checking arguments.
+   */
+  micro.lambda.contract.min:x:/..
+    _arg:text
+
+  /*
+   * Verifying widget actually exists before we attempt to change its value.
+   */
+  if
+    fetch:x:/0/0?value
+      widget-exists:hyperlang-current-text
+
+    /*
+     * Checking if we were given an actual text value, and if not, making widget
+     * invisible.
+     */
+    if:x:/../*/_arg?value
+      and:x:/../*/_arg?value
+        !=:
+
+      /*
+       * Text was given.
+       */
+      set-widget-property:hyperlang-current-text
+        innerValue:x:/../*/_arg?value
+        visible:true
+
+    else
+
+      /*
+       * Text was not given.
+       */
+      set-widget-property:hyperlang-current-text
+        visible:false
+
+    /*
+     * Returning success to caller.
+     */
+    return:bool:true
+
+  /*
+   * Returning failure to caller.
+   */
+  return:bool:false

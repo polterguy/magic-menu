@@ -1,0 +1,76 @@
+
+/*
+ * Creates the event that actually starts Hyperlang.
+ *
+ * You can override the default greeting with [greeting]
+ */
+create-event:hyperlang.start
+
+  /*
+   * Defaults.
+   */
+  .defaults
+    greeting:[Hello]
+
+  /*
+   * Checking if Hyperlang is already initiated from before, and if so, making
+   * sure we close any previous instances first.
+   */
+  if
+    fetch:x:/0/0?value
+      widget-exists:hyperlang-listener
+    delete-widget:hyperlang-listener
+
+  /*
+   * Making sure we reset grammar position.
+   */
+  hyperlang.grammar-position.clear
+
+  /*
+   * Creating main Hyperlang widget.
+   */
+  create-widget:hyperlang-listener
+    class:hyperlang-listener shaded rounded air-inner
+    widgets
+      div
+        class:strip
+        widgets
+          button
+            style:"margin-bottom:0;"
+            innerValue:@"<span class=""icon-close""></span>"
+            title:Close Hyperlang
+            accesskey:Q
+            oninit
+
+              /*
+               * Setting initial focus to "Close" button, to make it easy to close module.
+               */
+              micro.page.set-focus:x:/../*/_event?value
+
+            onclick
+
+              /*
+               * Closing Hyperlang.
+               */
+              hyperlang.stop
+
+          button
+            style:"margin-bottom:0;"
+            innerValue:@"<span class=""icon-question-circle""></span>"
+            title:Show options
+            onclick
+
+              /*
+               * Showing options for Hyperlang.
+               */
+              hyperlang.options.show
+
+          literal:hyperlang-current-text
+            element:label
+            class:hyperlang-tip
+            visible:false
+
+  /*
+   * Greets user, and asks for input.
+   */
+  hyperlang.listen:x:(/../*/greeting|/@.defaults/*/greeting)/$?value

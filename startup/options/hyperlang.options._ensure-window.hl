@@ -15,8 +15,67 @@ create-event:hyperlang.options._ensure-window
   /*
    * Creates common helper window, that displays options.
    */
-  create-container-widget:hyperlang-help
-    class:hyperlang-help rounded shaded bg air-inner
+  create-widget:hyperlang-help
+    class:hyperlang-help rounded shaded bg
     widgets
-      container:hyperlang-help-list
-        element:ul
+      div
+        class:container
+        widgets
+          div
+            class:row
+            widgets
+              div
+                class:col
+                widgets
+                  literal
+                    class:hyperlang-help-close
+                    element:a
+                    href:#
+                    innerValue:@"<span class=""icon-close""></span>"
+                    onclick
+
+                      /*
+                       * Closing widget.
+                       */
+                      hyperlang.options.close
+
+                  container:hyperlang-help-list-custom
+                    element:ul
+                    class:hyperlang-custom-options
+                  container:hyperlang-help-list
+                    element:ul
+                    class:hyperlang-options
+                  div
+                    class:right
+                    widgets
+                      a
+                        href:#
+                        role:button
+                        class:hyperlang-help-pager
+                        innerValue:@"<span class=""icon-chevron-left""></span>"
+                        onclick
+
+                          /*
+                           * Paging to previous options.
+                           */
+                          if
+                            hyperlang.options.show-previous
+                            not
+                            micro.windows.info:There are no more previous options
+                              class:micro-windows-info warning
+
+                      a
+                        href:#
+                        role:button
+                        class:hyperlang-help-pager
+                        innerValue:@"<span class=""icon-chevron-right""></span>"
+                        onclick
+
+                          /*
+                           * Paging to next options.
+                           */
+                          if
+                            hyperlang.options.show-next
+                            not
+                            micro.windows.info:There are no more options
+                              class:micro-windows-info warning

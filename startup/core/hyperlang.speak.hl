@@ -14,11 +14,6 @@ create-event:hyperlang.speak
   .signal
 
   /*
-   * Retrieving language for user, to figure out voice to use, etc.
-   */
-  hyperlang.settings.get-language
-
-  /*
    * Checking if there are referenced word(s) inside specified word or phrase.
    */
   match:x:/../*/_arg?value
@@ -71,17 +66,27 @@ create-event:hyperlang.speak
           dest:x:/@hyperlang.language.get-localized-phrase?value
 
   /*
-   * Applies arguments.
+   * Applies arguments, and adds [voice] unless an explicit voice was given as an argument.
    */
+  if:x:/../*/voice?value
+    not
+
+    /*
+     * No voice was given as an argument, making sure we apply the default voice from
+     * user's settings.
+     */
+    hyperlang.settings.get-language
+    eval-x:x:/+/*/*
+    add:x:/../*/micro.speak
+      src
+        voice:{0},{1}-{2}
+          :x:/@hyperlang.settings.get-language/*/voice?value
+          :x:/@hyperlang.settings.get-language/*/lang?value
+          :x:/@hyperlang.settings.get-language/*/sublang?value
   add:x:/../*/micro.speak
     src:x:/@.signal/--(!/_arg)
 
   /*
    * Speaks given [_arg] with our configured voice.
    */
-  eval-x:x:/+/*/voice
   micro.speak:x:/../*/_arg?value
-    voice:{0},{1}-{2}
-      :x:/@hyperlang.settings.get-language/*/voice?value
-      :x:/@hyperlang.settings.get-language/*/lang?value
-      :x:/@hyperlang.settings.get-language/*/sublang?value

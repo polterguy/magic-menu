@@ -1,8 +1,15 @@
 
 /*
  * Creates the event that shows all available options to user.
+ *
+ * Expects a list of options to actually display to user.
  */
-create-event:hyperlang.options.show
+create-event:hyperlang.options.show-custom
+
+  /*
+   * Used to separate arguments from the rest of our lambda.
+   */
+  .signal
 
   /*
    * Ensuring that "options" window is created.
@@ -10,144 +17,14 @@ create-event:hyperlang.options.show
   hyperlang.options._ensure-window
 
   /*
-   * Clearing out "current page" viewstate value.
+   * Invoking event actually responsible for creating our options.
+   *
+   * Notice, we make sure these options are created without any [onclick] Ajax event
+   * handler.
    */
-  p5.web.viewstate.set:hyperlang.options.offset
-    src:0
-  create-container-widget:hyperlang-help
-    class:hyperlang-help rounded shaded bg air-inner
-    oninit
-
-      /*
-       * Initial databinding of widget.
-       */
-      hyperlang.show-options.databind
-
-    events
-
-      /*
-       * Invoked when we have a "custom" list of potential results, and not
-       * the default which is taken from the database.
-       */
-      hyperlang.list-options
-
-        /*
-         * Used to separate arguments from the rest of the lambda.
-         */
-        .signal
-
-        /*
-         * Clears previous "li" elements, and clears out the pager viewstate value.
-         */
-        clear-widget:hyperlang-help-list
-        p5.web.viewstate.set:hyperlang.show-options._databind.offset
-          src:0
-        for-each:x:/@.signal/--(!/_arg!/_event)?value
-          create-widget
-            element:li
-            parent:hyperlang-help-list
-            innerValue:x:/@_dp?value
-
-      /*
-       * Invoked when the current position is changed, we simply re-databind our
-       * help widget.
-       */
-      hyperlang.position.changed
-
-        /*
-         * Re-databinding grid.
-         */
-        p5.web.viewstate.set:hyperlang.show-options._databind.offset
-          src:0
-        hyperlang.show-options.databind
-
-      /*
-       * Reloads the different options for current position in grammar tree.
-       */
-      hyperlang.show-options.databind
-
-        /*
-         * Clears previous "li" elements.
-         */
-        clear-widget:hyperlang-help-list
-
-        /*
-         * Lists options, and creates one "li" element for each.
-         */
-        hyperlang.grammar-position.list-options
-          limit:25
-        for-each:x:/@hyperlang.grammar-position.list-options/*
-          eval-x:x:/+/**/.text
-          create-widget
-            element:li
-            parent:hyperlang-help-list
-            innerValue:x:/@_dp/#?value
-            onclick
-
-              /*
-               * Forward evaluated above.
-               */
-              .text:x:/@_dp/#?value
-              hyperlang.command.handle:x:/@.text?value
-
-      /*
-       * Loads the 25 next options.
-       */
-      hyperlang.show-options.databind.next
-
-        /*
-         * Lists options, and creates one "li" element for each.
-         */
-        p5.web.viewstate.get:hyperlang.show-options._databind.offset
-        +:x:/@p5.web.viewstate.get/*?value.long
-          _:25
-        eval-x:x:/+/*/offset
-        hyperlang.grammar-position.list-options
-          limit:25
-          offset:x:/@+?value.long
-        if:x:/@hyperlang.grammar-position.list-options/*?count
-          =:int:0
-
-          /*
-           * No more options.
-           */
-          return:bool:false
-
-        /*
-         * We have more options, re-databinding options widget.
-         */
-        clear-widget:hyperlang-help-list
-        p5.web.viewstate.set:hyperlang.show-options._databind.offset
-          src:x:/@+?value
-        for-each:x:/@hyperlang.grammar-position.list-options/*
-          eval-x:x:/+/**/.text
-          create-widget
-            element:li
-            parent:hyperlang-help-list
-            innerValue:x:/@_dp/#?value
-            onclick
-
-              /*
-               * Forward evaluated above.
-               */
-              .text:x:/@_dp/#?value
-              hyperlang.command.handle:x:/@.text?value
-
-        /*
-         * Returning success to caller.
-         */
-        return:bool:true
-
-      /*
-       * Closes help widget.
-       */
-      hyperlang.show-options.close
-
-        /*
-         * Deletes help widget.
-         */
-        delete-widget:hyperlang-help
-
-    widgets
-      container:hyperlang-help-list
-        element:ul
+  add:x:/../*/hyperlang.options._create-options/*/options
+    src:x:/@.signal/--/<-
+  hyperlang.options._create-options
+    parent:hyperlang-help-list-custom
+    no-click:bool:true
+    options

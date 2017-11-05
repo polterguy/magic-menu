@@ -3,6 +3,8 @@
  * Internal event for creating options elements.
  *
  * Requires [parent] and [options] being collection of options to display.
+ * Optionally pass in boolean [no-click] to avoid creating an [onclick] event
+ * handler "button" type of link.
  */
 create-event:hyperlang.options._create-options
 
@@ -12,6 +14,8 @@ create-event:hyperlang.options._create-options
   micro.lambda.contract.min:x:/..
     parent:string
     options
+  micro.lambda.contract.optional:x:/..
+    no-click:bool
 
   /*
    * Clears previous "li" elements.
@@ -26,19 +30,38 @@ create-event:hyperlang.options._create-options
     /*
      * Creating an "li" element for currently iterated option.
      */
-    eval-x:x:/+/**/.text
-    create-widget
-      element:li
-      parent:x:/../*/parent?value
-      widgets
-        a
-          href:#
-          role:button
-          innerValue:x:/@_dp/#?value
-          onclick
+    if:x:/../*/no-click?value
 
-            /*
-             * Forward evaluated above.
-             */
-            .text:x:/@_dp/#?value
-            hyperlang.command.handle:x:/@.text?value
+      /*
+       * Simple "innerValue" option, with no click support.
+       */
+      create-widget
+        element:li
+        parent:x:/../*/parent?value
+        widgets
+          a
+            href:#
+            role:button
+            innerValue:x:/@_dp/#?value
+
+    else
+
+      /*
+       * Creating an [onclick] event for element(s).
+       */
+      eval-x:x:/+/**/.text
+      create-widget
+        element:li
+        parent:x:/../*/parent?value
+        widgets
+          a
+            href:#
+            role:button
+            innerValue:x:/@_dp/#?value
+            onclick
+
+              /*
+               * Forward evaluated above.
+               */
+              .text:x:/@_dp/#?value
+              hyperlang.command.handle:x:/@.text?value

@@ -390,7 +390,7 @@ hyperlang.listen:OK
                         /*
                          * Restarting input loop.
                          */
-                        hyperlang.restart:[OK]
+                        hyperlang.listen:[OK]
 
                     catch
 
@@ -413,4 +413,4 @@ hyperlang.listen:OK
                     /*
                      * Restarting input loop.
                      */
-                    hyperlang.restart:[Talk to me]
+                    hyperlang.listen:[Talk to me]
