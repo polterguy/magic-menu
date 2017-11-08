@@ -50,7 +50,7 @@ create-event:hyperlang.command.handle
        */
       p5.mysql.select:@"select c.id, c.parent, c.hyperlambda, p.command, p.id as phraseid from commands c inner join phrases p on p.commandid = c.id 
 where (soundex(p.command) = soundex(@command) or p.command = @command or p.command like @command2) and (c.parent = @parent or c.global = 1) and (c.username is null or c.username = @username) and (lang = @lang or lang = @sublang)
-order by `global` limit 1"
+order by global limit 1"
         @command:x:/../*/_arg?value
         @command2:%{0}%
           :x:/../*/_arg?value
@@ -75,7 +75,7 @@ order by `global` limit 1"
        */
       p5.mysql.select:@"select c.id, c.parent, c.hyperlambda, p.command, p.id as phraseid from commands c inner join phrases p on p.commandid = c.id 
 where (soundex(p.command) = soundex(@command) or p.command = @command or p.command like @command2) and c.parent is null and (c.username is null or c.username = @username) and (lang = @lang or lang = @sublang)
-order by `global` limit 1"
+order by global limit 1"
         @command:x:/../*/_arg?value
         @command2:%{0}%
           :x:/../*/_arg?value
@@ -205,7 +205,8 @@ order by `global` limit 1"
             default
 
               /*
-               * Unless the user says "yes" or "no", we assume it's the actual
-               * command he wanted to utter.
+               * Unless the user says "yes" or "no", we assume the engine recognised
+               * erronously, and that what he spoke now, was what he actually wants to
+               * do, for simplicity reasons.
                */
               hyperlang.command.handle:x:/../*/text?value

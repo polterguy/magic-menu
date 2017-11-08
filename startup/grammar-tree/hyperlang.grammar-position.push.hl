@@ -9,7 +9,7 @@ create-event:hyperlang.grammar-position.push
   /*
    * Sanity checking arguments.
    */
-  micro.lambda.contract.optional:x:/..
+  micro.lambda.contract.min:x:/..
     _arg:long
 
   /*
@@ -23,7 +23,7 @@ create-event:hyperlang.grammar-position.push
       =:x:/../*/_arg?value.long
 
     /*
-     * Nothing to clear.
+     * No reasons to push the same ID twice.
      */
     return
 
