@@ -7,16 +7,38 @@
 create-event:hyperlang.grammar-position.push
 
   /*
+   * Sanity checking arguments.
+   */
+  micro.lambda.contract.optional:x:/..
+    _arg:long
+
+  /*
+   * Retrieving current position, to see if specified position is the
+   * same as our current position, and if it is, we don't evaluate the rest
+   * of our lambda, but return early instead.
+   */
+  hyperlang.grammar-position.get
+  if:x:/@hyperlang.grammar-position.get?value
+    and:x:/@hyperlang.grammar-position.get?value.long
+      =:x:/../*/_arg?value.long
+
+    /*
+     * Nothing to clear.
+     */
+    return
+
+  /*
    * Sets the current position to the specified [_arg].
    */
   p5.web.viewstate.get:hyperlang.position
-  add:x:/../*/p5.web.viewstate.set/*
-    src:x:/@p5.web.viewstate.get/*/*
+  add:x:/../*/p5.web.viewstate.set/*/*
+    src:x:/@p5.web.viewstate.get/*/*/*
   add:x:/../*/p5.web.viewstate.set/*/*
     src:":{0}"
       :x:/../*/_arg?value
   p5.web.viewstate.set:hyperlang.position
     src
+      positions
 
   /*
    * Posting "changed" event.

@@ -45,6 +45,16 @@ create-event:hyperlang.options._ensure-window
                     events
 
                       /*
+                       * Invoked when current options have changed.
+                       */
+                      hyperlang.position.changed
+
+                        /*
+                         * Simply re-displaying options will do the trick for us here.
+                         */
+                        hyperlang.options.show
+
+                      /*
                        * Helper active event to clear custom options
                        */
                       hyperlang.options.clear-custom

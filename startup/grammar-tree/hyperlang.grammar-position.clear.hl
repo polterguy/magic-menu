@@ -7,6 +7,19 @@
 create-event:hyperlang.grammar-position.clear
 
   /*
+   * Retrieving current position, to see if there are any positions,
+   * and if not, we don't evaluate the rest of this lambda.
+   */
+  hyperlang.grammar-position.get
+  if:x:/@hyperlang.grammar-position.get?value
+    not
+
+    /*
+     * Nothing to clear.
+     */
+    return
+
+  /*
    * Sets the current position to the specified [_arg].
    */
   p5.web.viewstate.set:hyperlang.position

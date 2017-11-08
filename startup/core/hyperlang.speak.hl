@@ -9,61 +9,20 @@
 create-event:hyperlang.speak
 
   /*
-   * Signal node, to separate arguments from the rest of our lambda.
+   * Signal node.
    */
   .signal
 
   /*
-   * Checking if there are referenced word(s) inside specified word or phrase.
+   * Sanity checking arguments.
    */
-  match:x:/../*/_arg?value
-    src:regex:/\[[^\]]*\]/i
+  micro.lambda.contract.min:x:/..
+    _arg:string
 
   /*
-   * Making sure we do any substitutions found inside of [_arg].
+   * Unwrapping any references in [_arg] given.
    */
-  for-each:x:/@match/*/$?name
-
-    /*
-     * Checking if this is an event invocation, or a localized phrase.
-     */
-    split:x:/@_dp?value
-      =:"."
-    if:x:/@split/*?count
-      >:int:1
-
-      /*
-       * Active event invocation to retrieve value.
-       */
-      trim:x:/@_dp?value
-        chars:[]
-      split:x:/@trim?value
-        =:":"
-      set:x:/+2?name
-        src:x:/@split/0?name
-      set:x:/+?value
-        src:x:/@split/1?name
-      foo
-
-      /*
-       * Replacing all occurrencies of currently iterated [match] inside of
-       * [_arg] to result of event invocation.
-       */
-      set:x:/../*/_arg?value
-        replace:x:/../*/_arg?value
-          src:x:/@_dp?value
-          dest:x:/..set/-?value
-
-    else
-
-      /*
-       * Localized phrase, doing lookup into language file(s).
-       */
-      hyperlang.language.get-localized-phrase:x:/@_dp?value
-      set:x:/../*/_arg?value
-        replace:x:/../*/_arg?value
-          src:x:/@_dp?value
-          dest:x:/@hyperlang.language.get-localized-phrase?value
+  hyperlang.unwrap-phrase:x:/../*/_arg?value
 
   /*
    * Applies arguments, and adds [voice] unless an explicit voice was given as an argument.
@@ -87,6 +46,6 @@ create-event:hyperlang.speak
     src:x:/@.signal/--(!/_arg)
 
   /*
-   * Speaks given [_arg] with our configured voice.
+   * Speaks given [_arg], now "unwrapped" with any references, with our configured voice.
    */
-  micro.speak:x:/../*/_arg?value
+  micro.speak:x:/@hyperlang.unwrap-phrase?value

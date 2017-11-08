@@ -14,6 +14,19 @@ create-event:hyperlang.grammar-position.pop
     _arg:int
 
   /*
+   * Retrieving current position, to see if there are any positions,
+   * and if not, we don't evaluate the rest of this lambda.
+   */
+  hyperlang.grammar-position.get
+  if:x:/@hyperlang.grammar-position.get?value
+    not
+
+    /*
+     * Nothing to pop.
+     */
+    return
+
+  /*
    * Removes the last position from our chain, if any, and returns the new 
    * position to caller.
    */

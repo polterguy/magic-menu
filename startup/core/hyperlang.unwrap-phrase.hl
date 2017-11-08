@@ -1,0 +1,74 @@
+
+/*
+ * Creates the event that checks phrase to see if there are any referenced
+ * parts within it, and if so, including their references, and returning the results.
+ */
+create-event:hyperlang.unwrap-phrase
+
+  /*
+   * Signal node, to separate arguments from the rest of our lambda.
+   */
+  .signal
+
+  /*
+   * Sanity checking arguments.
+   */
+  micro.lambda.contract.min:x:/..
+    _arg:string
+
+  /*
+   * Checking if there are referenced word(s) inside specified word or phrase.
+   */
+  match:x:/../*/_arg?value
+    src:regex:/\[[^\]]*\]/i
+
+  /*
+   * Making sure we do any substitutions found inside of [_arg].
+   */
+  for-each:x:/@match/*/$?name
+
+    /*
+     * Checking if this is an event invocation, or a localized phrase.
+     */
+    split:x:/@_dp?value
+      =:"."
+    if:x:/@split/*?count
+      >:int:1
+
+      /*
+       * Active event invocation to retrieve value.
+       */
+      trim:x:/@_dp?value
+        chars:[]
+      split:x:/@trim?value
+        =:":"
+      set:x:/+2?name
+        src:x:/@split/0?name
+      set:x:/+?value
+        src:x:/@split/1?name
+      foo
+
+      /*
+       * Replacing all occurrencies of currently iterated [match] inside of
+       * [_arg] to result of event invocation.
+       */
+      set:x:/../*/_arg?value
+        replace:x:/../*/_arg?value
+          src:x:/@_dp?value
+          dest:x:/..set/-?value
+
+    else
+
+      /*
+       * Localized phrase, doing lookup into language file(s).
+       */
+      hyperlang.language.get-localized-phrase:x:/@_dp?value
+      set:x:/../*/_arg?value
+        replace:x:/../*/_arg?value
+          src:x:/@_dp?value
+          dest:x:/@hyperlang.language.get-localized-phrase?value
+
+  /*
+   * Returning changed argument back to caller.
+   */
+  return:x:/../*/_arg?value

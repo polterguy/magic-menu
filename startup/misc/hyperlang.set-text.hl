@@ -9,8 +9,8 @@ create-event:hyperlang.set-text
   /*
    * Sanity checking arguments.
    */
-  micro.lambda.contract.min:x:/..
-    _arg:text
+  micro.lambda.contract.optional:x:/..
+    _arg:string
 
   /*
    * Verifying widget actually exists before we attempt to change its value.
@@ -20,18 +20,23 @@ create-event:hyperlang.set-text
       widget-exists:hyperlang-current-text
 
     /*
-     * Checking if we were given an actual text value, and if not, making widget
-     * invisible.
+     * Checking if we were given an actual text value, and if not, 
+     * making text widget invisible.
      */
     if:x:/../*/_arg?value
       and:x:/../*/_arg?value
         !=:
 
       /*
+       * Unwrapping any references in [_arg] given.
+       */
+      hyperlang.unwrap-phrase:x:/../*/_arg?value
+
+      /*
        * Text was given.
        */
       set-widget-property:hyperlang-current-text
-        innerValue:x:/../*/_arg?value
+        innerValue:x:/@hyperlang.unwrap-phrase?value
         visible:true
 
     else
