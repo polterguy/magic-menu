@@ -11,49 +11,16 @@ create-event:hyperlang.grammar-position.list-options
    * Sanity checking arguments.
    */
   micro.lambda.contract.optional:x:/..
-    limit:int
+    limit:long
     offset:long
     filter:string
 
   /*
-   * More sanity checks.
+   * Defaults, in case no parameters are passed in.
    */
-  if:x:/../*/offset?value
-    and:x:/../*/limit?value
-      not
-    throw:If you supply an [offset], you'll also have to supply a [limit]
-
-  /*
-   * Creating additional "where" clause.
-   */
-  _where
-  if:x:/../*/filter?value
-    and:x:/../*/filter?value
-      !=:
-    set:x:/@_where?value
-      src:@"and p.command like @filter"
-    add:x:/../*/p5.mysql.connect/*/p5.mysql.select
-      src
-        @filter:%{0}%
-          :x:/../*/filter?value
-
-  /*
-   * Creating additional "tail" clause.
-   */
-  _tail
-  if:x:/../*/limit?value
-    set:x:/@_tail?value
-      src:@"limit @limit"
-    add:x:/../*/p5.mysql.connect/*/p5.mysql.select
-      src
-        @limit:x:/../*/limit?value.int
-    if:x:/../*/offset?value
-      set:x:/@_tail?value
-        src:{0} offset @offset
-          :x:/@_tail?value
-      add:x:/../*/p5.mysql.connect/*/p5.mysql.select
-        src
-          @offset:x:/../*/offset?value.int
+  .defaults
+    limit:long:10
+    offset:long:0
 
   /*
    * Retrieves the current position, username, and current language to parametrise SQL.
@@ -63,34 +30,90 @@ create-event:hyperlang.grammar-position.list-options
   hyperlang.settings.get-language
 
   /*
+   * Dynamically building our SQL, according to filter conditionins.
+   */
+  _sql:@"select p.id, p.command from 
+    phrases p join commands c on c.id = p.commandid
+    where (p.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) {{filter}} group by commandid))"
+
+  /*
+   * Checking if a filter condition was supplied.
+   */
+  if:x:/../*/filter?value
+
+    /*
+     * Caller supplied a [filter].
+     *
+     * Checking that filter doesn't try to do an SQL injection.
+     */
+    if
+      fetch:x:/0/0?name
+        match:x:/../*/filter?value
+          src:regex:/\{\{filter/
+      throw:Illegal filter condition
+
+    /*
+     * Filtering only on command.
+     */
+    set:x:/@_sql?value
+      replace:x:/@_sql?value
+        src:{{filter}}
+        dest:"and p.command like @filter"
+
+  else
+
+    /*
+     * No [filter] was supplied.
+     */
+    set:x:/@_sql?value
+      replace:x:/@_sql?value
+        src:{{filter}}
+
+  /*
    * Checking parent, and parametrizing SQL accordingly.
    */
   _parent
   if:x:/@hyperlang.grammar-position.get?value
+
+    /*
+     * We have an existing parent.
+     */
     set:x:/@_parent?value
-      src:"c.parent = @parent"
+      src:"and c.parent = @parent"
     add:x:/../*/p5.mysql.connect/*/p5.mysql.select
       src
         @parent:x:/@hyperlang.grammar-position.get?value
+
   else
+
+    /*
+     * No current parent.
+     */
     set:x:/@_parent?value
-      src:"c.parent is null"
+      src:"and c.parent is null"
+
+  /*
+   * Adding "tail" to SQL.
+   *
+   * Notice, we show "last used" commands first, then the commands that 
+   * were created last.
+   */
+  set:x:/@_sql?value
+    src:"{0} {1} order by lastused desc, id desc limit @limit offset @offset"
+      :x:/@_sql?value
+      :x:/@_parent?value
 
   /*
    * Connecting to database, and retrieving all possible options from current 
    * position in tree.
    */
   p5.mysql.connect:[hyperlang]
-    p5.mysql.select:@"select c.id, min(p.command) as command, max(p.lastused) as lastused from commands c inner join phrases p on p.commandid = c.id 
-where ({2} or c.global = 1) and (c.username is null or c.username = @username) and (lang = @lang or lang = @sublang)
-{0}
-group by c.id, p.lastused order by c.`global` desc, p.lastused desc, c.id {1}"
-      :x:/@_where?value
-      :x:/@_tail?value
-      :x:/@_parent?value
+    p5.mysql.select:x:/@_sql?value
       @username:x:/@whoami/*/username?value
       @lang:x:/@hyperlang.settings.get-language/*/lang?value
       @sublang:x:/@hyperlang.settings.get-language/*/sublang?value
+      @limit:x:(/../*/limit|/@.defaults/*/limit)/$?value.long
+      @offset:x:(/../*/offset|/@.defaults/*/offset)/$?value.long
 
     /*
      * Parametrizing return invocation below.
