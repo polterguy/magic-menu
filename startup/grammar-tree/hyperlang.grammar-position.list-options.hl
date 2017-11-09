@@ -5,7 +5,8 @@
  *
  * Optionally pass in [limit], [offset] and [filter] to further filter your results.
  *
- * Will return phrase database ID and phrase's command.
+ * Will return phrase database ID, and phrase's command, in addition to a [type] child,
+ * being the type of command this is, which might be global, root or local.
  */
 create-event:hyperlang.grammar-position.list-options
 

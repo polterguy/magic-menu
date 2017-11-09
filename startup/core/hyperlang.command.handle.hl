@@ -10,7 +10,7 @@
 create-event:hyperlang.command.handle
 
   /*
-   * Checking if anything was given, and if not, closing Hyperlang.
+   * Checking if anything was given, and if not, restarting listening loop.
    */
   if:x:/../*/_arg?value
     =:
@@ -28,122 +28,115 @@ create-event:hyperlang.command.handle
     return
 
   /*
-   * Retrieving language for current user, which is necessary to filter our results.
+   * Make sure we show the user what we heard.
+   *
+   * Notice, since this is done before we invoke lambda for command, this allows
+   * the lambda to override what's displayed to user.
    */
+  hyperlang.set-text:x:/../*/_arg?value
+
+  /*
+   * Necessary to parametrise SQL.
+   */
+  whoami
   hyperlang.settings.get-language
+  hyperlang.grammar-position.get
+
+  /*
+   * Dynamically building our SQL, depending upon whethere or not we should look
+   * at "root" level, use the given [id], or search using text.
+   */
+  _sql:@"select p.command, c.id, c.hyperlambda, p.id as phraseid from commands c 
+  inner join phrases p on p.commandid = c.id 
+  where (c.username is null or c.username = @username) and (lang = @lang or lang = @sublang)"
+
+  /*
+   * Checking type of invocation.
+   */
+  if:x:/../*/_arg?value
+
+    /*
+     * Text based search
+     */
+    set:x:/@_sql?value
+      src:@"{0} and soundex(p.command) = soundex(@command)"
+        :x:/@_sql?value
+    add:x:/../*/p5.mysql.connect/*/p5.mysql.select
+      src
+        @command:x:/../*/_arg?value
+
+  else
+
+    /*
+     * Looking for a specified [id] phrase.
+     */
+    set:x:/@_sql?value
+      src:@"{0} and p.id = @id"
+        :x:/@_sql?value
+    add:x:/../*/p5.mysql.connect/*/p5.mysql.select
+      src
+        @id:x:/../*/id?value.long
+
+  /*
+   * Checking if we have a current level.
+   */
+  if:x:/@hyperlang.grammar-position.get?value
+
+    /*
+     * Adding parent criteria.
+     */
+    set:x:/@_sql?value
+      src:@"{0} and (parent = @parent or global = 1)"
+        :x:/@_sql?value
+    add:x:/../*/p5.mysql.connect/*/p5.mysql.select
+      src
+        @parent:x:/@hyperlang.grammar-position.get?value
+
+  else
+
+    /*
+     * Only looking for empty parents, and global commands.
+     */
+    set:x:/@_sql?value
+      src:@"{0} and (parent is null or global = 1)"
+        :x:/@_sql?value
 
   /*
    * Looks up command from database.
-   *
-   * But first we must check to see if we have a current "position" in our
-   * grammar graph, which will restrict the commands accordingly.
    */
-  .command
   p5.mysql.connect:[hyperlang]
-    hyperlang.grammar-position.get
-    whoami
-    if:x:/@hyperlang.grammar-position.get?value
-      and:x:/../*/_arg?value
-
-      /*
-       * Current position exists, retrieving command having current position 
-       * as its parent, and global commands.
-       *
-       * Notice, we sort by "global", and we only select the first match, meaning 
-       * that commands that are not global will be prioritized.
-       */
-      p5.mysql.select:@"select c.id, c.parent, c.hyperlambda, p.command, p.id as phraseid from commands c inner join phrases p on p.commandid = c.id 
-where (soundex(p.command) = soundex(@command) or p.command = @command or p.command like @command2) and (c.parent = @parent or c.global = 1) and (c.username is null or c.username = @username) and (lang = @lang or lang = @sublang)
-order by global limit 1"
-        @command:x:/../*/_arg?value
-        @command2:%{0}%
-          :x:/../*/_arg?value
-        @parent:x:/@hyperlang.grammar-position.get?value
-        @username:x:/@whoami/*/username?value
-        @lang:x:/@hyperlang.settings.get-language/*/lang?value
-        @sublang:x:/@hyperlang.settings.get-language/*/sublang?value
-
-      /*
-       * Adding command to buffer above.
-       */
-      add:x:/@.command
-        src:x:/@p5.mysql.select/*/*
-
-    else-if:x:/../*/_arg?value
-
-      /*
-       * No current position, retrieving command having "null" parent, and global commands.
-       *
-       * Notice, we sort by "global", and we only select the first match, meaning 
-       * that commands that are not global will be prioritized.
-       */
-      p5.mysql.select:@"select c.id, c.parent, c.hyperlambda, p.command, p.id as phraseid from commands c inner join phrases p on p.commandid = c.id 
-where (soundex(p.command) = soundex(@command) or p.command = @command or p.command like @command2) and c.parent is null and (c.username is null or c.username = @username) and (lang = @lang or lang = @sublang)
-order by global limit 1"
-        @command:x:/../*/_arg?value
-        @command2:%{0}%
-          :x:/../*/_arg?value
-        @username:x:/@whoami/*/username?value
-        @lang:x:/@hyperlang.settings.get-language/*/lang?value
-        @sublang:x:/@hyperlang.settings.get-language/*/sublang?value
-
-      /*
-       * Adding command to buffer above.
-       */
-      add:x:/@.command
-        src:x:/@p5.mysql.select/*/*
-
-    else-if:x:/../*/id?value
-
-      /*
-       * Selecting according to database ID.
-       */
-      p5.mysql.select:@"select c.id, c.hyperlambda, p.id as phraseid from commands c inner join phrases p on p.commandid = c.id 
-where (c.username is null or c.username = @username) and (lang = @lang or lang = @sublang) and p.id = @id"
-        @id:x:/../*/id?value.long
-        @username:x:/@whoami/*/username?value
-        @lang:x:/@hyperlang.settings.get-language/*/lang?value
-        @sublang:x:/@hyperlang.settings.get-language/*/sublang?value
-
-      /*
-       * Adding command to buffer above.
-       */
-      add:x:/@.command
-        src:x:/@p5.mysql.select/*/*
-
-    else
-
-      /*
-       * Oops, erronous invocation.
-       */
-      throw:No [id] or [_arg] passed into [hyperlang.command.handle].
 
     /*
-     * Make sure we show the user what we heard, before we invoke lambda,
-     * such that lambda can override text to show if it wants to.
+     * Evaluating paramtrised SQL now.
      */
-    hyperlang.set-text:x:/../*/_arg?value
+    p5.mysql.select:"{0} order by parent desc, global limit 1"
+      :x:/@_sql?value
+      @username:x:/@whoami/*/username?value
+      @lang:x:/@hyperlang.settings.get-language/*/lang?value
+      @sublang:x:/@hyperlang.settings.get-language/*/sublang?value
 
     /*
      * Checking to see if we actually found a command.
      */
-    if:x:/@.command/*
+    if:x:/@p5.mysql.select/*
 
       /*
        * Success, we have a command in the current position, matching our 
        * specified [_arg].
        */
-      hyper2lambda:x:/@.command/*/hyperlambda?value
+      hyper2lambda:x:/@p5.mysql.select/*/*/hyperlambda?value
 
       /*
        * Making sure we wrap evaluation in a try/catch block, and that we pass
-       * in the command's id.
+       * in the command's id, in addition .
        */
       try
         eval-x:x:/+/*
         eval:x:/@hyper2lambda
-          id:x:/@.command/*/id?value
-          phraseid:x:/@.command/*/phraseid?value
+          id:x:/@p5.mysql.select/*/*/id?value
+          phraseid:x:/@p5.mysql.select/*/*/phraseid?value
+          spoken:x:/../*/_arg?value
+          matches:x:/@p5.mysql.select/*/*/command?value
         if:x:/@eval?value
           !=:bool:false
 
@@ -151,7 +144,7 @@ where (c.username is null or c.username = @username) and (lang = @lang or lang =
            * Notice, if lambda returns "false", we do not push the id of the current
            * command unto our stack.
            */
-          hyperlang.grammar-position.push:x:/@.command/*/id?value
+          hyperlang.grammar-position.push:x:/@p5.mysql.select/*/*/id?value
 
       catch
 
@@ -172,7 +165,7 @@ where (c.username is null or c.username = @username) and (lang = @lang or lang =
       p5.types.date.now
       p5.mysql.update:@"update phrases set lastused = @lastused where id = @id"
         @lastused:x:/@p5.types.date.now?value
-        @id:x:/@.command/*/phraseid?value
+        @id:x:/@p5.mysql.select/*/*/phraseid?value
 
     else
 
