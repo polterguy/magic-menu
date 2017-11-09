@@ -1,0 +1,97 @@
+
+/*
+ * Internal event being actual implementation of [hyperlang.listen].
+ *
+ * Optionally pass in [onfinish].
+ */
+create-event:hyperlang._listen
+
+  /*
+   * Sanity checking arguments.
+   */
+  micro.lambda.contract.optional:x:/..
+    onfinish
+
+  /*
+   * Our default [onfinish] implementation simply invokes [hyperlang.command.handle].
+   */
+  .defaults
+    onfinish
+      hyperlang.command.handle:x:/../*/text?value
+
+  /*
+   * If widget was closed, we simply abort.
+   */
+  if
+    fetch:x:/0/0?value
+      widget-exists:hyperlang-listener
+    not
+    return
+
+  /*
+   * Making sure we add "active" CSS class when speech recognition is initiated.
+   */
+  micro.css.add:hyperlang-listener
+    class:hyperlang-listening
+
+  /*
+   * Retrieving language for user, to figure out language to listen for, etc.
+   */
+  hyperlang.settings.get-language
+
+  /*
+   * Applying [onfinish], or default value if none was given.
+   */
+  add:x:/../*/micro.listen/*/onfinish/*/.lambda
+    src:x:(/../*/onfinish|/@.defaults/*/onfinish)/$/*
+
+  /*
+   * Start listening.
+   *
+   * Making sure we evaluate [onfinish] inside a try/catch block.
+   */
+  eval-x:x:/+/*/lang
+  micro.listen
+    lang:x:/@hyperlang.settings.get-language/*/lang?value
+    onfinish
+
+      /*
+       * Contains the lambda [onfinish] callback to be evaluated once speach
+       * has been captured.
+       */
+      .lambda
+
+      /*
+       * If widget was closed, we simply abort.
+       */
+      if
+        fetch:x:/0/0?value
+          widget-exists:hyperlang-listener
+        not
+        return
+
+      /*
+       * Deletes the visual clue, indicating we're listening for input.
+       */
+      micro.css.delete:hyperlang-listener
+        class:hyperlang-listening
+
+      /*
+       * Making sure we can intelligently handle exceptions.
+       */
+      try
+
+        eval-x:x:/+/*/text
+        eval:x:/@.lambda
+          text:x:/../*/text?value
+
+      catch
+
+        /*
+         * Showing user feedback about what went wrong.
+         */
+        hyperlang.listen:[An exception occurred]
+        micro.windows.info:x:/@message?value
+          class:micro-windows-info warning
+
+

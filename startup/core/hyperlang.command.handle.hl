@@ -3,9 +3,10 @@
  * Invoked when a new voice command is given.
  *
  * Looks up [_arg] or [id] command from database, and if existing, evaluates it.
+ * [id] is expected to be a "phrase ID" from database.
  *
  * If the command does not exist, it will ask user if he wants to create 
-  * a new command.
+ * a new command.
  */
 create-event:hyperlang.command.handle
 
@@ -127,33 +128,22 @@ create-event:hyperlang.command.handle
       hyper2lambda:x:/@p5.mysql.select/*/*/hyperlambda?value
 
       /*
-       * Making sure we wrap evaluation in a try/catch block, and that we pass
-       * in the command's id, in addition .
+       * Evaluating the command.
        */
-      try
-        eval-x:x:/+/*
-        eval:x:/@hyper2lambda
-          id:x:/@p5.mysql.select/*/*/id?value
-          phraseid:x:/@p5.mysql.select/*/*/phraseid?value
-          spoken:x:/../*/_arg?value
-          matches:x:/@p5.mysql.select/*/*/command?value
-        if:x:/@eval?value
-          !=:bool:false
-
-          /*
-           * Notice, if lambda returns "false", we do not push the id of the current
-           * command unto our stack.
-           */
-          hyperlang.grammar-position.push:x:/@p5.mysql.select/*/*/id?value
-
-      catch
+      eval-x:x:/+/*
+      eval:x:/@hyper2lambda
+        id:x:/@p5.mysql.select/*/*/id?value
+        phraseid:x:/@p5.mysql.select/*/*/phraseid?value
+        spoken:x:/../*/_arg?value
+        matches:x:/@p5.mysql.select/*/*/command?value
+      if:x:/@eval?value
+        !=:bool:false
 
         /*
-         * Giving feedback to user.
+         * Notice, if lambda returns "false", we do not push the ID of the current
+         * command unto our stack.
          */
-        hyperlang.listen:An exception occurred
-        micro.windows.info:x:/..catch/*/message?value
-          class:micro-windows-info warning
+        hyperlang.grammar-position.push:x:/@p5.mysql.select/*/*/id?value
 
       /*
        * Updating "lastused" for phrase.
@@ -188,15 +178,28 @@ create-event:hyperlang.command.handle
 
         /*
          * Computer didn't understand phrase, and user is not root.
+         *
          * Informing user and returning early.
          */
         hyperlang.listen:[I don't understand]
         return
 
+      /*
+       * User is "root", allowing him the option to teach a new command.
+       *
+       * First updating text widget of that user has the option to teach a new command.
+       */
       hyperlang.language.get-localized-phrase:[Say 'teach' to teach the computer]
       hyperlang.set-text:{0} '{1}'
         :x:/@hyperlang.language.get-localized-phrase?value
         :x:/../*/_arg?value
+
+      /*
+       * Then asking the user if he wants to teach or not.
+       *
+       * If user answers anything but what is found in [Teach] (localized phrase),
+       * we assume it's another command, and "recursively" invoke "self".
+       */
       eval-x:x:/+/*/*/*/*/hyperlang.command.create
       hyperlang.listen:[I don't understand]
         onfinish
@@ -230,5 +233,8 @@ create-event:hyperlang.command.handle
                * Unless the user says "yes" or "no", we assume the engine recognised
                * erronously, and that what he spoke now, was what he actually wants to
                * do, for simplicity reasons.
+               *
+               * This allows for saving one roundtrip to speech recognition engine, asking
+               * user to not wanting to create a new command.
                */
               hyperlang.command.handle:x:/../*/text?value
