@@ -41,7 +41,7 @@ micro.lambda.contract.optional:x:/..
  */
 _sql:@"select p.id, p.command, p.lang, p.commandid, p.lastused, c.id as cid, c.parent, c.username, c.global from 
   phrases p join commands c on c.id = p.commandid
-  where (p.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) {{filter}} group by commandid)
+  where (p.id in (select min(id) from phrases p2 where (p2.lang = @lang or p2.lang = @sublang) {{filter}} group by p2.commandid)
   {{filter2}}) "
 
 
@@ -68,11 +68,11 @@ if:x:/../*/filter?value
   set:x:/@_sql?value
     replace:x:/@_sql?value
       src:{{filter}}
-      dest:"and p.command like @filter"
+      dest:"and p2.command like @filter"
   set:x:/@_sql?value
     replace:x:/@_sql?value
       src:{{filter2}}
-      dest:"or (c.hyperlambda like @filter and p.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) group by commandid))"
+      dest:"or (c.hyperlambda like @filter and p.id in (select min(id) from phrases p3 where (p3.lang = @lang or p3.lang = @sublang) group by p3.commandid))"
 
 else
 

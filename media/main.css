@@ -75,6 +75,14 @@ label.hyperlang-tip {
 .hyperlang-help ul li a {
     display:block;
 }
+.hyperlang-options-root {
+}
+.hyperlang-options-local {
+    color: #0000ff;
+}
+.hyperlang-options-global {
+    text-decoration:underline;
+}
 .hyperlang-help-close {
     position:absolute;
     top:.5rem;

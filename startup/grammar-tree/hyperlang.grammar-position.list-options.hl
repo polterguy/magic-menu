@@ -4,6 +4,8 @@
  * current position.
  *
  * Optionally pass in [limit], [offset] and [filter] to further filter your results.
+ *
+ * Will return phrase database ID and phrase's command.
  */
 create-event:hyperlang.grammar-position.list-options
 
@@ -30,11 +32,17 @@ create-event:hyperlang.grammar-position.list-options
   hyperlang.settings.get-language
 
   /*
-   * Dynamically building our SQL, according to filter conditionins.
+   * Dynamically building our SQL, according to filter conditions.
+   *
+   * Notice, we first find our commandid.
+   * Then afterwards, we loop through all commandids to find the most recently used phrase,
+   * which is the one we'll end up displaying to our user.
    */
-  _sql:@"select p.id, p.command from 
-    phrases p join commands c on c.id = p.commandid
-    where (p.id in (select min(id) from phrases where (lang = @lang or lang = @sublang) {{filter}} group by commandid))"
+  _sql:@"select commandid, parent, global from phrases p join commands c on c.id = p.commandid
+    where p.id in
+    (
+      select min(id) from phrases where (lang = @lang or lang = @sublang) group by commandid
+    )"
 
   /*
    * Checking if a filter condition was supplied.
@@ -53,33 +61,27 @@ create-event:hyperlang.grammar-position.list-options
       throw:Illegal filter condition
 
     /*
-     * Filtering only on command.
+     * Filtering.
      */
     set:x:/@_sql?value
-      replace:x:/@_sql?value
-        src:{{filter}}
-        dest:"and p.command like @filter"
-
-  else
-
-    /*
-     * No [filter] was supplied.
-     */
-    set:x:/@_sql?value
-      replace:x:/@_sql?value
-        src:{{filter}}
+      src:@"{0} and command like @filter"
+        :x:/@_sql?value
+    add:x:/../*/p5.mysql.connect/*/p5.mysql.select
+      src
+        @filter:%{0}%
+          :x:/../*/filter?value
 
   /*
    * Checking parent, and parametrizing SQL accordingly.
    */
-  _parent
+  _scope
   if:x:/@hyperlang.grammar-position.get?value
 
     /*
      * We have an existing parent.
      */
-    set:x:/@_parent?value
-      src:"and c.parent = @parent"
+    set:x:/@_scope?value
+      src:@"and (parent = @parent or global = 1) and (username is null or username = @username)"
     add:x:/../*/p5.mysql.connect/*/p5.mysql.select
       src
         @parent:x:/@hyperlang.grammar-position.get?value
@@ -89,8 +91,8 @@ create-event:hyperlang.grammar-position.list-options
     /*
      * No current parent.
      */
-    set:x:/@_parent?value
-      src:"and c.parent is null"
+    set:x:/@_scope?value
+      src:@"and (parent is null or global = 1) and (username is null or username = @username)"
 
   /*
    * Adding "tail" to SQL.
@@ -99,9 +101,9 @@ create-event:hyperlang.grammar-position.list-options
    * were created last.
    */
   set:x:/@_sql?value
-    src:"{0} {1} order by lastused desc, id desc limit @limit offset @offset"
+    src:"{0} {1} order by parent desc, global, lastused desc, p.id limit @limit offset @offset"
       :x:/@_sql?value
-      :x:/@_parent?value
+      :x:/@_scope?value
 
   /*
    * Connecting to database, and retrieving all possible options from current 
@@ -119,10 +121,37 @@ create-event:hyperlang.grammar-position.list-options
      * Parametrizing return invocation below.
      */
     for-each:x:/@p5.mysql.select/*
+
+      /*
+       * Notice, we'll need an additional SQL select, to find the most recently
+       * used phrase for the specified command.
+       */
+      p5.mysql.select:@"select id, command from phrases where (lang = @lang or lang = @sublang) and commandid = @commandid order by lastused desc limit 1"
+        @lang:x:/@hyperlang.settings.get-language/*/lang?value
+        @sublang:x:/@hyperlang.settings.get-language/*/sublang?value
+        @commandid:x:/@_dp/#/*/commandid?value
       add:x:/../*/return
         src:@"{0}:{1}"
-          :x:/@_dp/#/*/id?value
-          :x:/@_dp/#/*/command?value
+          :x:/@p5.mysql.select/*/*/id?value
+          :x:/@p5.mysql.select/*/*/command?value
+
+      /*
+       * Checking type of currently iterated result.
+       * This can be "global", "local" or "root".
+       */
+      if:x:/@_dp/#/*/global?value.int
+        =:int:1
+        add:x:/../*/return/0/-
+          src
+            type:hyperlang-options-global
+      else-if:x:/@_dp/#/*/parent?value
+        add:x:/../*/return/0/-
+          src
+            type:hyperlang-options-local
+      else
+        add:x:/../*/return/0/-
+          src
+            type:hyperlang-options-root
 
   /*
    * Returning results to caller.

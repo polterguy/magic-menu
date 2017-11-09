@@ -1,6 +1,6 @@
 
 /*
- * Desktop widget file for the "hello-world" app.
+ * Desktop widget file for app.
  */
 container
   element:a
@@ -10,7 +10,7 @@ container
   oninit
 
     /*
-     * Verifying user is logged in, and if not, deleting widget altogether, and returning early.
+     * Verifying user is logged in as root, and if not, deleting widget.
      */
     whoami
     if:x:/@whoami/*/role?value

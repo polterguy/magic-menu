@@ -26,5 +26,4 @@ create-event:hyperlang.options.show-custom
     src:x:/@.signal/--/<-
   hyperlang.options._create-options
     parent:hyperlang-help-list-custom
-    no-click:bool:true
     options

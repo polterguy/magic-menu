@@ -3,10 +3,29 @@
  * Internal event for creating options elements.
  *
  * Requires [parent] and [options] being collection of options to display.
- * Optionally pass in boolean [no-click] to avoid creating an [onclick] event
- * handler "button" type of link.
+ * Options needs to be phrases' database ID as value, and text to display as
+ * value.
+ *
+ * Optionally pass in boolean [onclick] to have a custom onclick event occur 
+ * when item is clicked, instead of the default, which will raise the command
+ * associated with the phrases' ID.
  */
 create-event:hyperlang.options._create-options
+
+  /*
+   * Default values.
+   */
+  .defaults
+    onclick
+
+      /*
+       * Invokes command with specified commands ID.
+       */
+      get-widget-property:x:/../*/_event?value
+        .id
+      eval-x:x:/+/*
+      hyperlang.command.handle
+        id:x:/@get-widget-property/*/*?value
 
   /*
    * Sanity checking arguments.
@@ -15,7 +34,7 @@ create-event:hyperlang.options._create-options
     parent:string
     options
   micro.lambda.contract.optional:x:/..
-    no-click:bool
+    onclick
 
   /*
    * Clears previous "li" elements.
@@ -24,44 +43,24 @@ create-event:hyperlang.options._create-options
 
   /*
    * Looping through each return value from above invocation.
+   *
+   * However, first we pass in our [onclick] event to our [create-widget]
+   * invocation.
    */
+  add:x:/../*/for-each/*/create-widget/*/widgets/*/a
+    src:x:(/../*/onclick|/@.defaults/*/onclick)
   for-each:x:/../*/options/*
 
     /*
-     * Creating an "li" element for currently iterated option.
+     * Creating an [onclick] event for element(s).
      */
-    if:x:/../*/no-click?value
-
-      /*
-       * Simple "innerValue" option, with no click support.
-       */
-      create-widget
-        element:li
-        parent:x:/../*/parent?value
-        widgets
-          a
-            href:#
-            role:button
-            innerValue:x:/@_dp/#?value
-
-    else
-
-      /*
-       * Creating an [onclick] event for element(s).
-       */
-      eval-x:x:/+/**/.text
-      create-widget
-        element:li
-        parent:x:/../*/parent?value
-        widgets
-          a
-            href:#
-            role:button
-            innerValue:x:/@_dp/#?value
-            onclick
-
-              /*
-               * Forward evaluated above.
-               */
-              .text:x:/@_dp/#?value
-              hyperlang.command.handle:x:/@.text?value
+    create-widget
+      element:li
+      parent:x:/../*/parent?value
+      widgets
+        a
+          href:#
+          role:button
+          innerValue:x:/@_dp/#?value
+          .id:x:/@_dp/#?name
+          class:x:/@_dp/#/*/type?value
