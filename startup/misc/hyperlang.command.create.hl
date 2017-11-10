@@ -392,6 +392,11 @@ hyperlang.listen:OK
                          */
                         hyperlang.listen:[OK]
 
+                        /*
+                         * Making sure we refresh our options.
+                         */
+                        hyperlang.options.changed
+
                     catch
 
                       /*

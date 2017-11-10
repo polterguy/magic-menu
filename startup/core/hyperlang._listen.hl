@@ -1,6 +1,6 @@
 
 /*
- * Internal event being actual implementation of [hyperlang.listen].
+ * Internal event being the actual implementation of [hyperlang.listen].
  *
  * Optionally pass in [onfinish].
  */

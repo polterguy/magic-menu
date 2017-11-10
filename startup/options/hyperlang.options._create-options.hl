@@ -19,8 +19,11 @@ create-event:hyperlang.options._create-options
     onclick
 
       /*
-       * Invokes command with specified commands ID.
+       * Invokes command with specified commands ID, making sure we stop speech
+       * engine first, to avoid "race conditions".
        */
+      micro.speak.stop
+      micro.listen.stop
       get-widget-property:x:/../*/_event?value
         .id
       eval-x:x:/+/*

@@ -5,10 +5,26 @@
  * Looks up [_arg] or [id] command from database, and if existing, evaluates it.
  * [id] is expected to be a "phrase ID" from database.
  *
+ * Either supply [_arg] or [id], and not both.
+ *
  * If the command does not exist, it will ask user if he wants to create 
  * a new command.
  */
 create-event:hyperlang.command.handle
+
+  /*
+   * Sanity checking arguments.
+   */
+  micro.lambda.contract.optional:x:/..
+    id:long
+    _arg:string
+
+  /*
+   * Sanity check.
+   */
+  if:x:/../*/_arg
+    and:x:/../*/id
+    throw:Supply either [_arg] or [id], and not both.
 
   /*
    * Checking if anything was given, and if not, restarting listening loop.
@@ -29,14 +45,6 @@ create-event:hyperlang.command.handle
     return
 
   /*
-   * Make sure we show the user what we heard.
-   *
-   * Notice, since this is done before we invoke lambda for command, this allows
-   * the lambda to override what's displayed to user.
-   */
-  hyperlang.set-text:x:/../*/_arg?value
-
-  /*
    * Necessary to parametrise SQL.
    */
   whoami
@@ -55,6 +63,14 @@ create-event:hyperlang.command.handle
    * Checking type of invocation.
    */
   if:x:/../*/_arg?value
+
+    /*
+     * Make sure we show the user what we heard.
+     *
+     * Notice, since this is done before we invoke lambda for command, this allows
+     * the lambda to override what's displayed to user.
+     */
+    hyperlang.set-text:x:/../*/_arg?value
 
     /*
      * Text based search
@@ -120,6 +136,18 @@ create-event:hyperlang.command.handle
      * Checking to see if we actually found a command.
      */
     if:x:/@p5.mysql.select/*
+
+      /*
+       * Checking type of invocation, and if it's based upon ID search, we display
+       * the command name from our SQL query.
+       */
+      if:x:/../*/_arg?value
+        not
+
+        /*
+         * Make sure we show the user the command we're executing.
+         */
+        hyperlang.set-text:x:/@p5.mysql.select/*/*/command?value
 
       /*
        * Success, we have a command in the current position, matching our 
@@ -195,7 +223,7 @@ create-event:hyperlang.command.handle
         :x:/../*/_arg?value
 
       /*
-       * Then asking the user if he wants to teach or not.
+       * Then asking the user if he wants to teach the computer or not.
        *
        * If user answers anything but what is found in [Teach] (localized phrase),
        * we assume it's another command, and "recursively" invoke "self".
@@ -204,12 +232,11 @@ create-event:hyperlang.command.handle
       hyperlang.listen:[I don't understand]
         onfinish
 
-
           /*
            * Checking if user said "I will teach you".
            */
           hyperlang.language.get-localized-phrase:[Teach]
-          set:x:/./*/switch/*/case/=teach?value
+          set:x:/../*/switch/*/case/=teach?value
             src:x:/@hyperlang.language.get-localized-phrase?value
           switch:x:/../*/text?value
             case:teach

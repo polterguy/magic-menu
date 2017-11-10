@@ -19,3 +19,8 @@ create-event:hyperlang.settings.set-language
   eval-x:x:/+/*
   hyperlang.settings.set:voice
     value:x:/../*/_arg?value
+
+  /*
+   * Making sure we refresh our options.
+   */
+  hyperlang.options.changed

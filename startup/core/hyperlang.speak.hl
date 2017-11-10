@@ -20,6 +20,15 @@ create-event:hyperlang.speak
     _arg:string
 
   /*
+   * If widget was closed, we simply abort.
+   */
+  if
+    fetch:x:/0/0?value
+      widget-exists:hyperlang-listener
+    not
+    return
+
+  /*
    * Unwrapping any references in [_arg] given.
    */
   hyperlang.unwrap-phrase:x:/../*/_arg?value

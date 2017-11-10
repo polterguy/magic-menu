@@ -17,7 +17,7 @@ create-event:hyperlang.listen
   /*
    * Applying [onfinish], if any.
    */
-  add:x:/../**/micro._listen
+  add:x:/../**/hyperlang._listen
     src:x:/../*/onfinish
 
   /*
