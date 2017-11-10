@@ -24,8 +24,9 @@ create-event:hyperlang.command.create
     hyperlambda:@"/*
  * To simply speak something, and listen for input afterwards, you can use something
  * such as the following.
- *
  * Optionally, to handle the input yourself, pass in an [onfinish] lambda callback.
+ *
+ * Notice, you can write any Hyperlambda you wish here.
  */
 hyperlang.listen:OK
 
@@ -34,7 +35,7 @@ hyperlang.listen:OK
  * if you return ""true"", or nothing at all, the stack is updated, and the
  * current command becomes the ""current position"" in your ""grammar tree"".
  */
-//return:bool:false
+return:bool:false
 "
 
   /*
@@ -393,9 +394,11 @@ hyperlang.listen:OK
                         hyperlang.listen:[OK]
 
                         /*
-                         * Making sure we refresh our options.
+                         * Making sure we refresh our options, and hide our "create
+                         * command button".
                          */
                         hyperlang.options.changed
+                        hyperlang.hide-create-command-button
 
                     catch
 
@@ -416,6 +419,8 @@ hyperlang.listen:OK
                     delete-widget:hyperlang-create-phrase2hyper-association
 
                     /*
-                     * Restarting input loop.
+                     * Restarting input loop, and hiding our "create command button".
                      */
                     hyperlang.listen:[Talk to me]
+                    hyperlang.set-text:[Talk to me]
+                    hyperlang.hide-create-command-button

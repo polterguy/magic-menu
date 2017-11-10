@@ -61,6 +61,61 @@ create-event:hyperlang.start
 
           button
             style:"margin-bottom:0;"
+            innerValue:@"<span class=""icon-plus""></span>"
+            title:Teach computer phrase
+            visible:false
+            events
+
+              /*
+               * Event that displays our "create-command" button.
+               */
+              hyperlang.display-create-command-button
+
+                /*
+                 * Simply making widget visible.
+                 */
+                set-widget-property:x:/../*/_event?value
+                  visible:true
+                  .spoken:x:/../*/_arg?value
+
+              /*
+               * Event that hides our "create-command" button.
+               */
+              hyperlang.hide-create-command-button
+
+                /*
+                 * Simply making widget visible.
+                 */
+                set-widget-property:x:/../*/_event?value
+                  visible:false
+
+            onclick
+
+              /*
+               * Invokes event responsible for creating a new association, making
+               * sure we pass in proper arguments.
+               */
+              get-widget-property:x:/../*/_event?value
+                .spoken
+              hyperlang.grammar-position.get
+              if:x:/@hyperlang.grammar-position.get?value
+                eval-x:x:/+/*/*
+                add:x:/../*/hyperlang.command.create
+                  src
+                    pos:x:/@hyperlang.grammar-position.get?value
+              hyperlang.command.create:x:/@get-widget-property/*/*?value
+
+              /*
+               * Deletes the visual clue, indicating we're listening for input,
+               * and makes sure we stop listening and speaking.
+               */
+              micro.css.delete:hyperlang-listener
+                class:hyperlang-listening
+              micro.listen.stop
+              micro.speak.stop
+
+          button
+            style:"margin-bottom:0;"
             innerValue:@"<span class=""icon-question-circle""></span>"
             title:Show options
             onclick

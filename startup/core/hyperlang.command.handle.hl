@@ -223,6 +223,11 @@ create-event:hyperlang.command.handle
         :x:/../*/_arg?value
 
       /*
+       * Making sure we display "add command" button.
+       */
+      hyperlang.display-create-command-button:x:/../*/_arg?value
+
+      /*
        * Then asking the user if he wants to teach the computer or not.
        *
        * If user answers anything but what is found in [Teach] (localized phrase),
@@ -240,6 +245,12 @@ create-event:hyperlang.command.handle
             src:x:/@hyperlang.language.get-localized-phrase?value
           switch:x:/../*/text?value
             case:teach
+
+              /*
+               * Deletes the visual clue, indicating we're listening for input.
+               */
+              micro.css.delete:hyperlang-listener
+                class:hyperlang-listening
 
               /*
                * Invoking Active Event responsible for creating a "phrase2hyper"
@@ -265,3 +276,8 @@ create-event:hyperlang.command.handle
                * user to not wanting to create a new command.
                */
               hyperlang.command.handle:x:/../*/text?value
+
+              /*
+               * Hiding our "create command button".
+               */
+              hyperlang.hide-create-command-button
