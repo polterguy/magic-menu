@@ -2,7 +2,9 @@
 /*
  * Invoked when Hyperlang should speak something.
  *
- * Expects [_arg] to be whatever should be spoken.
+ * Expects [_arg] to be whatever should be spoken, and [onfinish] being what to
+ * do once content has been spoken.
+ *
  * Optionally, pass in [voice] to override the default voice to use, which is 
  * fetched from the user's settings.
  */
@@ -26,6 +28,20 @@ create-event:hyperlang.speak
     fetch:x:/0/0?value
       widget-exists:hyperlang-listener
     not
+    return
+
+  /*
+   * Checking if speech is disabled, and if so, evaluating given lambda if any,
+   * and returning immediately.
+   */
+  if
+    hyperlang.speech-is-enabled
+    not
+
+    /*
+     * Evaluating [onfinish] and returning immediately.
+     */
+    eval:x:/../*/onfinish
     return
 
   /*

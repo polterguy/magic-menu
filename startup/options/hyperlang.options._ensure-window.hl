@@ -31,7 +31,7 @@ create-event:hyperlang.options._ensure-window
                     class:hyperlang-help-close
                     element:a
                     href:#
-                    innerValue:@"<span class=""icon-close""></span>"
+                    innerValue:@"<span class=""icon-cross""></span>"
                     onclick
 
                       /*
@@ -84,7 +84,7 @@ create-event:hyperlang.options._ensure-window
                         href:#
                         role:button
                         class:hyperlang-help-pager
-                        innerValue:@"<span class=""icon-chevron-left""></span>"
+                        innerValue:@"<span class=""icon-arrow-left""></span>"
                         onclick
 
                           /*
@@ -100,7 +100,7 @@ create-event:hyperlang.options._ensure-window
                         href:#
                         role:button
                         class:hyperlang-help-pager
-                        innerValue:@"<span class=""icon-chevron-right""></span>"
+                        innerValue:@"<span class=""icon-arrow-right""></span>"
                         onclick
 
                           /*

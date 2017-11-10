@@ -182,7 +182,7 @@ create-widget
                   style:"display:inline-block;"
                   widgets
                     button
-                      innerValue:@"<span class=""icon-floppy-o""></span>"
+                      innerValue:@"<span class=""icon-floppy-disk""></span>"
                       title:Saves command object, and all associated synonyms
                       style:"margin-bottom:0;"
                       events
@@ -386,7 +386,7 @@ create-widget
                           force-parent:bool:true
 
                     button
-                      innerValue:@"<span class=""icon-refresh""></span>"
+                      innerValue:@"<span class=""icon-spinner11""></span>"
                       title:Clones the given command
                       style:"margin-bottom:0;"
                       onclick
@@ -434,7 +434,7 @@ create-widget
                           force-parent:bool:true
 
                     button
-                      innerValue:@"<span class=""icon-trash""></span>"
+                      innerValue:@"<span class=""icon-bin""></span>"
                       title:Deletes command object, and all associated synonyms
                       style:"margin-bottom:0;"
                       onclick
@@ -503,7 +503,7 @@ create-widget
                                           delete-widget:hyperlang-confirm-deletion-modal
 
                     button
-                      innerValue:@"<span class=""icon-close""></span>"
+                      innerValue:@"<span class=""icon-cross""></span>"
                       title:Close editor for command object without saving
                       style:"margin-bottom:0;"
                       onclick

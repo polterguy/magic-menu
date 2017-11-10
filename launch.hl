@@ -80,7 +80,7 @@ create-widget:hyperlang-main-container
                   onkeydown:@"if (event.keyCode == 13) {p5.$('hyperlang-search-button').raise('onclick');return false;}"
 
                 button:hyperlang-clear-search-button
-                  innerValue:@"<span class=""icon-remove""></span>"
+                  innerValue:@"<span class=""icon-cross""></span>"
                   title:Clears filter
                   disabled
                   onclick
@@ -205,7 +205,7 @@ create-widget:hyperlang-main-container
                     hyperlang.command.create
 
                 button
-                  innerValue:@"<span class=""icon-download""></span>"
+                  innerValue:@"<span class=""icon-download2""></span>"
                   title:Download dictionary
                   onclick
 
@@ -216,11 +216,11 @@ create-widget:hyperlang-main-container
                     hyperlang.backup.download
 
                 button
-                  innerValue:@"<span class=""icon-upload""></span>"
+                  innerValue:@"<span class=""icon-upload2""></span>"
                   title:Upload dictionary file
                   onclick:@"p5.dropzone.browse();event.stopPropagation(true);return false;"
                 button
-                  innerValue:@"<span class=""icon-home""></span>"
+                  innerValue:@"<span class=""icon-home3""></span>"
                   title:Close Hyperlang
                   onclick
 

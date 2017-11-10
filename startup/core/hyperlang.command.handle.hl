@@ -268,6 +268,11 @@ create-event:hyperlang.command.handle
             default
 
               /*
+               * Hiding our "create command button".
+               */
+              hyperlang.hide-create-command-button
+
+              /*
                * Unless the user says "yes" or "no", we assume the engine recognised
                * erronously, and that what he spoke now, was what he actually wants to
                * do, for simplicity reasons.
@@ -276,8 +281,3 @@ create-event:hyperlang.command.handle
                * user to not wanting to create a new command.
                */
               hyperlang.command.handle:x:/../*/text?value
-
-              /*
-               * Hiding our "create command button".
-               */
-              hyperlang.hide-create-command-button

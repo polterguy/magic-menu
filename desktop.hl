@@ -27,7 +27,7 @@ container
       widgets
         literal
           element:span
-          class:icon-flash desktop-app-icon
+          class:icon-mic desktop-app-icon
         span
           style:"position:absolute;top:5px;right:5px;font-size:.7rem;"
           innerValue:Hyperlang

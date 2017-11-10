@@ -1,4 +1,4 @@
-
+﻿
 /*
  * Creates the event that actually starts Hyperlang.
  *
@@ -37,22 +37,71 @@ create-event:hyperlang.start
         widgets
           button
             style:"margin-bottom:0;"
-            innerValue:@"<span class=""icon-close""></span>"
-            title:Close Hyperlang
-            accesskey:Q
-            oninit
+            title:Pauses temporarily
+            events
 
               /*
-               * Setting initial focus to "Close" button, to make it easy to close module.
+               * Returns true if speech is enabled, otherwise false.
                */
-              micro.page.set-focus:x:/../*/_event?value
+              hyperlang.speech-is-enabled
+
+                /*
+                 * Checking if speech is enabled.
+                 */
+                p5.web.widgets.get-children:x:/../*/_event?value
+                get-widget-property:x:/-/*/*?value
+                  class
+                if:x:/@get-widget-property/*/*?value
+                  =:icon-pause2
+
+                  /*
+                   * Speech is enabled.
+                   */
+                  return:bool:true
+
+                else
+
+                  /*
+                   * Speech is enabled.
+                   */
+                  return:bool:false
 
             onclick
 
               /*
-               * Closing Hyperlang.
+               * Figuring out if we should pause or restart.
                */
-              hyperlang.stop
+              p5.web.widgets.get-children:x:/../*/_event?value
+              get-widget-property:x:/-/*/*?value
+                class
+              if:x:/@get-widget-property/*/*?value
+                =:icon-pause2
+
+                /*
+                 * We should temporarily pause input loop.
+                 * Deletes the visual clue, indicating we're listening for input,
+                 * and makes sure we stop listening and speaking.
+                 */
+                micro.css.delete:hyperlang-listener
+                  class:hyperlang-listening
+                micro.listen.stop
+                micro.speak.stop
+                set-widget-property:x:/@p5.web.widgets.get-children/*/*?value
+                  class:icon-play3
+
+              else
+
+                /*
+                 * We should restart input loop.
+                 */
+                set-widget-property:x:/@p5.web.widgets.get-children/*/*?value
+                  class:icon-pause2
+                hyperlang.listen:[OK]
+
+            widgets
+              literal
+                element:span
+                class:icon-pause2
 
           literal:hyperlang-current-text
             element:label
@@ -116,7 +165,19 @@ create-event:hyperlang.start
 
           button
             style:"margin-bottom:0;"
-            innerValue:@"<span class=""icon-question-circle""></span>"
+            innerValue:@"<span class=""icon-cross""></span>"
+            title:Close Hyperlang
+            accesskey:Q
+            onclick
+
+              /*
+               * Closing Hyperlang.
+               */
+              hyperlang.stop
+
+          button
+            style:"margin-bottom:0;"
+            innerValue:@"<span class=""icon-question""></span>"
             title:Show options
             onclick
 

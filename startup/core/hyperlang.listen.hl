@@ -15,6 +15,18 @@ create-event:hyperlang.listen
     _arg:string
 
   /*
+   * Checking if speech is disabled, and if so, returning immediately.
+   */
+  if
+    hyperlang.speech-is-enabled
+    not
+
+    /*
+     * Returning immediately.
+     */
+    return
+
+  /*
    * Applying [onfinish], if any.
    */
   add:x:/../**/hyperlang._listen

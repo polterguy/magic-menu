@@ -48,7 +48,7 @@ create-event:desktop.plugins.post.create-toolbar-button
       element:button
       class:hyperlang-start
       title:Start Hyperlang, shortcut H
-      innerValue:@"<span class=""icon-flash""></span>"
+      innerValue:@"<span class=""icon-mic""></span>"
       accesskey:H
       oninit
 
