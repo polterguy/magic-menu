@@ -69,6 +69,8 @@ create-event:hyperlang.options._ensure-window
                              * Filter was cleared.
                              */
                             p5.web.viewstate.set:hyperlang.options-filter
+                            set-widget-property:hyperlang-options-search-clear
+                              disabled
 
                           else
 
@@ -77,12 +79,30 @@ create-event:hyperlang.options._ensure-window
                              */
                             p5.web.viewstate.set:hyperlang.options-filter
                               src:x:/@get-widget-property/*/*?value
+                            delete-widget-property:hyperlang-options-search-clear
+                              disabled
 
                           /*
                            * Reloading options, now with filter (or with filter removed).
                            */
                           hyperlang.options.show
                           micro.page.set-focus:x:/../*/_event?value
+
+                      button:hyperlang-options-search-clear
+                        innerValue:@"<span class=""icon-cross""></span>"
+                        disabled
+                        onclick
+
+                          /*
+                           * Removes current filter, and re-databinds options.
+                           */
+                          p5.web.viewstate.set:hyperlang.options-filter
+                          hyperlang.options.show
+                          set-widget-property:x:/../*/_event?value
+                            disabled
+                          set-widget-property:hyperlang-options-search-textbox
+                            value:
+                          micro.page.set-focus:hyperlang-options-search-textbox
 
                       button
                         innerValue:@"<span class=""icon-arrow-left""></span>"

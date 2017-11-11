@@ -16,6 +16,15 @@ create-event:hyperlang.options.show-next
   hyperlang.options._ensure-window
 
   /*
+   * Checking if we have a filter condition.
+   */
+  hyperlang.options.get-filter
+  if:x:/@hyperlang.options.get-filter?value
+    add:x:/../*/hyperlang.grammar-position.list-options
+      src
+        filter:x:/@hyperlang.options.get-filter?value
+
+  /*
    * Increments current "page" for options.
    */
   hyperlang.settings.get:no-options

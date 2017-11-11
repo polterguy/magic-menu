@@ -120,9 +120,6 @@ create-event:hyperlang.grammar-position.list-options
    * Connecting to database, and retrieving all possible options from current 
    * position in tree.
    */
-  create-widget
-    element:pre
-    innerValue:x:/..
   p5.mysql.connect:[hyperlang]
     p5.mysql.select:x:/@_sql?value
       @username:x:/@whoami/*/username?value
