@@ -84,8 +84,27 @@ create-event:hyperlang.options._ensure-window
 
                           /*
                            * Reloading options, now with filter (or with filter removed).
+                           *
+                           * Notice, if filter yields zero results, we assume user wants to
+                           * possibly create a new command, and hence we enable our "create new
+                           * command button".
                            */
-                          hyperlang.options.show
+                          if
+                            hyperlang.options.show
+
+                            /*
+                             * Disabling "create new command button".
+                             */
+                            hyperlang.hide-create-command-button
+
+                          else
+
+                            /*
+                             * Enabling "create new command button".
+                             */
+                            hyperlang.set-text:x:/@get-widget-property/*/*?value
+                            hyperlang.display-create-command-button:x:/@get-widget-property/*/*?value
+
                           micro.page.set-focus:x:/../*/_event?value
 
                       button:hyperlang-options-search-clear
@@ -103,6 +122,7 @@ create-event:hyperlang.options._ensure-window
                           set-widget-property:hyperlang-options-search-textbox
                             value:
                           micro.page.set-focus:hyperlang-options-search-textbox
+                          hyperlang.hide-create-command-button
 
                       button
                         innerValue:@"<span class=""icon-arrow-left""></span>"
