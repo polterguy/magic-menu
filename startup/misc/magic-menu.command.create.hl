@@ -15,7 +15,7 @@
  * You can also optionally pass in [global] and [private] to set the initial values for both of these
  * values. However, the user can still change both of these if he wants to.
  */
-create-event:hyperlang.command.create
+create-event:magic-menu.command.create
 
   /*
    * Default values.
@@ -28,7 +28,7 @@ create-event:hyperlang.command.create
  *
  * Notice, you can write any Hyperlambda you wish here.
  */
-hyperlang.listen:OK
+magic-menu.listen:OK
 
 /*
  * If you return ""false"", the ""current position stack"" is not changed,
@@ -113,7 +113,7 @@ return:bool:false
   /*
    * Retrieving language for user, to parametrise SQL.
    */
-  hyperlang.settings.get-language
+  magic-menu.settings.get-language
 
   /*
    * Creating a modal widget, which asks user to type in Hyperlambda, and configure
@@ -122,15 +122,15 @@ return:bool:false
    */
   eval-x:x:/+/**(/_pos|/hypereval.widgets.hyperlambda-textarea/*/value)
   create-widgets
-    micro.widgets.modal:hyperlang-create-phrase2hyper-association
+    micro.widgets.modal:magic-menu-create-phrase2hyper-association
       widgets
         h3
           innerValue:New association
         label
           innerValue:Phrase(s)
-          for:hyperlang-synonymous-phrases
+          for:magic-menu-synonymous-phrases
           style:"margin-bottom:0;"
-        literal:hyperlang-synonymous-phrases
+        literal:magic-menu-synonymous-phrases
           element:textarea
           class:fill
           rows:5
@@ -163,14 +163,14 @@ return:bool:false
                  */
                 if
                   fetch:x:/0/0?value
-                    widget-exists:hyperlang-create-phrase-parent-label
+                    widget-exists:magic-menu-create-phrase-parent-label
                   get-widget-property:x:/../*/_event?value
                     checked
                   if:x:/@get-widget-property/*/*
-                    set-widget-property:hyperlang-create-phrase-parent-label
+                    set-widget-property:magic-menu-create-phrase-parent-label
                       visible:false
                   else
-                    set-widget-property:hyperlang-create-phrase-parent-label
+                    set-widget-property:magic-menu-create-phrase-parent-label
                       visible:true
 
             span
@@ -185,7 +185,7 @@ return:bool:false
               checked
             span
               innerValue:Private phrase
-        literal:hyperlang-create-phrase-parent-label
+        literal:magic-menu-create-phrase-parent-label
           element:span
           style:"position:absolute;top:1rem;right:1rem;font-style:italic;color:#a0a0a0;"
           oninit
@@ -201,12 +201,12 @@ return:bool:false
                * Figuring out the first relevant phrase, and displaying it as
                * widget's innerValue.
                */
-              hyperlang.settings.get-language
-              p5.mysql.connect:[hyperlang]
+              magic-menu.settings.get-language
+              p5.mysql.connect:[magic-menu]
                 p5.mysql.scalar:@"select command from phrases where commandid in (select id from commands where id = @id) and (lang = @lang or lang = @sublang) order by lastused, id limit 1"
                   @id:x:/@_pos?value
-                  @lang:x:/@hyperlang.settings.get-language/*/lang?value
-                  @sublang:x:/@hyperlang.settings.get-language/*/sublang?value
+                  @lang:x:/@magic-menu.settings.get-language/*/lang?value
+                  @sublang:x:/@magic-menu.settings.get-language/*/sublang?value
                 set-widget-property:x:/../*/_event?value
                   innerValue:@"Parent: '{0}'"
                     :x:/@p5.mysql.scalar?value
@@ -241,7 +241,7 @@ return:bool:false
                        * association between phrase and code, before we close widget
                        * and restarts listening loop.
                        */
-                      micro.form.serialize:hyperlang-create-phrase2hyper-association
+                      micro.form.serialize:magic-menu-create-phrase2hyper-association
 
                       /*
                        * Verifying user actually provided any Hyperlambda, and if not,
@@ -256,7 +256,7 @@ return:bool:false
                        * making sure we wrap our attempt inside a transaction, to avoid inserting
                        * "bad partial command objects".
                        */
-                      p5.mysql.connect:[hyperlang]
+                      p5.mysql.connect:[magic-menu]
                         p5.mysql.transaction.begin
 
                           /*
@@ -329,7 +329,7 @@ return:bool:false
                            * Defaulting language to user's configure language, and only overriding the language,
                            * if user explicitly chose to override it, with a ":".
                            */
-                          hyperlang.settings.get-language
+                          magic-menu.settings.get-language
                           split:x:/@micro.form.serialize/*/synonyms?value
                             =:"\r\n"
                           p5.types.date.now
@@ -349,7 +349,7 @@ return:bool:false
                               /*
                                * Explicit language declaration.
                                */
-                              hyperlang._assume-language-exists:x:/@split/0?name
+                              magic-menu._assume-language-exists:x:/@split/0?name
                               set:x:/@_lang?value
                                 src:x:/@split/0?name
 
@@ -360,7 +360,7 @@ return:bool:false
                                * Using default language.
                                */
                               set:x:/@_lang?value
-                                src:x:/@hyperlang.settings.get-language/*/lang?value
+                                src:x:/@magic-menu.settings.get-language/*/lang?value
 
                             else
 
@@ -386,19 +386,19 @@ return:bool:false
                         /*
                          * Closing modal widget, and restarting listening loop.
                          */
-                        delete-widget:hyperlang-create-phrase2hyper-association
+                        delete-widget:magic-menu-create-phrase2hyper-association
 
                         /*
                          * Restarting input loop.
                          */
-                        hyperlang.listen:[OK]
+                        magic-menu.listen:[OK]
 
                         /*
                          * Making sure we refresh our options, and hide our "create
                          * command button".
                          */
-                        hyperlang.options.changed
-                        hyperlang.hide-create-command-button
+                        magic-menu.options.changed
+                        magic-menu.hide-create-command-button
 
                     catch
 
@@ -416,26 +416,26 @@ return:bool:false
                     /*
                      * Closing modal widget, and restarting listening loop.
                      */
-                    delete-widget:hyperlang-create-phrase2hyper-association
+                    delete-widget:magic-menu-create-phrase2hyper-association
 
                     /*
                      * Restarting input loop, and hiding our "create command button".
                      *
                      * Notice, we don't restart input loop, unless speach is enabled.
                      */
-                    hyperlang.hide-create-command-button
+                    magic-menu.hide-create-command-button
                     if
-                      hyperlang.speech-is-enabled
+                      magic-menu.speech-is-enabled
 
                       /*
                        * Speech is enabled.
                        */
-                      hyperlang.listen:[Talk to me]
-                      hyperlang.set-text:[Talk to me]
+                      magic-menu.listen:[Talk to me]
+                      magic-menu.set-text:[Talk to me]
 
                     else
 
                       /*
                        * Speech is not enabled.
                        */
-                      hyperlang.set-text
+                      magic-menu.set-text

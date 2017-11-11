@@ -4,7 +4,7 @@
  * File responsible for importing a single Hyperlambda file.
  *
  * Requires [filename] being filename of file to import.
- * Expects an open database connection to "hyperlang" database.
+ * Expects an open database connection to "magic-menu" database.
  */
 
 
@@ -58,7 +58,7 @@ for-each:x:/@load-file/*/*/command
    * allowing us to uniquely identify commands, across all servers in the world.
    * Since its default value is created as a GUID, this should not be a problem,
    * and should be globally unique anyways - Unless user has hand-edited it,
-   * which is not possible in the UI of Hyperlang anyways.
+   * which is not possible in the UI of Magic menu anyways.
    */
   _parent
   if:x:/@_dp/#/*/parent?value

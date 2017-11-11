@@ -1,4 +1,4 @@
-
+﻿
 /*
  * Uninstall file.
  */
@@ -10,6 +10,6 @@
 /*
  * Deleting all relevant Active Events, and that's it.
  */
-delete-event:p5.io.unroll-path.@HYPERLANG
-vocabulary:hyperlang.
+delete-event:p5.io.unroll-path.@MAGIC
+vocabulary:magic-menu.
 delete-event:x:/-/*?name

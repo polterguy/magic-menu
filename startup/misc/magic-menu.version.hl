@@ -1,7 +1,7 @@
-
+﻿
 /*
  * Creates version Active Event.
  */
-create-event:hyperlang.version
+create-event:magic-menu.version
 
   return:decimal:1.0

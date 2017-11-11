@@ -18,7 +18,7 @@ if:x:/@split/0/-?name
   /*
    * Invoking event responsible for handling uploads, and returning early.
    */
-  micro.evaluate.file:@HYPERLANG/helpers/handle-upload-request.hl
+  micro.evaluate.file:@MAGIC/helpers/handle-upload-request.hl
   return
 
 
@@ -62,24 +62,24 @@ if:x:/@whoami/*/role?value
 /*
  * Creating our main wire frame.
  */
-create-widget:hyperlang-main-container
-  class:container hyperlang-editor
+create-widget:magic-menu-main-container
+  class:container magic-menu-editor
   widgets
     div
       class:row
       widgets
         div
-          class:col-67 right
+          class:col-60 right
           widgets
             div
               class:strip fill
               widgets
-                input:hyperlang-search-textbox
+                input:magic-menu-search-textbox
                   type:text
                   placeholder:Filter ...
-                  onkeydown:@"if (event.keyCode == 13) {p5.$('hyperlang-search-button').raise('onclick');return false;}"
+                  onkeydown:@"if (event.keyCode == 13) {p5.$('magic-menu-search-button').raise('onclick');return false;}"
 
-                button:hyperlang-clear-search-button
+                button:magic-menu-clear-search-button
                   innerValue:@"<span class=""icon-cross""></span>"
                   title:Clears filter
                   disabled
@@ -88,12 +88,12 @@ create-widget:hyperlang-main-container
                     /*
                      * Clears filter and invokes Ajax event for search button.
                      */
-                    set-widget-property:hyperlang-search-textbox
+                    set-widget-property:magic-menu-search-textbox
                       value:
-                    p5.web.widgets.ajax-events.raise:hyperlang-search-button
+                    p5.web.widgets.ajax-events.raise:magic-menu-search-button
                       onclick
 
-                container:hyperlang-select-language
+                container:magic-menu-select-language
                   element:select
                   style:"width:40%;"
                   oninit
@@ -111,13 +111,13 @@ create-widget:hyperlang-main-container
                          * But first creating our "select voice" option element.
                          */
                         create-widget
-                          parent:hyperlang-select-language
+                          parent:magic-menu-select-language
                           element:option
                           innerValue:Select voice ...
                           value:_default
                         for-each:x:/../*/voices/*
                           create-widget
-                            parent:hyperlang-select-language
+                            parent:magic-menu-select-language
                             element:option
                             innerValue:{0},{1}
                               :x:/@_dp/#?name
@@ -129,11 +129,11 @@ create-widget:hyperlang-main-container
                         /*
                          * Setting widget's initial value to language setting for user, if possible.
                          */
-                        hyperlang.settings.get-language
-                        set-widget-property:hyperlang-select-language
+                        magic-menu.settings.get-language
+                        set-widget-property:magic-menu-select-language
                           value:{0},{1}
-                            :x:/@hyperlang.settings.get-language/*/voice?value
-                            :x:/@hyperlang.settings.get-language/*/sublang?value
+                            :x:/@magic-menu.settings.get-language/*/voice?value
+                            :x:/@magic-menu.settings.get-language/*/sublang?value
 
                   onchange
 
@@ -142,14 +142,14 @@ create-widget:hyperlang-main-container
                      */
                     get-widget-property:x:/../*/_event?value
                       value
-                    hyperlang.settings.set-language:x:/@get-widget-property/*/*?value
+                    magic-menu.settings.set-language:x:/@get-widget-property/*/*?value
 
                     /*
                      * Re-databinding grid.
                      */
-                    micro.evaluate.file:@HYPERLANG/helpers/databind-grid.hl
+                    micro.evaluate.file:@MAGIC/helpers/databind-grid.hl
 
-                button:hyperlang-search-button
+                button:magic-menu-search-button
                   innerValue:@"<span class=""icon-search""></span>"
                   title:Search
                   onclick
@@ -157,21 +157,21 @@ create-widget:hyperlang-main-container
                     /*
                      * Retrieving filter, and re-databinding grid, now with the specified filter condition.
                      */
-                    get-widget-property:hyperlang-search-textbox
+                    get-widget-property:magic-menu-search-textbox
                       value
                     eval-x:x:/+/*
-                    micro.evaluate.file:@HYPERLANG/helpers/databind-grid.hl
+                    micro.evaluate.file:@MAGIC/helpers/databind-grid.hl
                       filter:x:/@get-widget-property/*/*?value
 
                     /*
                      * For simplicity, we set focus to search textbox again.
                      */
-                    micro.page.set-focus:hyperlang-search-textbox
+                    micro.page.set-focus:magic-menu-search-textbox
 
                     /*
                      * Making sure we store filter.
                      */
-                    p5.web.viewstate.set:hyperlang.grid-filter
+                    p5.web.viewstate.set:magic-menu.grid-filter
                       src:x:/@get-widget-property/*/*?value
 
                     /*
@@ -179,10 +179,10 @@ create-widget:hyperlang-main-container
                      */
                     if:x:/@get-widget-property/*/*?value
                       !=:
-                      delete-widget-property:hyperlang-clear-search-button
+                      delete-widget-property:magic-menu-clear-search-button
                         disabled
                     else
-                      set-widget-property:hyperlang-clear-search-button
+                      set-widget-property:magic-menu-clear-search-button
                         disabled
 
         div
@@ -193,7 +193,7 @@ create-widget:hyperlang-main-container
               style:"display:inline-block;"
               widgets
 
-                button:hyperlang-add-command
+                button:magic-menu-add-command
                   innerValue:@"<span class=""icon-plus""></span>"
                   title:Add new command
                   style:"padding-left:45px;padding-right:45px;"
@@ -202,7 +202,7 @@ create-widget:hyperlang-main-container
                     /*
                      * Creates a new command, by invoking file responsible for doing just that..
                      */
-                    hyperlang.command.create
+                    magic-menu.command.create
 
                 button
                   innerValue:@"<span class=""icon-download2""></span>"
@@ -212,8 +212,8 @@ create-widget:hyperlang-main-container
                     /*
                      * Downloads a backup of entire database as a zip file.
                      */
-                    micro.evaluate.file:@HYPERLANG/helpers/export-dictionary.hl
-                    hyperlang.backup.download
+                    micro.evaluate.file:@MAGIC/helpers/export-dictionary.hl
+                    magic-menu.backup.download
 
                 button
                   innerValue:@"<span class=""icon-upload2""></span>"
@@ -221,7 +221,7 @@ create-widget:hyperlang-main-container
                   onclick:@"p5.dropzone.browse();event.stopPropagation(true);return false;"
                 button
                   innerValue:@"<span class=""icon-home3""></span>"
-                  title:Close Hyperlang
+                  title:Close Magic menu
                   onclick
 
                     /*
@@ -233,15 +233,15 @@ create-widget:hyperlang-main-container
     div
       class:row
       widgets
-        container:hyperlang-content
+        container:magic-menu-content
           class:col-100
           widgets
 
             /*
-             * Grid containing all words and phrasese Hyperlang understands.
+             * Grid containing all words and phrasese Magic menu understands.
              */
-            micro.widgets.grid:hyperlang-phrases-grid
-              class:hover striped hyperlang-grid
+            micro.widgets.grid:magic-menu-phrases-grid
+              class:hover striped magic-menu-grid
               columns
                 Command
                 Parent
@@ -252,7 +252,7 @@ create-widget:hyperlang-main-container
                 /*
                  * Evaluating file that databinds grid.
                  */
-                micro.evaluate.file:@HYPERLANG/helpers/databind-grid.hl
+                micro.evaluate.file:@MAGIC/helpers/databind-grid.hl
 
                 /*
                  * Including JavaScript to determine if user is at the bottom of page,
@@ -262,14 +262,14 @@ create-widget:hyperlang-main-container
 window.onscroll = function() {
   if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
     if (!p5.hyperlang_end_of_dataset) {
-      if(p5.hyperlang_ongoing_scroll === true) {
+      if(p5.magic_menu_ongoing_scroll === true) {
         return;
       }
-      p5.hyperlang_ongoing_scroll = true;
-      var el = p5.$('hyperlang-phrases-grid');
+      p5.magic_menu_ongoing_scroll = true;
+      var el = p5.$('magic-menu-phrases-grid');
       el.raise('.onfeed',{
         onsuccess:function() {
-          p5.hyperlang_ongoing_scroll = false;
+          p5.magic_menu_ongoing_scroll = false;
         }
       });
     }
@@ -280,10 +280,10 @@ window.onscroll = function() {
                 /*
                  * Invoked when grid needs more items.
                  */
-                p5.web.viewstate.get:hyperlang.grid-offset
-                p5.web.viewstate.get:hyperlang.grid-filter
+                p5.web.viewstate.get:magic-menu.grid-offset
+                p5.web.viewstate.get:magic-menu.grid-filter
                 eval-x:x:/+/*(/offset|/filter)
-                micro.evaluate.file:@HYPERLANG/helpers/databind-grid.hl
+                micro.evaluate.file:@MAGIC/helpers/databind-grid.hl
                   keep-items:true
                   offset:x:/../*/p5.web.viewstate.get/[0,1]/*?value
                   filter:x:/../*/p5.web.viewstate.get/[1,2]/*?value
@@ -294,5 +294,5 @@ window.onscroll = function() {
  */
 micro.page.create-dropzone
   filter:zip|hl
-  url:/hyperlang/upload
+  url:/magic-menu/upload
   .onfinish:@"function(uid, no_files, no_errors) {window.location.replace(window.location.href);}"

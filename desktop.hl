@@ -1,12 +1,12 @@
-
+﻿
 /*
  * Desktop widget file for app.
  */
 container
   element:a
   class:desktop-app shaded rounded air-inner
-  href:/hyperlang
-  title:Hyperlang
+  href:/magic-menu
+  title:Magic menu
   oninit
 
     /*
@@ -27,7 +27,7 @@ container
       widgets
         literal
           element:span
-          class:icon-mic desktop-app-icon
+          class:icon-magic-wand desktop-app-icon
         span
           style:"position:absolute;top:5px;right:5px;font-size:.7rem;"
-          innerValue:Hyperlang
+          innerValue:Magic menu

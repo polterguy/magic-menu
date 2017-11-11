@@ -35,22 +35,22 @@ if:x:/@whoami/*/role?value
  */
 if
   fetch:x:/0/0?value
-    folder-exists:~/temp/hyperlang/
+    folder-exists:~/temp/magic-menu/
   not
 
   /*
-   * Creating Hyperlang temp folder.
+   * Creating Magic menu temp folder.
    */
-  create-folder:~/temp/hyperlang/
+  create-folder:~/temp/magic-menu/
 
 else
 
   /*
-   * Hyperlang "temp" folder already exists, making sure we empty it.
+   * Magic menu "temp" folder already exists, making sure we empty it.
    */
-  list-files:~/temp/hyperlang/
+  list-files:~/temp/magic-menu/
   delete-file:x:/@list-files/*?name
-  list-folder:~/temp/hyperlang/
+  list-folder:~/temp/magic-menu/
   delete-folder:x:/@list-folder/*?name
 
 
@@ -61,7 +61,7 @@ else
  * Opening a database connection, and creating a database transaction, to avoid
  * importing "partial files".
  */
-p5.mysql.connect:[hyperlang]
+p5.mysql.connect:[magic-menu]
   p5.mysql.transaction.begin
 
     /*
@@ -73,7 +73,7 @@ p5.mysql.connect:[hyperlang]
      * will also be added to existing dictionary.
      */
     p5.web.request.parse-mime
-      attachment-folder:~/temp/hyperlang/
+      attachment-folder:~/temp/magic-menu/
     split:x:/@p5.web.request.parse-mime/**/filename/[0,1]?value
       =:.
     switch:x:/@split/0/-?name
@@ -86,7 +86,7 @@ p5.mysql.connect:[hyperlang]
          * pass in the filename, as returned from [p5.web.request.parse-mime].
          */
         eval-x:x:/+/*
-        micro.evaluate.file:@HYPERLANG/helpers/import-hyperlambda-file.hl
+        micro.evaluate.file:@MAGIC/helpers/import-hyperlambda-file.hl
           filename:{0}{1}{2}
             :x:/@p5.web.request.parse-mime/**/filename/[0,1]/*/folder?value
             :x:/@p5.web.request.parse-mime/**/filename/[0,1]/*/prefix?value
@@ -102,7 +102,7 @@ p5.mysql.connect:[hyperlang]
           :x:/@p5.web.request.parse-mime/**/filename/[0,1]/*/folder?value
           :x:/@p5.web.request.parse-mime/**/filename/[0,1]/*/prefix?value
           :x:/@p5.web.request.parse-mime/**/filename/[0,1]?value
-          dest:~/temp/hyperlang/
+          dest:~/temp/magic-menu/
 
         /*
          * Mac OS X tends to create "funny additional" folders, which we simply remove.
@@ -126,7 +126,7 @@ p5.mysql.connect:[hyperlang]
              * Currently iterated file is a Hyperlambda file.
              */
             eval-x:x:/+/*
-            micro.evaluate.file:@HYPERLANG/helpers/import-hyperlambda-file.hl
+            micro.evaluate.file:@MAGIC/helpers/import-hyperlambda-file.hl
               filename:x:/@_dp?value
 
       default

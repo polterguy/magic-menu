@@ -106,7 +106,7 @@ set:x:/@_sql?value
 /*
  * Retrieving language for user, such that we can parametrize SQL.
  */
-hyperlang.settings.get-language
+magic-menu.settings.get-language
 
 
 
@@ -115,10 +115,10 @@ hyperlang.settings.get-language
 /*
  * Connecting to database, and selecting records according to filter condition.
  */
-p5.mysql.connect:[hyperlang]
+p5.mysql.connect:[magic-menu]
   p5.mysql.select:x:/@_sql?value
-    @lang:x:/@hyperlang.settings.get-language/*/lang?value
-    @sublang:x:/@hyperlang.settings.get-language/*/sublang?value
+    @lang:x:/@magic-menu.settings.get-language/*/lang?value
+    @sublang:x:/@magic-menu.settings.get-language/*/sublang?value
     @filter:%{0}%
       :x:/../*/filter?value
     @offset:x:(/../*/offset|/../*/.defaults/*/offset)/$?value
@@ -146,8 +146,8 @@ p5.mysql.connect:[hyperlang]
     if:x:/@_dp/#/*/parent?value
       p5.mysql.scalar:@"select command from phrases 
 where id in (select min(id) from phrases where (lang = @lang or lang = @sublang) and commandid = @id group by commandid)"
-        @lang:x:/@hyperlang.settings.get-language/*/lang?value
-        @sublang:x:/@hyperlang.settings.get-language/*/sublang?value
+        @lang:x:/@magic-menu.settings.get-language/*/lang?value
+        @sublang:x:/@magic-menu.settings.get-language/*/sublang?value
         @id:x:/@_dp/#/*/parent?value
       set:x:/@_parent?value
         src:x:/@p5.mysql.scalar?value
@@ -181,7 +181,7 @@ where id in (select min(id) from phrases where (lang = @lang or lang = @sublang)
               get-widget-property:x:/../*/_event?value
                 .id
               eval-x:x:/+/*
-              micro.evaluate.file:@HYPERLANG/helpers/edit-phrase.hl
+              micro.evaluate.file:@MAGIC/helpers/edit-phrase.hl
                 id:x:/@get-widget-property/*/*?value.long
 
           Command:x:/@_dp/#/*/command?value
@@ -198,7 +198,7 @@ where id in (select min(id) from phrases where (lang = @lang or lang = @sublang)
  * support "never ending scrolling" to feed the grid.
  */
 eval-x:x:/+/*
-micro.widgets.grid.databind:hyperlang-phrases-grid
+micro.widgets.grid.databind:magic-menu-phrases-grid
   keep-items:x:/../*/keep-items?value
 
 
@@ -210,5 +210,5 @@ micro.widgets.grid.databind:hyperlang-phrases-grid
  */
 +:x:(/../*/offset|/../*/.defaults/*/offset)/$?value
   _:25
-p5.web.viewstate.set:hyperlang.grid-offset
+p5.web.viewstate.set:magic-menu.grid-offset
   src:x:/@+?value

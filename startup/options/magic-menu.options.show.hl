@@ -1,0 +1,61 @@
+﻿
+/*
+ * Creates the event that shows the available options to user.
+ */
+create-event:magic-menu.options.show
+
+  /*
+   * Ensuring that "options" window is created.
+   */
+  magic-menu.options._ensure-window
+
+  /*
+   * Clearing out "current page" viewstate value.
+   */
+  p5.web.viewstate.set:magic-menu.options.offset
+    src:0
+
+  /*
+   * Checking if we have a filter condition.
+   */
+  magic-menu.options.get-filter
+  if:x:/@magic-menu.options.get-filter?value
+    add:x:/../*/magic-menu.grammar-position.list-options
+      src
+        filter:x:/@magic-menu.options.get-filter?value
+
+  /*
+   * Retrieves the first "n" options.
+   */
+  magic-menu.settings.get:no-options
+    default:10
+  eval-x:x:/+/*
+  magic-menu.grammar-position.list-options
+    limit:x:/@magic-menu.settings.get?value
+
+  /*
+   * Parametrising and invoking event responsible for "data binding" options window.
+   */
+  add:x:/../*/magic-menu.options._create-options/*/options
+    src:x:/@magic-menu.grammar-position.list-options/*
+  magic-menu.options._create-options
+    parent:magic-menu-help-list
+    options
+
+  /*
+   * Checking if there are any options, and returning accordingly to caller.
+   */
+  if:x:/@magic-menu.grammar-position.list-options/*?count
+    =:int:0
+
+    /*
+     * No options, returning "failure" to caller.
+     */
+    return:bool:false
+
+  else
+
+    /*
+     * Returning "success" to caller.
+     */
+    return:bool:true

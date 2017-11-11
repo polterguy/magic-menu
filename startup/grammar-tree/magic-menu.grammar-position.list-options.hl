@@ -8,7 +8,7 @@
  * Will return phrase database ID, and phrase's command, in addition to a [type] child,
  * being the type of command this is, which might be global, root or local.
  */
-create-event:hyperlang.grammar-position.list-options
+create-event:magic-menu.grammar-position.list-options
 
   /*
    * Sanity checking arguments.
@@ -29,8 +29,8 @@ create-event:hyperlang.grammar-position.list-options
    * Retrieves the current position, username, and current language to parametrise SQL.
    */
   whoami
-  hyperlang.grammar-position.get
-  hyperlang.settings.get-language
+  magic-menu.grammar-position.get
+  magic-menu.settings.get-language
 
   /*
    * Dynamically building our SQL, according to filter conditions.
@@ -86,7 +86,7 @@ create-event:hyperlang.grammar-position.list-options
    * Checking parent, and parametrizing SQL accordingly.
    */
   _scope
-  if:x:/@hyperlang.grammar-position.get?value
+  if:x:/@magic-menu.grammar-position.get?value
 
     /*
      * We have an existing parent.
@@ -95,7 +95,7 @@ create-event:hyperlang.grammar-position.list-options
       src:@"and (parent = @parent or global = 1) and (username is null or username = @username)"
     add:x:/../*/p5.mysql.connect/*/p5.mysql.select
       src
-        @parent:x:/@hyperlang.grammar-position.get?value
+        @parent:x:/@magic-menu.grammar-position.get?value
 
   else
 
@@ -120,11 +120,11 @@ create-event:hyperlang.grammar-position.list-options
    * Connecting to database, and retrieving all possible options from current 
    * position in tree.
    */
-  p5.mysql.connect:[hyperlang]
+  p5.mysql.connect:[magic-menu]
     p5.mysql.select:x:/@_sql?value
       @username:x:/@whoami/*/username?value
-      @lang:x:/@hyperlang.settings.get-language/*/lang?value
-      @sublang:x:/@hyperlang.settings.get-language/*/sublang?value
+      @lang:x:/@magic-menu.settings.get-language/*/lang?value
+      @sublang:x:/@magic-menu.settings.get-language/*/sublang?value
       @limit:x:(/../*/limit|/@.defaults/*/limit)/$?value.long
       @offset:x:(/../*/offset|/@.defaults/*/offset)/$?value.long
 
@@ -138,8 +138,8 @@ create-event:hyperlang.grammar-position.list-options
        * used phrase for the specified command.
        */
       p5.mysql.select:@"select id, command from phrases where (lang = @lang or lang = @sublang) and commandid = @commandid order by lastused desc limit 1"
-        @lang:x:/@hyperlang.settings.get-language/*/lang?value
-        @sublang:x:/@hyperlang.settings.get-language/*/sublang?value
+        @lang:x:/@magic-menu.settings.get-language/*/lang?value
+        @sublang:x:/@magic-menu.settings.get-language/*/sublang?value
         @commandid:x:/@_dp/#/*/commandid?value
       add:x:/../*/return
         src:@"{0}:{1}"
@@ -154,15 +154,15 @@ create-event:hyperlang.grammar-position.list-options
         =:int:1
         add:x:/../*/return/0/-
           src
-            type:hyperlang-options-global
+            type:magic-menu-options-global
       else-if:x:/@_dp/#/*/parent?value
         add:x:/../*/return/0/-
           src
-            type:hyperlang-options-local
+            type:magic-menu-options-local
       else
         add:x:/../*/return/0/-
           src
-            type:hyperlang-options-root
+            type:magic-menu-options-root
 
   /*
    * Returning results to caller.

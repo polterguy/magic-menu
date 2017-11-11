@@ -1,10 +1,10 @@
 ﻿
 /*
- * Creates the event that actually starts Hyperlang.
+ * Creates the event that actually starts Magic menu.
  *
  * You can override the default greeting with [greeting]
  */
-create-event:hyperlang.start
+create-event:magic-menu.start
 
   /*
    * Defaults.
@@ -13,24 +13,24 @@ create-event:hyperlang.start
     greeting:[Hello]
 
   /*
-   * Checking if Hyperlang is already initiated from before, and if so, making
+   * Checking if Magic menu is already initiated from before, and if so, making
    * sure we close any previous instances first.
    */
   if
     fetch:x:/0/0?value
-      widget-exists:hyperlang-listener
-    delete-widget:hyperlang-listener
+      widget-exists:magic-menu-listener
+    delete-widget:magic-menu-listener
 
   /*
    * Making sure we reset grammar position.
    */
-  hyperlang.grammar-position.clear
+  magic-menu.grammar-position.clear
 
   /*
-   * Creating main Hyperlang widget.
+   * Creating main Magic menu widget.
    */
-  create-widget:hyperlang-listener
-    class:hyperlang-listener shaded rounded air-inner
+  create-widget:magic-menu-listener
+    class:magic-menu-listener shaded rounded air-inner
     widgets
       div
         class:strip
@@ -43,7 +43,7 @@ create-event:hyperlang.start
               /*
                * Returns true if speech is enabled, otherwise false.
                */
-              hyperlang.speech-is-enabled
+              magic-menu.speech-is-enabled
 
                 /*
                  * Checking if speech is enabled.
@@ -82,8 +82,8 @@ create-event:hyperlang.start
                  * Deletes the visual clue, indicating we're listening for input,
                  * and makes sure we stop listening and speaking.
                  */
-                micro.css.delete:hyperlang-listener
-                  class:hyperlang-listening
+                micro.css.delete:magic-menu-listener
+                  class:magic-menu-listening
                 micro.listen.stop
                 micro.speak.stop
                 set-widget-property:x:/@p5.web.widgets.get-children/*/*?value
@@ -94,10 +94,10 @@ create-event:hyperlang.start
                  * disabled for user.
                  */
                 whoami
-                delete-data:x:/*/*/hyperlang.speech-is-disabled-{0}
+                delete-data:x:/*/*/magic-menu.speech-is-disabled-{0}
                   :x:/@whoami/*/username?value
                 set:x:/+/*?name
-                  src:hyperlang.speech-is-disabled-{0}
+                  src:magic-menu.speech-is-disabled-{0}
                     :x:/@whoami/*/username?value
                 insert-data
                   foo:bool:true
@@ -106,7 +106,7 @@ create-event:hyperlang.start
                  * Notice, when speech is disabled, we make sure we show options
                  * by default.
                  */
-                hyperlang.options.show
+                magic-menu.options.show
                   
 
               else
@@ -116,14 +116,14 @@ create-event:hyperlang.start
                  */
                 set-widget-property:x:/@p5.web.widgets.get-children/*/*?value
                   class:icon-pause2
-                hyperlang.listen:[Talk to me]
+                magic-menu.listen:[Talk to me]
 
                 /*
                  * Notice, we also store in our p5.data database if speech is 
                  * disabled for user.
                  */
                 whoami
-                delete-data:x:/*/*/hyperlang.speech-is-disabled-{0}
+                delete-data:x:/*/*/magic-menu.speech-is-disabled-{0}
                   :x:/@whoami/*/username?value
 
             oninit
@@ -133,15 +133,15 @@ create-event:hyperlang.start
                * disabled for user.
                */
               whoami
-              select-data:x:/*/*/hyperlang.speech-is-disabled-{0}
+              select-data:x:/*/*/magic-menu.speech-is-disabled-{0}
                 :x:/@whoami/*/username?value
               if:x:/@select-data/*?value
 
                 /*
                  * Speech is by default disabled for current session.
                  */
-                micro.css.delete:hyperlang-listener
-                  class:hyperlang-listening
+                micro.css.delete:magic-menu-listener
+                  class:magic-menu-listening
                 p5.web.widgets.get-children:x:/../*/_event?value
                 set-widget-property:x:/@p5.web.widgets.get-children/*/*?value
                   class:icon-play3
@@ -150,8 +150,8 @@ create-event:hyperlang.start
                  * When speech is by default disabled for user, we automatically
                  * show our options, since no other input elements exists.
                  */
-                hyperlang.options.show
-                micro.css.add:hyperlang-show-options-button
+                magic-menu.options.show
+                micro.css.add:magic-menu-show-options-button
                   class:toggled
 
             widgets
@@ -159,9 +159,9 @@ create-event:hyperlang.start
                 element:span
                 class:icon-pause2
 
-          literal:hyperlang-current-text
+          literal:magic-menu-current-text
             element:label
-            class:hyperlang-tip
+            class:magic-menu-tip
             visible:false
 
           button
@@ -174,7 +174,7 @@ create-event:hyperlang.start
               /*
                * Event that displays our "create-command" button.
                */
-              hyperlang.display-create-command-button
+              magic-menu.display-create-command-button
 
                 /*
                  * Simply making widget visible.
@@ -186,7 +186,7 @@ create-event:hyperlang.start
               /*
                * Event that hides our "create-command" button.
                */
-              hyperlang.hide-create-command-button
+              magic-menu.hide-create-command-button
 
                 /*
                  * Simply making widget visible.
@@ -202,24 +202,24 @@ create-event:hyperlang.start
                */
               get-widget-property:x:/../*/_event?value
                 .spoken
-              hyperlang.grammar-position.get
-              if:x:/@hyperlang.grammar-position.get?value
+              magic-menu.grammar-position.get
+              if:x:/@magic-menu.grammar-position.get?value
                 eval-x:x:/+/*/*
-                add:x:/../*/hyperlang.command.create
+                add:x:/../*/magic-menu.command.create
                   src
-                    pos:x:/@hyperlang.grammar-position.get?value
-              hyperlang.command.create:x:/@get-widget-property/*/*?value
+                    pos:x:/@magic-menu.grammar-position.get?value
+              magic-menu.command.create:x:/@get-widget-property/*/*?value
 
               /*
                * Deletes the visual clue, indicating we're listening for input,
                * and makes sure we stop listening and speaking.
                */
-              micro.css.delete:hyperlang-listener
-                class:hyperlang-listening
+              micro.css.delete:magic-menu-listener
+                class:magic-menu-listening
               micro.listen.stop
               micro.speak.stop
 
-          button:hyperlang-show-options-button
+          button:magic-menu-show-options-button
             style:"margin-bottom:0;"
             innerValue:@"<span class=""icon-question""></span>"
             title:Show options
@@ -229,19 +229,20 @@ create-event:hyperlang.start
                * Trapping when options are displayed, to make sure we toggle
                * our button accordingly.
                */
-              hyperlang.options.show
+              magic-menu.options.show
 
                 /*
                  * Making sure button becomes "toggled".
                  */
                 micro.css.add:x:/../*/_event?value
                   class:toggled
+                return:x:/../*/_arg?value
 
               /*
                * Trapping when options are hidden, to make sure we toggle
                * our button accordingly.
                */
-              hyperlang.options.close
+              magic-menu.options.close
 
                 /*
                  * Making sure button becomes "untoggled".
@@ -256,35 +257,35 @@ create-event:hyperlang.start
                */
               if
                 fetch:x:/0/0?value
-                  widget-exists:hyperlang-help
+                  widget-exists:magic-menu-help
 
                 /*
-                 * Hides options for Hyperlang, and deletes CSS "toggled" class
+                 * Hides options for Magic menu, and deletes CSS "toggled" class
                  * for button.
                  */
-                hyperlang.options.close
+                magic-menu.options.close
 
               else
 
                 /*
-                 * Showing options for Hyperlang, and adds CSS "toggled" class
+                 * Showing options for Magic menu, and adds CSS "toggled" class
                  * for button.
                  */
-                hyperlang.options.show
+                magic-menu.options.show
 
           button
             style:"margin-bottom:0;"
             innerValue:@"<span class=""icon-cross""></span>"
-            title:Close Hyperlang
+            title:Close Magic menu
             accesskey:Q
             onclick
 
               /*
-               * Closing Hyperlang.
+               * Closing Magic menu.
                */
-              hyperlang.stop
+              magic-menu.stop
 
   /*
    * Greets user, and asks for input.
    */
-  hyperlang.listen:x:(/../*/greeting|/@.defaults/*/greeting)/$?value
+  magic-menu.listen:x:(/../*/greeting|/@.defaults/*/greeting)/$?value

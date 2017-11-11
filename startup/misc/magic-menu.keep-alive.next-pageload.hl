@@ -1,0 +1,12 @@
+﻿
+/*
+ * Creates the event that makes Magic menu keep alive for the next page load.
+ */
+create-event:magic-menu.keep-alive.next-pageload
+
+  /*
+   * Adding a session variable, that will make sure Magic menu is automatically
+   * loaded during our next pageload.
+   */
+  p5.web.session.set:magic-menu.keep-alive
+    src:bool:true

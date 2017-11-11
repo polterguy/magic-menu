@@ -1,4 +1,4 @@
-
+﻿
 /*
  * Internal event for creating options elements.
  *
@@ -10,7 +10,7 @@
  * when item is clicked, instead of the default, which will raise the command
  * associated with the phrases' ID.
  */
-create-event:hyperlang.options._create-options
+create-event:magic-menu.options._create-options
 
   /*
    * Default values.
@@ -27,7 +27,7 @@ create-event:hyperlang.options._create-options
       get-widget-property:x:/../*/_event?value
         .id
       eval-x:x:/+/*
-      hyperlang.command.handle
+      magic-menu.command.handle
         id:x:/@get-widget-property/*/*?value
 
   /*

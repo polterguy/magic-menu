@@ -1,10 +1,10 @@
-
+﻿
 /*
  * Returns the specified [_arg] setting value, if any.
  *
  * Optionally pass in [default], who's value will be returned if the setting doesn't exist.
  */
-create-event:hyperlang.settings.get
+create-event:magic-menu.settings.get
 
   /*
    * Sanity checking arguments.
@@ -23,7 +23,7 @@ create-event:hyperlang.settings.get
    * Checking if setting didn't exist, and caller supplied a [default], at which
    * point we return the value of [default].
    */
-  if:x:/@p5.auth.my-settings.get/*/hyperlang/*/{0}
+  if:x:/@p5.auth.my-settings.get/*/magic-menu/*/{0}
     :x:/../*/_arg?value
     not
 
@@ -36,5 +36,5 @@ create-event:hyperlang.settings.get
   /*
    * Returning specified setting.
    */
-  return:x:/@p5.auth.my-settings.get/*/hyperlang/*/{0}?value
+  return:x:/@p5.auth.my-settings.get/*/magic-menu/*/{0}?value
     :x:/../*/_arg?value

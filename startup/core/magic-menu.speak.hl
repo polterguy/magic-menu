@@ -1,6 +1,6 @@
-
+﻿
 /*
- * Invoked when Hyperlang should speak something.
+ * Invoked when Magic menu should speak something.
  *
  * Expects [_arg] to be whatever should be spoken, and [onfinish] being what to
  * do once content has been spoken.
@@ -8,7 +8,7 @@
  * Optionally, pass in [voice] to override the default voice to use, which is 
  * fetched from the user's settings.
  */
-create-event:hyperlang.speak
+create-event:magic-menu.speak
 
   /*
    * Signal node.
@@ -26,7 +26,7 @@ create-event:hyperlang.speak
    */
   if
     fetch:x:/0/0?value
-      widget-exists:hyperlang-listener
+      widget-exists:magic-menu-listener
     not
     return
 
@@ -36,21 +36,21 @@ create-event:hyperlang.speak
    * and returning early.
    */
   if
-    hyperlang.speech-is-enabled
+    magic-menu.speech-is-enabled
     not
 
     /*
      * Speech is not enabled, evaluating [onfinish] if existing, updating text, 
      * and returning early.
      */
-    hyperlang.set-text:x:/../*/_arg?value
+    magic-menu.set-text:x:/../*/_arg?value
     eval:x:/../*/onfinish
     return
 
   /*
    * Unwrapping any references in [_arg] given.
    */
-  hyperlang.unwrap-phrase:x:/../*/_arg?value
+  magic-menu.unwrap-phrase:x:/../*/_arg?value
 
   /*
    * Applies arguments, and adds [voice] unless an explicit voice was given as an argument.
@@ -62,18 +62,18 @@ create-event:hyperlang.speak
      * No voice was given as an argument, making sure we apply the default voice from
      * user's settings.
      */
-    hyperlang.settings.get-language
+    magic-menu.settings.get-language
     eval-x:x:/+/*/*
     add:x:/../*/micro.speak
       src
         voice:{0},{1}-{2}
-          :x:/@hyperlang.settings.get-language/*/voice?value
-          :x:/@hyperlang.settings.get-language/*/lang?value
-          :x:/@hyperlang.settings.get-language/*/sublang?value
+          :x:/@magic-menu.settings.get-language/*/voice?value
+          :x:/@magic-menu.settings.get-language/*/lang?value
+          :x:/@magic-menu.settings.get-language/*/sublang?value
   add:x:/../*/micro.speak
     src:x:/@.signal/--(!/_arg)
 
   /*
    * Speaks given [_arg], now "unwrapped" with any references, with our configured voice.
    */
-  micro.speak:x:/@hyperlang.unwrap-phrase?value
+  micro.speak:x:/@magic-menu.unwrap-phrase?value

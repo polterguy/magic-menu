@@ -1,10 +1,10 @@
-
+﻿
 /*
- * Internal event being the actual implementation of [hyperlang.listen].
+ * Internal event being the actual implementation of [magic-menu.listen].
  *
  * Optionally pass in [onfinish].
  */
-create-event:hyperlang._listen
+create-event:magic-menu._listen
 
   /*
    * Sanity checking arguments.
@@ -13,18 +13,18 @@ create-event:hyperlang._listen
     onfinish
 
   /*
-   * Our default [onfinish] implementation simply invokes [hyperlang.command.handle].
+   * Our default [onfinish] implementation simply invokes [magic-menu.command.handle].
    */
   .defaults
     onfinish
-      hyperlang.command.handle:x:/../*/text?value
+      magic-menu.command.handle:x:/../*/text?value
 
   /*
    * If widget was closed, we simply abort.
    */
   if
     fetch:x:/0/0?value
-      widget-exists:hyperlang-listener
+      widget-exists:magic-menu-listener
     not
     return
 
@@ -32,7 +32,7 @@ create-event:hyperlang._listen
    * Checking if speech is enabled, and if not, returning early.
    */
   if
-    hyperlang.speech-is-enabled
+    magic-menu.speech-is-enabled
     not
 
     /*
@@ -43,13 +43,13 @@ create-event:hyperlang._listen
   /*
    * Making sure we add "active" CSS class when speech recognition is initiated.
    */
-  micro.css.add:hyperlang-listener
-    class:hyperlang-listening
+  micro.css.add:magic-menu-listener
+    class:magic-menu-listening
 
   /*
    * Retrieving language for user, to figure out language to listen for, etc.
    */
-  hyperlang.settings.get-language
+  magic-menu.settings.get-language
 
   /*
    * Applying [onfinish], or default value if none was given.
@@ -64,7 +64,7 @@ create-event:hyperlang._listen
    */
   eval-x:x:/+/*/lang
   micro.listen
-    lang:x:/@hyperlang.settings.get-language/*/lang?value
+    lang:x:/@magic-menu.settings.get-language/*/lang?value
     onfinish
 
       /*
@@ -78,15 +78,15 @@ create-event:hyperlang._listen
        */
       if
         fetch:x:/0/0?value
-          widget-exists:hyperlang-listener
+          widget-exists:magic-menu-listener
         not
         return
 
       /*
        * Deletes the visual clue, indicating we're listening for input.
        */
-      micro.css.delete:hyperlang-listener
-        class:hyperlang-listening
+      micro.css.delete:magic-menu-listener
+        class:magic-menu-listening
 
       /*
        * Making sure we can intelligently handle exceptions.
@@ -102,7 +102,7 @@ create-event:hyperlang._listen
         /*
          * Showing user feedback about what went wrong.
          */
-        hyperlang.listen:[An exception occurred]
+        magic-menu.listen:[An exception occurred]
         micro.windows.info:x:/@message?value
           class:micro-windows-info warning
 

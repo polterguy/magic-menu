@@ -1,11 +1,11 @@
-
+﻿
 /*
  * Creates the event that sets the current language for user.
  *
  * Expects language to be in "Daniel,en-GB" format, and that the language is given
  * as [_arg].
  */
-create-event:hyperlang.settings.set-language
+create-event:magic-menu.settings.set-language
 
   /*
    * Sanity checking arguments.
@@ -17,10 +17,10 @@ create-event:hyperlang.settings.set-language
    * Updating settings for user.
    */
   eval-x:x:/+/*
-  hyperlang.settings.set:voice
+  magic-menu.settings.set:voice
     value:x:/../*/_arg?value
 
   /*
    * Making sure we refresh our options.
    */
-  hyperlang.options.changed
+  magic-menu.options.changed

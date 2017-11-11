@@ -1,4 +1,4 @@
-
+﻿
 /*
  * File responsible for initializing module.
  */
@@ -13,7 +13,7 @@ set:x:/@split/0/-
 join:x:/@split/*?name
   sep:/
 eval-x:x:/+/*
-create-event:p5.io.unroll-path.@HYPERLANG
+create-event:p5.io.unroll-path.@MAGIC
   return:/{0}
     :x:/@join?value
 
@@ -24,4 +24,4 @@ create-event:p5.io.unroll-path.@HYPERLANG
 /*
  * Evaluates all startup scripts in "/startup/" folder.
  */
-micro.evaluate.folder:@HYPERLANG/startup/
+micro.evaluate.folder:@MAGIC/startup/

@@ -2,9 +2,9 @@
 /*
  * Creates the event that sets the current position in our command hierarchy.
  *
- * Requires [_arg] being the database ID of a "command" from hyperlang.
+ * Requires [_arg] being the database ID of a "command" from magic-menu.
  */
-create-event:hyperlang.grammar-position.push
+create-event:magic-menu.grammar-position.push
 
   /*
    * Sanity checking arguments.
@@ -17,9 +17,9 @@ create-event:hyperlang.grammar-position.push
    * same as our current position, and if it is, we don't evaluate the rest
    * of our lambda, but return early instead.
    */
-  hyperlang.grammar-position.get
-  if:x:/@hyperlang.grammar-position.get?value
-    and:x:/@hyperlang.grammar-position.get?value.long
+  magic-menu.grammar-position.get
+  if:x:/@magic-menu.grammar-position.get?value
+    and:x:/@magic-menu.grammar-position.get?value.long
       =:x:/../*/_arg?value.long
 
     /*
@@ -30,17 +30,17 @@ create-event:hyperlang.grammar-position.push
   /*
    * Sets the current position to the specified [_arg].
    */
-  p5.web.viewstate.get:hyperlang.position
+  p5.web.viewstate.get:magic-menu.position
   add:x:/../*/p5.web.viewstate.set/*/*
     src:x:/@p5.web.viewstate.get/*/*/*
   add:x:/../*/p5.web.viewstate.set/*/*
     src:":{0}"
       :x:/../*/_arg?value
-  p5.web.viewstate.set:hyperlang.position
+  p5.web.viewstate.set:magic-menu.position
     src
       positions
 
   /*
    * Posting "changed" event.
    */
-  hyperlang.position.changed
+  magic-menu.position.changed

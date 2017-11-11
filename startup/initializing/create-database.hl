@@ -1,9 +1,9 @@
-
+﻿
 /*
  * Creating database schema if it doesn't exist.
  */
 try
-  p5.mysql.connect:[hyperlang]
+  p5.mysql.connect:[magic-menu]
     p5.mysql.execute:@"
 create table if not exists `commands` (
   `id` int(10) unsigned not null auto_increment,
@@ -52,7 +52,7 @@ catch
      * Creating database schema.
      */
     p5.mysql.connect:[sys]
-      p5.mysql.execute:@"create schema `{0}hyperlang`;"
+      p5.mysql.execute:@"create schema `{0}magic-menu`;"
         :x:/@p5.config.get/*?value
 
     /*

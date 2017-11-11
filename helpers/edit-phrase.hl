@@ -26,7 +26,7 @@ micro.lambda.contract.min:x:/..
  * This simple little "trick", makes it far easier to "sneak peek" at the content
  * of an item, as the user is browsing his items.
  */
-p5.web.widgets.find:hyperlang-phrases-grid
+p5.web.widgets.find:magic-menu-phrases-grid
   .edit:x:/../*/id?value
 if:x:/@p5.web.widgets.find/*/*?value
 
@@ -40,7 +40,7 @@ if:x:/@p5.web.widgets.find/*/*?value
 /*
  * Connecting to database, to select record we're editing.
  */
-p5.mysql.connect:[hyperlang]
+p5.mysql.connect:[magic-menu]
   p5.mysql.select:@"select * from phrases where id = @id"
     @id:x:/../*/id?value
   p5.mysql.select:@"select * from phrases where commandid = @commandid"
@@ -55,7 +55,7 @@ p5.mysql.connect:[hyperlang]
 /*
  * Preparing all synonyms for databind operation.
  */
-hyperlang.settings.get-language
+magic-menu.settings.get-language
 .synonyms
 for-each:x:/@p5.mysql.connect/*/p5.mysql.select/[1,2]/*
 
@@ -64,7 +64,7 @@ for-each:x:/@p5.mysql.connect/*/p5.mysql.select/[1,2]/*
    * main language for user, at which point we do not prepend the language declaration
    * for it.
    */
-  if:x:/@hyperlang.settings.get-language/*/lang?value
+  if:x:/@magic-menu.settings.get-language/*/lang?value
     =:x:/@_dp/#/*/lang?value
 
     /*
@@ -122,7 +122,7 @@ if:x:/@p5.mysql.connect/*/p5.mysql.select/[2,3]/*/*/username?value
 /*
  * Finding grid item, and appending a row beneath item, which allows for editing item.
  */
-p5.web.widgets.find:hyperlang-phrases-grid
+p5.web.widgets.find:magic-menu-phrases-grid
   .id:x:/../*/id?value
 eval-x:x:/+/**/micro.widgets.wizard-form/*(/value|/*/hypereval.widgets.hyperlambda-textarea/*/value)
 create-widget
@@ -190,7 +190,7 @@ create-widget
                         /*
                          * Throws an exception if the specified language doesn't exist.
                          */
-                        hyperlang._assume-language-exists
+                        magic-menu._assume-language-exists
 
                           /*
                            * Checking to see if the specified [_arg] language exists.
@@ -220,7 +220,7 @@ create-widget
                          * Connecting to database, and doing updates.
                          */
                         try
-                          p5.mysql.connect:[hyperlang]
+                          p5.mysql.connect:[magic-menu]
                             p5.mysql.transaction.begin
 
                               /*
@@ -238,7 +238,7 @@ create-widget
                               /*
                                * Retrieving language for current user, which is necessary to filter our results.
                                */
-                              hyperlang.settings.get-language
+                              magic-menu.settings.get-language
 
                               /*
                                * Inserting new phrases.
@@ -260,7 +260,7 @@ create-widget
                                   /*
                                    * Explicit language definition.
                                    */
-                                  hyperlang._assume-language-exists:x:/@split/0?name
+                                  magic-menu._assume-language-exists:x:/@split/0?name
                                   eval-x:x:/+/*/*
                                   add:x:/..for-each/*/p5.mysql.insert
                                     src
@@ -277,7 +277,7 @@ create-widget
                                   add:x:/..for-each/*/p5.mysql.insert
                                     src
                                       @command:x:/@_dp?value
-                                      @lang:x:/@hyperlang.settings.get-language/*/lang?value
+                                      @lang:x:/@magic-menu.settings.get-language/*/lang?value
 
                                 else
 
@@ -372,7 +372,7 @@ create-widget
                         /*
                          * Then we need to retrieve "command" id.
                          */
-                        p5.mysql.connect:[hyperlang]
+                        p5.mysql.connect:[magic-menu]
                           p5.mysql.scalar:@"select commandid from phrases where id = @id"
                             @id:x:/@get-widget-property/*/*?value
 
@@ -381,7 +381,7 @@ create-widget
                          * making sure we pass in [pos] to explicitly override the default positioning logic.
                          */
                         eval-x:x:/+/*
-                        hyperlang.command.create:New child command
+                        magic-menu.command.create:New child command
                           pos:x:/@p5.mysql.connect/*/p5.mysql.scalar?value
                           force-parent:bool:true
 
@@ -405,7 +405,7 @@ create-widget
                         /*
                          * Then we need to retrieve "command" id.
                          */
-                        p5.mysql.connect:[hyperlang]
+                        p5.mysql.connect:[magic-menu]
                           p5.mysql.select:@"select parent, hyperlambda, global, username from commands where id in (select commandid from phrases where id = @id)"
                             @id:x:/@get-widget-property/*/*?value
 
@@ -415,21 +415,21 @@ create-widget
                          * if current command actually has a parent.
                          */
                         if:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/parent?value
-                          add:x:/../*/hyperlang.command.create
+                          add:x:/../*/magic-menu.command.create
                             src
                               pos:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/parent?value
                         if:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/global?value.int
                           =:int:1
-                          add:x:/../*/hyperlang.command.create
+                          add:x:/../*/magic-menu.command.create
                             src
                               global:bool:true
                         if:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/username?value
                           not
-                          add:x:/../*/hyperlang.command.create
+                          add:x:/../*/magic-menu.command.create
                             src
                               private:bool:false
                         eval-x:x:/+/*
-                        hyperlang.command.create:New cloned command
+                        magic-menu.command.create:New cloned command
                           hyperlambda:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/hyperlambda?value
                           force-parent:bool:true
 
@@ -448,7 +448,7 @@ create-widget
                           .edit
                         eval-x:x:/+/**/.id
                         create-widgets
-                          micro.widgets.modal:hyperlang-confirm-deletion-modal
+                          micro.widgets.modal:magic-menu-confirm-deletion-modal
                             widgets
                               h3
                                 innerValue:Please confirm
@@ -477,7 +477,7 @@ create-widget
                                            * Deleting command, and deleting row from grid.
                                            */
                                           .id:x:/../*/get-widget-property/*/*?value
-                                          p5.mysql.connect:[hyperlang]
+                                          p5.mysql.connect:[magic-menu]
                                             p5.mysql.delete:@"delete from commands where id in (select commandid from phrases where id = @id)"
                                               @id:x:/@.id?value
                                           p5.web.widgets.find
@@ -490,7 +490,7 @@ create-widget
                                           /*
                                            * Deletes modal widget.
                                            */
-                                          delete-widget:hyperlang-confirm-deletion-modal
+                                          delete-widget:magic-menu-confirm-deletion-modal
 
                                       button
                                         innerValue:No
@@ -500,7 +500,7 @@ create-widget
                                           /*
                                            * Simply deletes modal widget.
                                            */
-                                          delete-widget:hyperlang-confirm-deletion-modal
+                                          delete-widget:magic-menu-confirm-deletion-modal
 
                     button
                       innerValue:@"<span class=""icon-cross""></span>"

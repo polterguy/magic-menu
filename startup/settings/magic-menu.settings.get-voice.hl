@@ -1,18 +1,18 @@
-
+﻿
 /*
  * Creates the event that returns the currently configured voice for user.
  *
  * Will return e.g. "Daniel" or "Karen", depending upon which voice user has 
  * configured to use.
  */
-create-event:hyperlang.settings.get-voice
+create-event:magic-menu.settings.get-voice
 
   /*
    * Figuring out voice for user, defaulting to "Daniel".
    */
-  hyperlang.settings.get-language
+  magic-menu.settings.get-language
 
   /*
    * Returning voice to caller.
    */
-  return:x:/@hyperlang.settings.get-language/*/voice?value
+  return:x:/@magic-menu.settings.get-language/*/voice?value

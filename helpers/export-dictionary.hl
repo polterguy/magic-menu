@@ -1,4 +1,4 @@
-
+﻿
 /*
  * Creates a backup of entire dictionary and downloads it to client.
  *
@@ -20,9 +20,9 @@
  */
 if
   fetch:x:/0/0?value
-    folder-exists:~/temp/hyperlang/
+    folder-exists:~/temp/magic-menu/
   not
-  create-folder:~/temp/hyperlang/
+  create-folder:~/temp/magic-menu/
 
 
 
@@ -31,7 +31,7 @@ if
 /*
  * Making sure temp folder is empty.
  */
-list-files:~/temp/hyperlang/
+list-files:~/temp/magic-menu/
 delete-file:x:/-/*?name
 
 
@@ -41,7 +41,7 @@ delete-file:x:/-/*?name
 /*
  * Connecting to database and selects all commands.
  */
-p5.mysql.connect:[hyperlang]
+p5.mysql.connect:[magic-menu]
   p5.mysql.select:@"select * from commands order by id"
 
   /*
@@ -119,7 +119,7 @@ p5.mysql.connect:[hyperlang]
      * the "child" command, which obviously would have created an exception.
      */
     lambda2hyper:x:/@.command/*
-    save-file:"~/temp/hyperlang/command-{0:000000000000}.hl"
+    save-file:"~/temp/magic-menu/command-{0:000000000000}.hl"
       :x:/@_dp/#/*/id?value
       src:x:/@lambda2hyper?value
 
@@ -132,10 +132,10 @@ p5.mysql.connect:[hyperlang]
  */
 if
   fetch:x:/0/0?value
-    file-exists:~/temp/hyperlang-backup.zip
-  delete-file:~/temp/hyperlang-backup.zip
-zip:~/temp/hyperlang-backup.zip
-  src:~/temp/hyperlang/
-micro.download.file:~/temp/hyperlang-backup.zip
+    file-exists:~/temp/magic-menu-backup.zip
+  delete-file:~/temp/magic-menu-backup.zip
+zip:~/temp/magic-menu-backup.zip
+  src:~/temp/magic-menu/
+micro.download.file:~/temp/magic-menu-backup.zip
   Content-Type:application/zip
-  Content-Disposition:@"attachment; filename=""hyperlang-backup.zip"""
+  Content-Disposition:@"attachment; filename=""magic-menu-backup.zip"""

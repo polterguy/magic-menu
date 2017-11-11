@@ -5,7 +5,7 @@
  * Optionally pass in [_arg] being an integer value, to pop [_arg] number of
  * positions in one invocation.
  */
-create-event:hyperlang.grammar-position.pop
+create-event:magic-menu.grammar-position.pop
 
   /*
    * Sanity checking arguments.
@@ -17,8 +17,8 @@ create-event:hyperlang.grammar-position.pop
    * Retrieving current position, to see if there are any positions,
    * and if not, we don't evaluate the rest of this lambda.
    */
-  hyperlang.grammar-position.get
-  if:x:/@hyperlang.grammar-position.get?value
+  magic-menu.grammar-position.get
+  if:x:/@magic-menu.grammar-position.get?value
     not
 
     /*
@@ -30,7 +30,7 @@ create-event:hyperlang.grammar-position.pop
    * Removes the last position from our chain, if any, and returns the new 
    * position to caller.
    */
-  p5.web.viewstate.get:hyperlang.position
+  p5.web.viewstate.get:magic-menu.position
 
   /*
    * Checking if caller supplied an integer [_arg] value.
@@ -59,10 +59,10 @@ create-event:hyperlang.grammar-position.pop
    */
   add:x:/../*/p5.web.viewstate.set/*
     src:x:/@p5.web.viewstate.get/*/*
-  p5.web.viewstate.set:hyperlang.position
+  p5.web.viewstate.set:magic-menu.position
     src
 
   /*
    * Posting "changed" event.
    */
-  hyperlang.position.changed
+  magic-menu.position.changed

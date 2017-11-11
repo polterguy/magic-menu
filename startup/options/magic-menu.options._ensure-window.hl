@@ -1,22 +1,22 @@
-
+﻿
 /*
  * Private event that ensures that our common "options" window is created.
  */
-create-event:hyperlang.options._ensure-window
+create-event:magic-menu.options._ensure-window
 
   /*
    * Checking if widget exists already, and if so, returning early.
    */
   if
     fetch:x:/0/0?value
-      widget-exists:hyperlang-help
+      widget-exists:magic-menu-help
     return
 
   /*
    * Creates common helper window, that displays options.
    */
-  create-widget:hyperlang-help
-    class:hyperlang-help rounded shaded bg
+  create-widget:magic-menu-help
+    class:magic-menu-help rounded shaded bg
     widgets
       div
         class:container
@@ -28,9 +28,9 @@ create-event:hyperlang.options._ensure-window
                 class:col
                 widgets
                   div
-                    class:strip fill hyperlang-options-pager-toolbar
+                    class:strip fill magic-menu-options-pager-toolbar
                     widgets
-                      input:hyperlang-options-search-textbox
+                      input:magic-menu-options-search-textbox
                         type:text
                         placeholder:Search ...
                         class:smaller
@@ -39,28 +39,28 @@ create-event:hyperlang.options._ensure-window
                           /*
                            * Clears the current filter.
                            */
-                          p5.web.viewstate.set:hyperlang.options-filter
+                          p5.web.viewstate.set:magic-menu.options-filter
 
                         events
 
                           /*
                            * Returns the current filter to caller.
                            */
-                          hyperlang.options.get-filter
+                          magic-menu.options.get-filter
 
                             /*
                              * Returning current filter to caller, if any.
                              */
-                            p5.web.viewstate.get:hyperlang.options-filter
+                            p5.web.viewstate.get:magic-menu.options-filter
                             return:x:/@p5.web.viewstate.get/*?value
 
-                        onkeydown:@"if (event.keyCode == 13) {p5.$('hyperlang-options-search-textbox').raise('.onsearch');return false;}"
+                        onkeydown:@"if (event.keyCode == 13) {p5.$('magic-menu-options-search-textbox').raise('.onsearch');return false;}"
                         .onsearch
 
                           /*
                            * Making sure we store current filter in ViewState
                            */
-                          get-widget-property:hyperlang-options-search-textbox
+                          get-widget-property:magic-menu-options-search-textbox
                             value
                           if:x:/@get-widget-property/*/*?value
                             =:
@@ -68,8 +68,8 @@ create-event:hyperlang.options._ensure-window
                             /*
                              * Filter was cleared.
                              */
-                            p5.web.viewstate.set:hyperlang.options-filter
-                            set-widget-property:hyperlang-options-search-clear
+                            p5.web.viewstate.set:magic-menu.options-filter
+                            set-widget-property:magic-menu-options-search-clear
                               disabled
 
                           else
@@ -77,9 +77,9 @@ create-event:hyperlang.options._ensure-window
                             /*
                              * Some filter was supplied.
                              */
-                            p5.web.viewstate.set:hyperlang.options-filter
+                            p5.web.viewstate.set:magic-menu.options-filter
                               src:x:/@get-widget-property/*/*?value
-                            delete-widget-property:hyperlang-options-search-clear
+                            delete-widget-property:magic-menu-options-search-clear
                               disabled
 
                           /*
@@ -89,25 +89,26 @@ create-event:hyperlang.options._ensure-window
                            * possibly create a new command, and hence we enable our "create new
                            * command button".
                            */
-                          if
-                            hyperlang.options.show
+                          magic-menu.options.show
+                          if:x:/@magic-menu.options.show?value
+                            =:bool:true
 
                             /*
                              * Disabling "create new command button".
                              */
-                            hyperlang.hide-create-command-button
+                            magic-menu.hide-create-command-button
 
                           else
 
                             /*
                              * Enabling "create new command button".
                              */
-                            hyperlang.set-text:x:/@get-widget-property/*/*?value
-                            hyperlang.display-create-command-button:x:/@get-widget-property/*/*?value
+                            magic-menu.set-text:x:/@get-widget-property/*/*?value
+                            magic-menu.display-create-command-button:x:/@get-widget-property/*/*?value
 
                           micro.page.set-focus:x:/../*/_event?value
 
-                      button:hyperlang-options-search-clear
+                      button:magic-menu-options-search-clear
                         innerValue:@"<span class=""icon-cross""></span>"
                         disabled
                         onclick
@@ -115,14 +116,14 @@ create-event:hyperlang.options._ensure-window
                           /*
                            * Removes current filter, and re-databinds options.
                            */
-                          p5.web.viewstate.set:hyperlang.options-filter
-                          hyperlang.options.show
+                          p5.web.viewstate.set:magic-menu.options-filter
+                          magic-menu.options.show
                           set-widget-property:x:/../*/_event?value
                             disabled
-                          set-widget-property:hyperlang-options-search-textbox
+                          set-widget-property:magic-menu-options-search-textbox
                             value:
-                          micro.page.set-focus:hyperlang-options-search-textbox
-                          hyperlang.hide-create-command-button
+                          micro.page.set-focus:magic-menu-options-search-textbox
+                          magic-menu.hide-create-command-button
 
                       button
                         innerValue:@"<span class=""icon-arrow-left""></span>"
@@ -131,7 +132,7 @@ create-event:hyperlang.options._ensure-window
                           /*
                            * Paging to previous options.
                            */
-                          hyperlang.options.show-previous
+                          magic-menu.options.show-previous
 
                       button
                         innerValue:@"<span class=""icon-arrow-right""></span>"
@@ -140,43 +141,43 @@ create-event:hyperlang.options._ensure-window
                           /*
                            * Paging to next options.
                            */
-                          hyperlang.options.show-next
+                          magic-menu.options.show-next
 
-                  container:hyperlang-help-list-custom
+                  container:magic-menu-help-list-custom
                     element:ul
-                    class:hyperlang-custom-options
+                    class:magic-menu-custom-options
                     events
 
                       /*
                        * Invoked when current options have changed.
                        */
-                      hyperlang.position.changed
+                      magic-menu.position.changed
 
                         /*
                          * Simply re-displaying options will do the trick for us here.
                          */
-                        hyperlang.options.show
+                        magic-menu.options.show
 
                       /*
                        * Invoked when options should be refreshed for some reasons.
                        */
-                      hyperlang.options.changed
+                      magic-menu.options.changed
 
                         /*
                          * Simply re-displaying options will do the trick for us here.
                          */
-                        hyperlang.options.show
+                        magic-menu.options.show
 
                       /*
                        * Helper active event to clear custom options
                        */
-                      hyperlang.options.clear-custom
+                      magic-menu.options.clear-custom
 
                         /*
                          * Clearing custom options.
                          */
                         clear-widget:x:/../*/_event?value
 
-                  container:hyperlang-help-list
+                  container:magic-menu-help-list
                     element:ul
-                    class:hyperlang-options
+                    class:magic-menu-options

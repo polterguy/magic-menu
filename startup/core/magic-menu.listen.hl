@@ -1,11 +1,11 @@
-
+﻿
 /*
- * Invoked when Hyperlang should listen for new input.
+ * Invoked when Magic menu should listen for new input.
  *
  * Optionally pass in [_arg] being something to speak before listening is initiated,
  * and an [onfinish] lambda, to be invoked after something has been spoken.
  */
-create-event:hyperlang.listen
+create-event:magic-menu.listen
 
   /*
    * Sanity checking arguments.
@@ -17,7 +17,7 @@ create-event:hyperlang.listen
   /*
    * Applying [onfinish], if any.
    */
-  add:x:/../**/hyperlang._listen
+  add:x:/../**/magic-menu._listen
     src:x:/../*/onfinish
 
   /*
@@ -29,17 +29,17 @@ create-event:hyperlang.listen
     /*
      * Speaking given [_arg], before we start listening.
      */
-    hyperlang.speak:x:/../*/_arg?value
+    magic-menu.speak:x:/../*/_arg?value
       onfinish
 
         /*
          * Invoking event responsible for starting listening process.
          */
-        hyperlang._listen
+        magic-menu._listen
 
   else
 
     /*
      * Invoking event responsible for starting listening process.
      */
-    hyperlang._listen
+    magic-menu._listen

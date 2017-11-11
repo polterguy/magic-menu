@@ -1,14 +1,14 @@
-
+﻿
 /*
- * Creates our plugin Active Event, that initialized Hyperlang, by creating
- * a "toolbar button" that allows us to start Hyperlang.
+ * Creates our plugin Active Event, that initialized Magic menu, by creating
+ * a "toolbar button" that allows us to start Magic menu.
  *
  * Notice, this button is only created if there exists a widget with a 
  * CSS class containing the string "toolbar" on the page, and the button 
  * is automatically injected into the first matching widget.
  *
  * Notice, this toolbar button is also only created if user is logged in,
- * which implies that Hyperlang is only available for "actual users" in
+ * which implies that Magic menu is only available for "actual users" in
  * your system, and not guest accounts or guest visitors.
  */
 create-event:desktop.plugins.post.create-toolbar-button
@@ -30,7 +30,7 @@ create-event:desktop.plugins.post.create-toolbar-button
     /*
      * Includes CSS file.
      */
-    p5.web.include-css-file:@HYPERLANG/media/main.css
+    p5.web.include-css-file:@MAGIC/media/main.css
 
     /*
      * Making sure we insert our widget as the second last widget into our "toolbar".
@@ -44,36 +44,36 @@ create-event:desktop.plugins.post.create-toolbar-button
     /*
      * Creating our button widget.
      */
-    create-widget:hyperlang-start-button
+    create-widget:magic-menu-start-button
       element:button
-      class:hyperlang-start
-      title:Start Hyperlang, shortcut H
-      innerValue:@"<span class=""icon-mic""></span>"
+      class:magic-menu-start
+      title:Start Magic menu, shortcut H
+      innerValue:@"<span class=""icon-magic-wand""></span>"
       accesskey:H
       oninit
 
         /*
          * Checking if we have a "keep alive" session variable, across page loads,
-         * and if so, make sure we initialize Hyperlang by default during pageload.
+         * and if so, make sure we initialize Magic menu by default during pageload.
          */
-        p5.web.session.get:hyperlang.keep-alive
+        p5.web.session.get:magic-menu.keep-alive
         if:x:/@p5.web.session.get/*?value
 
           /*
-           * Starts Hyperlang.
+           * Starts Magic menu.
            */
-          hyperlang.start
+          magic-menu.start
             greeting:OK
 
         /*
          * Clearing session variable, to avoid automatically starting it during
          * the next page load.
          */
-        p5.web.session.set:hyperlang.keep-alive
+        p5.web.session.set:magic-menu.keep-alive
 
       onclick
 
         /*
-         * Starts Hyperlang.
+         * Starts Magic menu.
          */
-        hyperlang.start
+        magic-menu.start

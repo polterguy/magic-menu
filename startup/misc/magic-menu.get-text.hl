@@ -1,15 +1,15 @@
-
+﻿
 /*
  * Creates the event that returns the current text.
  */
-create-event:hyperlang.get-text
+create-event:magic-menu.get-text
 
   /*
    * Verifying widget exists before we return its value.
    */
   if
     fetch:x:/0/0?value
-      widget-exists:hyperlang-current-text
-    get-widget-property:hyperlang-current-text
+      widget-exists:magic-menu-current-text
+    get-widget-property:magic-menu-current-text
       innerValue
     return:x:/@get-widget-property/*/*?value

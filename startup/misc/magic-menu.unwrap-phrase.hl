@@ -1,9 +1,9 @@
-
+﻿
 /*
  * Creates the event that checks phrase to see if there are any referenced
  * parts within it, and if so, including their references, and returning the results.
  */
-create-event:hyperlang.unwrap-phrase
+create-event:magic-menu.unwrap-phrase
 
   /*
    * Signal node, to separate arguments from the rest of our lambda.
@@ -62,11 +62,11 @@ create-event:hyperlang.unwrap-phrase
       /*
        * Localized phrase, doing lookup into language file(s).
        */
-      hyperlang.language.get-localized-phrase:x:/@_dp?value
+      magic-menu.language.get-localized-phrase:x:/@_dp?value
       set:x:/../*/_arg?value
         replace:x:/../*/_arg?value
           src:x:/@_dp?value
-          dest:x:/@hyperlang.language.get-localized-phrase?value
+          dest:x:/@magic-menu.language.get-localized-phrase?value
 
   /*
    * Returning changed argument back to caller.

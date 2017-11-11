@@ -1,55 +1,55 @@
-
+﻿
 /*
  * Styles for main plugin button, which initiates Hyperlang.
  */
 
-.hyperlang-editor {
+.magic-menu-editor {
     padding-bottom:150px;
 }
 
 /*
  * Button to start Hyperlang.
  */
-.hyperlang-start {
+.magic-menu-start {
 }
 
 /*
  * Main Hyperlang "listener".
  */
-@keyframes hyperlang-listener {
+@keyframes magic-menu-listener {
     0% {background-color:rgba(255,255,0,1);}
     100% {background-color:rgba(128,255,0,1);}
 }
-.hyperlang-listener {
+.magic-menu-listener {
     position:fixed;
     bottom:0;
     left:1rem;
     background-color:#fefefe;
     z-index:999;
 }
-.hyperlang-listening {
-    animation-name: hyperlang-listener;
+.magic-menu-listening {
+    animation-name: magic-menu-listener;
     animation-duration: .5s;
     animation-iteration-count: infinite;
     animation-direction: alternate;
 }
-.hyperlang-listener button {
+.magic-menu-listener button {
 }
-label.hyperlang-tip {
+label.magic-menu-tip {
     color:black;
     background:transparent !important;
     font-style:italic;
     margin-bottom:0;
 }
-.hyperlang-tip:before {
+.magic-menu-tip:before {
     content:'"';
     font-style:italic;
 }
-.hyperlang-tip:after {
+.magic-menu-tip:after {
     content:'"';
     font-style:italic;
 }
-.hyperlang-help {
+.magic-menu-help {
     position:fixed;
     top:1rem;
     right:1rem;
@@ -58,93 +58,93 @@ label.hyperlang-tip {
     display:inline-block;
     z-index:1000;
 }
-.hyperlang-help .hyperlang-options-pager-toolbar {
+.magic-menu-help .magic-menu-options-pager-toolbar {
 }
-.hyperlang-help .hyperlang-options-pager-toolbar button {
+.magic-menu-help .magic-menu-options-pager-toolbar button {
     height:30px;
     width:35px;
     padding-left:9px;
     padding-top:7px;
     margin-bottom:0;
 }
-.hyperlang-help .hyperlang-options-pager-toolbar input[type=text] {
+.magic-menu-help .magic-menu-options-pager-toolbar input[type=text] {
     height:30px;
     margin-bottom:0;
 }
-.hyperlang-help ul {
+.magic-menu-help ul {
     margin-bottom:0;
     margin-top:.5rem;
 }
-.hyperlang-help ul li {
+.magic-menu-help ul li {
     cursor:pointer;
     list-style-type:circle;
 }
-.hyperlang-help ul li:hover {
+.magic-menu-help ul li:hover {
     background-color:rgba(0,0,0,.1);
 }
-.hyperlang-help ul.hyperlang-options {
+.magic-menu-help ul.magic-menu-options {
 }
-.hyperlang-help ul li a {
+.magic-menu-help ul li a {
     display:block;
 }
-.hyperlang-options-root {
+.magic-menu-options-root {
 }
-.hyperlang-options-local {
+.magic-menu-options-local {
     color: #0000ff;
 }
-.hyperlang-options-global {
+.magic-menu-options-global {
     text-decoration:underline;
 }
 label.input-label {
     min-width:0;
 }
-.hyperlang-grid {
+.magic-menu-grid {
 }
-.hyperlang-grid tr th:nth-child(1),
-.hyperlang-grid tr td:nth-child(1) {
+.magic-menu-grid tr th:nth-child(1),
+.magic-menu-grid tr td:nth-child(1) {
     white-space: nowrap;
     width:50%;
 }
-.hyperlang-grid tr th:nth-child(2),
-.hyperlang-grid tr td:nth-child(2),
-.hyperlang-grid tr th:nth-child(3),
-.hyperlang-grid tr td:nth-child(3),
-.hyperlang-grid tr th:nth-child(4),
-.hyperlang-grid tr td:nth-child(4) {
+.magic-menu-grid tr th:nth-child(2),
+.magic-menu-grid tr td:nth-child(2),
+.magic-menu-grid tr th:nth-child(3),
+.magic-menu-grid tr td:nth-child(3),
+.magic-menu-grid tr th:nth-child(4),
+.magic-menu-grid tr td:nth-child(4) {
     display: none;
 }
-.hyperlang-grid tr th:nth-child(2),
-.hyperlang-grid tr td:nth-child(2),
-.hyperlang-grid tr th:nth-child(3),
-.hyperlang-grid tr td:nth-child(3) {
+.magic-menu-grid tr th:nth-child(2),
+.magic-menu-grid tr td:nth-child(2),
+.magic-menu-grid tr th:nth-child(3),
+.magic-menu-grid tr td:nth-child(3) {
     white-space: nowrap;
     width:50%;
 }
-.hyperlang-grid tr th:nth-child(3),
-.hyperlang-grid tr td:nth-child(3) {
+.magic-menu-grid tr th:nth-child(3),
+.magic-menu-grid tr td:nth-child(3) {
     width: 125px;
 }
-.hyperlang-grid tr th:nth-child(4),
-.hyperlang-grid tr td:nth-child(4) {
+.magic-menu-grid tr th:nth-child(4),
+.magic-menu-grid tr td:nth-child(4) {
     width: 50px;
     text-align: right;
     white-space:nowrap;
 }
 @media screen and (min-width: 450px) {
-    .hyperlang-grid tr th:nth-child(4),
-    .hyperlang-grid tr td:nth-child(4) {
+    .magic-menu-grid tr th:nth-child(4),
+    .magic-menu-grid tr td:nth-child(4) {
         display:table-cell;
     }
 }
 @media screen and (min-width: 550px) {
-    .hyperlang-grid tr th:nth-child(3),
-    .hyperlang-grid tr td:nth-child(3) {
+    .magic-menu-grid tr th:nth-child(3),
+    .magic-menu-grid tr td:nth-child(3) {
         display: table-cell;
     }
 }
 @media screen and (min-width: 800px) {
-    .hyperlang-grid tr th:nth-child(2),
-    .hyperlang-grid tr td:nth-child(2) {
+    .magic-menu-grid tr th:nth-child(2),
+    .magic-menu-grid tr td:nth-child(2) {
         display: table-cell;
     }
 }

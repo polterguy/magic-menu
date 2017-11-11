@@ -1,4 +1,4 @@
-
+﻿
 /*
  * Creates the event that returns the currently configured language for user.
  *
@@ -7,7 +7,7 @@
  * [voice] being "person" who speaks, e.g. "Karen", [lang] being language, e.g. "en"
  * for "English", and [sublang] being e.g. "en-AU" for "English, Australian".
  */
-create-event:hyperlang.settings.get-language
+create-event:magic-menu.settings.get-language
 
   /*
    * Sanity checking arguments.
@@ -18,9 +18,9 @@ create-event:hyperlang.settings.get-language
   /*
    * Figuring out language and voice for user, defaulting to "English, Great Britain, Daniel".
    */
-  hyperlang.settings.get:voice
+  magic-menu.settings.get:voice
     default:Daniel,en-GB
-  split:x:/@hyperlang.settings.get?value
+  split:x:/@magic-menu.settings.get?value
     =:,
   split:x:/@split/0/-?name
     =:-

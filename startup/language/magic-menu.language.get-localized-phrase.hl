@@ -1,27 +1,27 @@
-
+﻿
 /*
  * Returns the localized specified phrase.
  */
-create-event:hyperlang.language.get-localized-phrase
+create-event:magic-menu.language.get-localized-phrase
 
   /*
    * Retrieving settings for user, to figure out language to listen for, etc.
    */
-  hyperlang.settings.get-language
+  magic-menu.settings.get-language
 
   /*
    * Making sure we prioritize "sublang" if it exists.
    */
   if
     fetch:x:/0/0?value
-      file-exists:@HYPERLANG/configuration/lang-{0}.hl
-        :x:/@hyperlang.settings.get-language/*/sublang?value
+      file-exists:@MAGIC/configuration/lang-{0}.hl
+        :x:/@magic-menu.settings.get-language/*/sublang?value
 
     /*
      * Localized file exists.
      */
-    load-file:@HYPERLANG/configuration/lang-{0}.hl
-      :x:/@hyperlang.settings.get-language/*/sublang?value
+    load-file:@MAGIC/configuration/lang-{0}.hl
+      :x:/@magic-menu.settings.get-language/*/sublang?value
     return:x:/@load-file/*/*/\{0}?value
       :x:/../*/_arg?value
 
@@ -32,14 +32,14 @@ create-event:hyperlang.language.get-localized-phrase
      */
     if
       fetch:x:/0/0?value
-        file-exists:@HYPERLANG/configuration/lang-{0}.hl
-          :x:/@hyperlang.settings.get-language/*/lang?value
+        file-exists:@MAGIC/configuration/lang-{0}.hl
+          :x:/@magic-menu.settings.get-language/*/lang?value
 
       /*
        * Localized "root" language file exists.
        */
-      load-file:@HYPERLANG/configuration/lang-{0}.hl
-        :x:/@hyperlang.settings.get-language/*/lang?value
+      load-file:@MAGIC/configuration/lang-{0}.hl
+        :x:/@magic-menu.settings.get-language/*/lang?value
       return:x:/@load-file/*/*/\{0}?value
         :x:/../*/_arg?value
 
@@ -48,6 +48,6 @@ create-event:hyperlang.language.get-localized-phrase
       /*
        * Root language file didn't exist, defaulting to "English".
        */
-      load-file:@HYPERLANG/configuration/lang-en.hl
+      load-file:@MAGIC/configuration/lang-en.hl
       return:x:/@load-file/*/*/\{0}?value
         :x:/../*/_arg?value

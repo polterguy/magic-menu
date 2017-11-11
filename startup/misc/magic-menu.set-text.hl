@@ -1,10 +1,10 @@
-
+﻿
 /*
  * Creates the event that sets the "current text" (tip).
  *
  * Expects [_arg] being the new text to display.
  */
-create-event:hyperlang.set-text
+create-event:magic-menu.set-text
 
   /*
    * Sanity checking arguments.
@@ -17,7 +17,7 @@ create-event:hyperlang.set-text
    */
   if
     fetch:x:/0/0?value
-      widget-exists:hyperlang-current-text
+      widget-exists:magic-menu-current-text
 
     /*
      * Checking if we were given an actual text value, and if not, 
@@ -30,13 +30,13 @@ create-event:hyperlang.set-text
       /*
        * Unwrapping any references in [_arg] given.
        */
-      hyperlang.unwrap-phrase:x:/../*/_arg?value
+      magic-menu.unwrap-phrase:x:/../*/_arg?value
 
       /*
        * Text was given.
        */
-      set-widget-property:hyperlang-current-text
-        innerValue:x:/@hyperlang.unwrap-phrase?value
+      set-widget-property:magic-menu-current-text
+        innerValue:x:/@magic-menu.unwrap-phrase?value
         visible:true
 
     else
@@ -44,7 +44,7 @@ create-event:hyperlang.set-text
       /*
        * Text was not given.
        */
-      set-widget-property:hyperlang-current-text
+      set-widget-property:magic-menu-current-text
         visible:false
 
     /*
