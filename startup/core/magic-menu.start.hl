@@ -164,6 +164,60 @@ create-event:magic-menu.start
             class:magic-menu-tip
             visible:false
 
+          button:magic-menu-show-options-button
+            style:"margin-bottom:0;"
+            innerValue:@"<span class=""icon-question""></span>"
+            title:Show options
+            events
+
+              /*
+               * Trapping when options are displayed, to make sure we toggle
+               * our button accordingly.
+               */
+              magic-menu.options.show
+
+                /*
+                 * Making sure button becomes "toggled".
+                 */
+                micro.css.add:x:/../*/_event?value
+                  class:toggled
+                return:x:/../*/_arg?value
+
+              /*
+               * Trapping when options are hidden, to make sure we toggle
+               * our button accordingly.
+               */
+              magic-menu.options.close
+
+                /*
+                 * Making sure button becomes "untoggled".
+                 */
+                micro.css.delete:x:/../*/_event?value
+                  class:toggled
+
+            onclick
+
+              /*
+               * Checking if widget exists already, and if so, we hide it.
+               */
+              if
+                fetch:x:/0/0?value
+                  widget-exists:magic-menu-help
+
+                /*
+                 * Hides options for Magic menu, and deletes CSS "toggled" class
+                 * for button.
+                 */
+                magic-menu.options.close
+
+              else
+
+                /*
+                 * Showing options for Magic menu, and adds CSS "toggled" class
+                 * for button.
+                 */
+                magic-menu.options.show
+
           button
             style:"margin-bottom:0;"
             innerValue:@"<span class=""icon-plus""></span>"
@@ -218,60 +272,6 @@ create-event:magic-menu.start
                 class:magic-menu-listening
               micro.listen.stop
               micro.speak.stop
-
-          button:magic-menu-show-options-button
-            style:"margin-bottom:0;"
-            innerValue:@"<span class=""icon-question""></span>"
-            title:Show options
-            events
-
-              /*
-               * Trapping when options are displayed, to make sure we toggle
-               * our button accordingly.
-               */
-              magic-menu.options.show
-
-                /*
-                 * Making sure button becomes "toggled".
-                 */
-                micro.css.add:x:/../*/_event?value
-                  class:toggled
-                return:x:/../*/_arg?value
-
-              /*
-               * Trapping when options are hidden, to make sure we toggle
-               * our button accordingly.
-               */
-              magic-menu.options.close
-
-                /*
-                 * Making sure button becomes "untoggled".
-                 */
-                micro.css.delete:x:/../*/_event?value
-                  class:toggled
-
-            onclick
-
-              /*
-               * Checking if widget exists already, and if so, we hide it.
-               */
-              if
-                fetch:x:/0/0?value
-                  widget-exists:magic-menu-help
-
-                /*
-                 * Hides options for Magic menu, and deletes CSS "toggled" class
-                 * for button.
-                 */
-                magic-menu.options.close
-
-              else
-
-                /*
-                 * Showing options for Magic menu, and adds CSS "toggled" class
-                 * for button.
-                 */
-                magic-menu.options.show
 
           button
             style:"margin-bottom:0;"
