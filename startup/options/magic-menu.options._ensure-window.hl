@@ -16,168 +16,160 @@ create-event:magic-menu.options._ensure-window
    * Creates common helper window, that displays options.
    */
   create-widget:magic-menu-help
-    class:magic-menu-help rounded shaded bg
+    parent:magic-menu-help-wrapper
+    class:magic-menu-help
     widgets
       div
-        class:container
+        class:strip fill magic-menu-options-pager-toolbar
         widgets
-          div
-            class:row
-            widgets
-              div
-                class:col
-                widgets
-                  div
-                    class:strip fill magic-menu-options-pager-toolbar
-                    widgets
-                      input:magic-menu-options-search-textbox
-                        type:text
-                        placeholder:Search ...
-                        class:smaller
-                        oninit
+          input:magic-menu-options-search-textbox
+            type:text
+            placeholder:Search ...
+            class:smaller
+            oninit
 
-                          /*
-                           * Clears the current filter.
-                           */
-                          p5.web.viewstate.set:magic-menu.options-filter
+              /*
+               * Clears the current filter.
+               */
+              p5.web.viewstate.set:magic-menu.options-filter
 
-                        events
+            events
 
-                          /*
-                           * Returns the current filter to caller.
-                           */
-                          magic-menu.options.get-filter
+              /*
+               * Returns the current filter to caller.
+               */
+              magic-menu.options.get-filter
 
-                            /*
-                             * Returning current filter to caller, if any.
-                             */
-                            p5.web.viewstate.get:magic-menu.options-filter
-                            return:x:/@p5.web.viewstate.get/*?value
+                /*
+                 * Returning current filter to caller, if any.
+                 */
+                p5.web.viewstate.get:magic-menu.options-filter
+                return:x:/@p5.web.viewstate.get/*?value
 
-                        onkeydown:@"if (event.keyCode == 13) {p5.$('magic-menu-options-search-textbox').raise('.onsearch');return false;}"
-                        .onsearch
+            onkeydown:@"if (event.keyCode == 13) {p5.$('magic-menu-options-search-textbox').raise('.onsearch');return false;}"
+            .onsearch
 
-                          /*
-                           * Making sure we store current filter in ViewState
-                           */
-                          get-widget-property:magic-menu-options-search-textbox
-                            value
-                          if:x:/@get-widget-property/*/*?value
-                            =:
+              /*
+               * Making sure we store current filter in ViewState
+               */
+              get-widget-property:magic-menu-options-search-textbox
+                value
+              if:x:/@get-widget-property/*/*?value
+                =:
 
-                            /*
-                             * Filter was cleared.
-                             */
-                            p5.web.viewstate.set:magic-menu.options-filter
-                            set-widget-property:magic-menu-options-search-clear
-                              disabled
+                /*
+                 * Filter was cleared.
+                 */
+                p5.web.viewstate.set:magic-menu.options-filter
+                set-widget-property:magic-menu-options-search-clear
+                  disabled
 
-                          else
+              else
 
-                            /*
-                             * Some filter was supplied.
-                             */
-                            p5.web.viewstate.set:magic-menu.options-filter
-                              src:x:/@get-widget-property/*/*?value
-                            delete-widget-property:magic-menu-options-search-clear
-                              disabled
+                /*
+                 * Some filter was supplied.
+                 */
+                p5.web.viewstate.set:magic-menu.options-filter
+                  src:x:/@get-widget-property/*/*?value
+                delete-widget-property:magic-menu-options-search-clear
+                  disabled
 
-                          /*
-                           * Reloading options, now with filter (or with filter removed).
-                           *
-                           * Notice, if filter yields zero results, we assume user wants to
-                           * possibly create a new command, and hence we enable our "create new
-                           * command button".
-                           */
-                          magic-menu.options.show
-                          if:x:/@magic-menu.options.show?value
-                            =:bool:true
+              /*
+               * Reloading options, now with filter (or with filter removed).
+               *
+               * Notice, if filter yields zero results, we assume user wants to
+               * possibly create a new command, and hence we enable our "create new
+               * command button".
+               */
+              magic-menu.options.show
+              if:x:/@magic-menu.options.show?value
+                =:bool:true
 
-                            /*
-                             * Disabling "create new command button".
-                             */
-                            magic-menu.hide-create-command-button
+                /*
+                 * Disabling "create new command button".
+                 */
+                magic-menu.hide-create-command-button
 
-                          else
+              else
 
-                            /*
-                             * Enabling "create new command button".
-                             */
-                            magic-menu.set-text:x:/@get-widget-property/*/*?value
-                            magic-menu.display-create-command-button:x:/@get-widget-property/*/*?value
+                /*
+                 * Enabling "create new command button".
+                 */
+                magic-menu.set-text:x:/@get-widget-property/*/*?value
+                magic-menu.display-create-command-button:x:/@get-widget-property/*/*?value
 
-                          micro.page.set-focus:x:/../*/_event?value
+              micro.page.set-focus:x:/../*/_event?value
 
-                      button:magic-menu-options-search-clear
-                        innerValue:@"<span class=""icon-cross""></span>"
-                        disabled
-                        onclick
+          button:magic-menu-options-search-clear
+            innerValue:@"<span class=""icon-cross""></span>"
+            disabled
+            onclick
 
-                          /*
-                           * Removes current filter, and re-databinds options.
-                           */
-                          p5.web.viewstate.set:magic-menu.options-filter
-                          magic-menu.options.show
-                          set-widget-property:x:/../*/_event?value
-                            disabled
-                          set-widget-property:magic-menu-options-search-textbox
-                            value:
-                          micro.page.set-focus:magic-menu-options-search-textbox
-                          magic-menu.hide-create-command-button
+              /*
+               * Removes current filter, and re-databinds options.
+               */
+              p5.web.viewstate.set:magic-menu.options-filter
+              magic-menu.options.show
+              set-widget-property:x:/../*/_event?value
+                disabled
+              set-widget-property:magic-menu-options-search-textbox
+                value:
+              micro.page.set-focus:magic-menu-options-search-textbox
+              magic-menu.hide-create-command-button
 
-                      button
-                        innerValue:@"<span class=""icon-arrow-left""></span>"
-                        onclick
+          button
+            innerValue:@"<span class=""icon-arrow-left""></span>"
+            onclick
 
-                          /*
-                           * Paging to previous options.
-                           */
-                          magic-menu.options.show-previous
+              /*
+               * Paging to previous options.
+               */
+              magic-menu.options.show-previous
 
-                      button
-                        innerValue:@"<span class=""icon-arrow-right""></span>"
-                        onclick
+          button
+            innerValue:@"<span class=""icon-arrow-right""></span>"
+            onclick
 
-                          /*
-                           * Paging to next options.
-                           */
-                          magic-menu.options.show-next
+              /*
+               * Paging to next options.
+               */
+              magic-menu.options.show-next
 
-                  container:magic-menu-help-list-custom
-                    element:ul
-                    class:magic-menu-custom-options
-                    events
+      container:magic-menu-help-list-custom
+        element:ul
+        class:magic-menu-custom-options
+        events
 
-                      /*
-                       * Invoked when current options have changed.
-                       */
-                      magic-menu.position.changed
+          /*
+           * Invoked when current options have changed.
+           */
+          magic-menu.position.changed
 
-                        /*
-                         * Simply re-displaying options will do the trick for us here.
-                         */
-                        magic-menu.options.show
+            /*
+             * Simply re-displaying options will do the trick for us here.
+             */
+            magic-menu.options.show
 
-                      /*
-                       * Invoked when options should be refreshed for some reasons.
-                       */
-                      magic-menu.options.changed
+          /*
+           * Invoked when options should be refreshed for some reasons.
+           */
+          magic-menu.options.changed
 
-                        /*
-                         * Simply re-displaying options will do the trick for us here.
-                         */
-                        magic-menu.options.show
+            /*
+             * Simply re-displaying options will do the trick for us here.
+             */
+            magic-menu.options.show
 
-                      /*
-                       * Helper active event to clear custom options
-                       */
-                      magic-menu.options.clear-custom
+          /*
+           * Helper active event to clear custom options
+           */
+          magic-menu.options.clear-custom
 
-                        /*
-                         * Clearing custom options.
-                         */
-                        clear-widget:x:/../*/_event?value
+            /*
+             * Clearing custom options.
+             */
+            clear-widget:x:/../*/_event?value
 
-                  container:magic-menu-help-list
-                    element:ul
-                    class:magic-menu-options
+      container:magic-menu-help-list
+        element:ul
+        class:magic-menu-options

@@ -14,11 +14,11 @@
 }
 
 /*
- * Main Hyperlang "listener".
+ * Main Hyperlang "listener", and its animation.
  */
 @keyframes magic-menu-listener {
-    0% {background-color:rgba(255,255,0,1);}
-    100% {background-color:rgba(128,255,0,1);}
+    0% {background-position-x:0px;}
+    100% {background-position-x:50px;}
 }
 .magic-menu-listener {
     position:fixed;
@@ -26,20 +26,24 @@
     left:1rem;
     background-color:#fefefe;
     z-index:999;
+    background:url(/modules/micro/media/skins/sea-breeze/bg.svg);
+    background-color:#fefefe;
 }
 .magic-menu-listening {
     animation-name: magic-menu-listener;
-    animation-duration: .5s;
+    animation-duration: 2s;
     animation-iteration-count: infinite;
-    animation-direction: alternate;
+    animation-direction:alternate;
+    animation-timing-function:ease-in-out;
 }
 .magic-menu-listener button {
 }
 label.magic-menu-tip {
     color:black;
-    background:transparent !important;
+    background:#fefefe;
     font-style:italic;
     margin-bottom:0;
+    width:100%;
 }
 .magic-menu-tip:before {
     content:'"';
@@ -50,13 +54,6 @@ label.magic-menu-tip {
     font-style:italic;
 }
 .magic-menu-help {
-    position:fixed;
-    top:1rem;
-    right:1rem;
-    width:50%;
-    max-width:400px;
-    display:inline-block;
-    z-index:1000;
 }
 .magic-menu-help .magic-menu-options-pager-toolbar {
 }
@@ -72,12 +69,26 @@ label.magic-menu-tip {
     margin-bottom:0;
 }
 .magic-menu-help ul {
-    margin-bottom:0;
     margin-top:.5rem;
+    margin-bottom:.5rem;
+    margin-left:0;
 }
 .magic-menu-help ul li {
     cursor:pointer;
-    list-style-type:circle;
+    list-style:none;
+    border:solid var(--border-width) var(--wid-border-col);
+    border-bottom:none;
+    padding:.2rem;
+    background-color:#fefefe;
+}
+.magic-menu-help ul li:first-child {
+    border-top-left-radius:var(--border-radius);
+    border-top-right-radius:var(--border-radius);
+}
+.magic-menu-help ul li:last-child {
+    border-bottom:solid var(--border-width) var(--wid-border-col);
+    border-bottom-left-radius:var(--border-radius);
+    border-bottom-right-radius:var(--border-radius);
 }
 .magic-menu-help ul li:hover {
     background-color:rgba(0,0,0,.1);

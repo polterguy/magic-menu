@@ -28,7 +28,7 @@ create-event:magic-menu.options.show
    * Retrieves the first "n" options.
    */
   magic-menu.settings.get:no-options
-    default:10
+    default:5
   eval-x:x:/+/*
   magic-menu.grammar-position.list-options
     limit:x:/@magic-menu.settings.get?value

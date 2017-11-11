@@ -28,7 +28,7 @@ create-event:magic-menu.options.show-next
    * Increments current "page" for options.
    */
   magic-menu.settings.get:no-options
-    default:10
+    default:5
   p5.web.viewstate.get:magic-menu.options.offset
   +:x:(/@p5.web.viewstate.get/*/magic-menu.options.offset|/@.defaults/*/magic-menu.options.offset)/$?value.long
     _:x:/@magic-menu.settings.get?value

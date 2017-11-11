@@ -32,8 +32,9 @@ create-event:magic-menu.start
   create-widget:magic-menu-listener
     class:magic-menu-listener shaded rounded air-inner
     widgets
+      container:magic-menu-help-wrapper
       div
-        class:strip
+        class:strip fill
         widgets
           button
             style:"margin-bottom:0;"
