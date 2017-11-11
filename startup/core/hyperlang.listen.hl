@@ -16,14 +16,18 @@ create-event:hyperlang.listen
 
   /*
    * Checking if speech is disabled, and if so, returning immediately.
+   * Making sure we set the displayed text to what the system wanted to speak,
+   * instead of what the user spoke.
    */
   if
     hyperlang.speech-is-enabled
     not
 
     /*
-     * Returning immediately.
+     * Returning immediately, making sure we set text to whatever system wanted
+     * to speak, if anything.
      */
+    hyperlang.set-text:x:/../*/_arg?value
     return
 
   /*

@@ -62,7 +62,7 @@ create-event:hyperlang.start
                 else
 
                   /*
-                   * Speech is enabled.
+                   * Speech is disabled.
                    */
                   return:bool:false
 
@@ -182,9 +182,29 @@ create-event:hyperlang.start
             onclick
 
               /*
-               * Showing options for Hyperlang.
+               * Checking if widget exists already, and if so, we hide it.
                */
-              hyperlang.options.show
+              if
+                fetch:x:/0/0?value
+                  widget-exists:hyperlang-help
+
+                /*
+                 * Hides options for Hyperlang, and deletes CSS "toggled" class
+                 * for button.
+                 */
+                hyperlang.options.close
+                micro.css.delete:x:/../*/_event?value
+                  class:toggled
+
+              else
+
+                /*
+                 * Showing options for Hyperlang, and adds CSS "toggled" class
+                 * for button.
+                 */
+                hyperlang.options.show
+                micro.css.add:x:/../*/_event?value
+                  class:toggled
 
   /*
    * Greets user, and asks for input.

@@ -138,16 +138,15 @@ create-event:hyperlang.command.handle
     if:x:/@p5.mysql.select/*
 
       /*
-       * Checking type of invocation, and if it's based upon ID search, we display
-       * the command name from our SQL query.
+       * Checking type of invocation, and if it's text search, we display the text,
+       * to make sure user can see what we recognized.
        */
       if:x:/../*/_arg?value
-        not
 
         /*
-         * Make sure we show the user the command we're executing.
+         * Make sure we show what we heard.
          */
-        hyperlang.set-text:x:/@p5.mysql.select/*/*/command?value
+        hyperlang.set-text:x:/../*/_arg?value
 
       /*
        * Success, we have a command in the current position, matching our 
@@ -185,6 +184,11 @@ create-event:hyperlang.command.handle
         @lastused:x:/@p5.types.date.now?value
         @id:x:/@p5.mysql.select/*/*/phraseid?value
 
+      /*
+       * Updating options, since order has highly likely changed.
+       */
+      hyperlang.options.changed
+
     else
 
       /*
@@ -192,7 +196,7 @@ create-event:hyperlang.command.handle
        * create a new association for the given [_arg] command, or if he wants to
        * discard input, and rephrase his command.
        *
-       * Waiting for user to say tell us what to do.
+       * Waiting for user to tell us what to do.
        *
        * Giving a visual clue to user, to inform him that he can say "teach"
        * to teach the computer a new word.

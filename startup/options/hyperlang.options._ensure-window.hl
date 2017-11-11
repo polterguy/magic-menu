@@ -27,17 +27,27 @@ create-event:hyperlang.options._ensure-window
               div
                 class:col
                 widgets
-                  literal
-                    class:hyperlang-help-close
-                    element:a
-                    href:#
-                    innerValue:@"<span class=""icon-cross""></span>"
-                    onclick
+                  div
+                    style:"float:right;"
+                    class:strip hyperlang-options-pager-toolbar
+                    widgets
+                      button
+                        innerValue:@"<span class=""icon-arrow-left""></span>"
+                        onclick
 
-                      /*
-                       * Closing widget.
-                       */
-                      hyperlang.options.close
+                          /*
+                           * Paging to previous options.
+                           */
+                          hyperlang.options.show-previous
+
+                      button
+                        innerValue:@"<span class=""icon-arrow-right""></span>"
+                        onclick
+
+                          /*
+                           * Paging to next options.
+                           */
+                          hyperlang.options.show-next
 
                   container:hyperlang-help-list-custom
                     element:ul
@@ -77,37 +87,3 @@ create-event:hyperlang.options._ensure-window
                   container:hyperlang-help-list
                     element:ul
                     class:hyperlang-options
-                  div
-                    class:right
-                    widgets
-                      a
-                        href:#
-                        role:button
-                        class:hyperlang-help-pager
-                        innerValue:@"<span class=""icon-arrow-left""></span>"
-                        onclick
-
-                          /*
-                           * Paging to previous options.
-                           */
-                          if
-                            hyperlang.options.show-previous
-                            not
-                            micro.windows.info:There are no more previous options
-                              class:micro-windows-info warning
-
-                      a
-                        href:#
-                        role:button
-                        class:hyperlang-help-pager
-                        innerValue:@"<span class=""icon-arrow-right""></span>"
-                        onclick
-
-                          /*
-                           * Paging to next options.
-                           */
-                          if
-                            hyperlang.options.show-next
-                            not
-                            micro.windows.info:There are no more options
-                              class:micro-windows-info warning

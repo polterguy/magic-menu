@@ -420,7 +420,22 @@ return:bool:false
 
                     /*
                      * Restarting input loop, and hiding our "create command button".
+                     *
+                     * Notice, we don't restart input loop, unless speach is enabled.
                      */
-                    hyperlang.listen:[Talk to me]
-                    hyperlang.set-text:[Talk to me]
                     hyperlang.hide-create-command-button
+                    if
+                      hyperlang.speech-is-enabled
+
+                      /*
+                       * Speech is enabled.
+                       */
+                      hyperlang.listen:[Talk to me]
+                      hyperlang.set-text:[Talk to me]
+
+                    else
+
+                      /*
+                       * Speech is not enabled.
+                       */
+                      hyperlang.set-text
