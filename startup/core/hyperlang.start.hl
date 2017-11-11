@@ -101,6 +101,12 @@ create-event:hyperlang.start
                     :x:/@whoami/*/username?value
                 insert-data
                   foo:bool:true
+
+                /*
+                 * Notice, when speech is disabled, we make sure we show options
+                 * by default.
+                 */
+                hyperlang.options.show
                   
 
               else
@@ -145,6 +151,8 @@ create-event:hyperlang.start
                  * show our options, since no other input elements exists.
                  */
                 hyperlang.options.show
+                micro.css.add:hyperlang-show-options-button
+                  class:toggled
 
             widgets
               literal
@@ -211,10 +219,36 @@ create-event:hyperlang.start
               micro.listen.stop
               micro.speak.stop
 
-          button
+          button:hyperlang-show-options-button
             style:"margin-bottom:0;"
             innerValue:@"<span class=""icon-question""></span>"
             title:Show options
+            events
+
+              /*
+               * Trapping when options are displayed, to make sure we toggle
+               * our button accordingly.
+               */
+              hyperlang.options.show
+
+                /*
+                 * Making sure button becomes "toggled".
+                 */
+                micro.css.add:x:/../*/_event?value
+                  class:toggled
+
+              /*
+               * Trapping when options are hidden, to make sure we toggle
+               * our button accordingly.
+               */
+              hyperlang.options.close
+
+                /*
+                 * Making sure button becomes "untoggled".
+                 */
+                micro.css.delete:x:/../*/_event?value
+                  class:toggled
+
             onclick
 
               /*
@@ -229,8 +263,6 @@ create-event:hyperlang.start
                  * for button.
                  */
                 hyperlang.options.close
-                micro.css.delete:x:/../*/_event?value
-                  class:toggled
 
               else
 
@@ -239,8 +271,6 @@ create-event:hyperlang.start
                  * for button.
                  */
                 hyperlang.options.show
-                micro.css.add:x:/../*/_event?value
-                  class:toggled
 
           button
             style:"margin-bottom:0;"

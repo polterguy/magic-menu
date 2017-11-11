@@ -65,16 +65,13 @@ create-event:hyperlang.command.handle
   if:x:/../*/_arg?value
 
     /*
+     * Text based search.
      * Make sure we show the user what we heard.
      *
      * Notice, since this is done before we invoke lambda for command, this allows
      * the lambda to override what's displayed to user.
      */
     hyperlang.set-text:x:/../*/_arg?value
-
-    /*
-     * Text based search
-     */
     set:x:/@_sql?value
       src:@"{0} and soundex(p.command) = soundex(@command)"
         :x:/@_sql?value
@@ -183,11 +180,6 @@ create-event:hyperlang.command.handle
       p5.mysql.update:@"update phrases set lastused = @lastused where id = @id"
         @lastused:x:/@p5.types.date.now?value
         @id:x:/@p5.mysql.select/*/*/phraseid?value
-
-      /*
-       * Updating options, since order has highly likely changed.
-       */
-      hyperlang.options.changed
 
     else
 
