@@ -31,6 +31,23 @@ create-event:hyperlang.speak
     return
 
   /*
+   * Checking if speech is enabled, and if not, evaluating any potential
+   * [onfinish] lambdas immediately, setting text to what was supposed to be spoken,
+   * and returning early.
+   */
+  if
+    hyperlang.speech-is-enabled
+    not
+
+    /*
+     * Speech is not enabled, evaluating [onfinish] if existing, updating text, 
+     * and returning early.
+     */
+    hyperlang.set-text:x:/../*/_arg?value
+    eval:x:/../*/onfinish
+    return
+
+  /*
    * Unwrapping any references in [_arg] given.
    */
   hyperlang.unwrap-phrase:x:/../*/_arg?value
