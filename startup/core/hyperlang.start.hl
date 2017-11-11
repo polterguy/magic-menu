@@ -90,11 +90,18 @@ create-event:hyperlang.start
                   class:icon-play3
 
                 /*
-                 * Notice, we also store in the session if speech is disabled or not.
-                 * This allows us to "persist" this change across multiple invocations.
+                 * Notice, we also store in our p5.data database if speech is 
+                 * disabled for user.
                  */
-                p5.web.session.set:hyperlang.speech-is-disabled
-                  src:bool:true
+                whoami
+                delete-data:x:/*/*/hyperlang.speech-is-disabled-{0}
+                  :x:/@whoami/*/username?value
+                set:x:/+/*?name
+                  src:hyperlang.speech-is-disabled-{0}
+                    :x:/@whoami/*/username?value
+                insert-data
+                  foo:bool:true
+                  
 
               else
 
@@ -106,18 +113,23 @@ create-event:hyperlang.start
                 hyperlang.listen:[Talk to me]
 
                 /*
-                 * Notice, we also store in the session if speech is disabled or not.
-                 * This allows us to "persist" this change across multiple invocations.
+                 * Notice, we also store in our p5.data database if speech is 
+                 * disabled for user.
                  */
-                p5.web.session.set:hyperlang.speech-is-disabled
+                whoami
+                delete-data:x:/*/*/hyperlang.speech-is-disabled-{0}
+                  :x:/@whoami/*/username?value
 
             oninit
 
               /*
-               * Checking if we should disable speech engine by default.
+               * Notice, we also store in our p5.data database if speech is 
+               * disabled for user.
                */
-              p5.web.session.get:hyperlang.speech-is-disabled
-              if:x:/@p5.web.session.get/*?value
+              whoami
+              select-data:x:/*/*/hyperlang.speech-is-disabled-{0}
+                :x:/@whoami/*/username?value
+              if:x:/@select-data/*?value
 
                 /*
                  * Speech is by default disabled for current session.
