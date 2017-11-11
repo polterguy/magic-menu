@@ -29,6 +29,18 @@ create-event:hyperlang._listen
     return
 
   /*
+   * Checking if speech is enabled, and if not, returning early.
+   */
+  if
+    hyperlang.speech-is-enabled
+    not
+
+    /*
+     * Speech is not enabled, returning early.
+     */
+    return
+
+  /*
    * Making sure we add "active" CSS class when speech recognition is initiated.
    */
   micro.css.add:hyperlang-listener
