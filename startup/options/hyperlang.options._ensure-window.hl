@@ -28,9 +28,62 @@ create-event:hyperlang.options._ensure-window
                 class:col
                 widgets
                   div
-                    style:"float:right;"
-                    class:strip hyperlang-options-pager-toolbar
+                    class:strip fill hyperlang-options-pager-toolbar
                     widgets
+                      input:hyperlang-options-search-textbox
+                        type:text
+                        placeholder:Search ...
+                        class:smaller
+                        oninit
+
+                          /*
+                           * Clears the current filter.
+                           */
+                          p5.web.viewstate.set:hyperlang.options-filter
+
+                        events
+
+                          /*
+                           * Returns the current filter to caller.
+                           */
+                          hyperlang.options.get-filter
+
+                            /*
+                             * Returning current filter to caller, if any.
+                             */
+                            p5.web.viewstate.get:hyperlang.options-filter
+                            return:x:/@p5.web.viewstate.get/*?value
+
+                        onkeydown:@"if (event.keyCode == 13) {p5.$('hyperlang-options-search-textbox').raise('.onsearch');return false;}"
+                        .onsearch
+
+                          /*
+                           * Making sure we store current filter in ViewState
+                           */
+                          get-widget-property:hyperlang-options-search-textbox
+                            value
+                          if:x:/@get-widget-property/*/*?value
+                            =:
+
+                            /*
+                             * Filter was cleared.
+                             */
+                            p5.web.viewstate.set:hyperlang.options-filter
+
+                          else
+
+                            /*
+                             * Some filter was supplied.
+                             */
+                            p5.web.viewstate.set:hyperlang.options-filter
+                              src:x:/@get-widget-property/*/*?value
+
+                          /*
+                           * Reloading options, now with filter (or with filter removed).
+                           */
+                          hyperlang.options.show
+                          micro.page.set-focus:x:/../*/_event?value
+
                       button
                         innerValue:@"<span class=""icon-arrow-left""></span>"
                         onclick

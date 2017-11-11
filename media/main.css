@@ -53,20 +53,23 @@ label.hyperlang-tip {
     position:fixed;
     top:1rem;
     right:1rem;
-    min-width:35%;
-    max-width:50%;
+    width:50%;
+    max-width:400px;
     display:inline-block;
     z-index:1000;
 }
 .hyperlang-help .hyperlang-options-pager-toolbar {
-    margin-top:-.5rem;
-    margin-right:-.5rem;
 }
 .hyperlang-help .hyperlang-options-pager-toolbar button {
     height:30px;
     width:35px;
     padding-left:9px;
     padding-top:7px;
+    margin-bottom:0;
+}
+.hyperlang-help .hyperlang-options-pager-toolbar input[type=text] {
+    height:30px;
+    margin-bottom:0;
 }
 .hyperlang-help ul {
     margin-bottom:0;

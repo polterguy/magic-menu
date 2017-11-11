@@ -42,7 +42,7 @@ create-event:hyperlang.grammar-position.list-options
   _sql:@"select commandid, parent, global from phrases p join commands c on c.id = p.commandid
     where p.id in
     (
-      select min(id) from phrases where (lang = @lang or lang = @sublang) group by commandid
+      select min(id) from phrases where (lang = @lang or lang = @sublang) {{filter}} group by commandid
     )"
 
   /*
@@ -65,12 +65,22 @@ create-event:hyperlang.grammar-position.list-options
      * Filtering.
      */
     set:x:/@_sql?value
-      src:@"{0} and command like @filter"
-        :x:/@_sql?value
+      replace:x:/@_sql?value
+        src:{{filter}}
+        dest:@"and command like @filter"
     add:x:/../*/p5.mysql.connect/*/p5.mysql.select
       src
         @filter:%{0}%
           :x:/../*/filter?value
+
+  else
+
+    /*
+     * No filter.
+     */
+    set:x:/@_sql?value
+      replace:x:/@_sql?value
+        src:{{filter}}
 
   /*
    * Checking parent, and parametrizing SQL accordingly.
@@ -110,6 +120,9 @@ create-event:hyperlang.grammar-position.list-options
    * Connecting to database, and retrieving all possible options from current 
    * position in tree.
    */
+  create-widget
+    element:pre
+    innerValue:x:/..
   p5.mysql.connect:[hyperlang]
     p5.mysql.select:x:/@_sql?value
       @username:x:/@whoami/*/username?value

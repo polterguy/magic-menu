@@ -16,6 +16,15 @@ create-event:hyperlang.options.show
     src:0
 
   /*
+   * Checking if we have a filter condition.
+   */
+  hyperlang.options.get-filter
+  if:x:/@hyperlang.options.get-filter?value
+    add:x:/../*/hyperlang.grammar-position.list-options
+      src
+        filter:x:/@hyperlang.options.get-filter?value
+
+  /*
    * Retrieves the first "n" options.
    */
   hyperlang.settings.get:no-options
@@ -23,6 +32,15 @@ create-event:hyperlang.options.show
   eval-x:x:/+/*
   hyperlang.grammar-position.list-options
     limit:x:/@hyperlang.settings.get?value
+
+  /*
+   * Parametrising and invoking event responsible for "data binding" options window.
+   */
+  add:x:/../*/hyperlang.options._create-options/*/options
+    src:x:/@hyperlang.grammar-position.list-options/*
+  hyperlang.options._create-options
+    parent:hyperlang-help-list
+    options
 
   /*
    * Checking if there are any options.
@@ -34,15 +52,6 @@ create-event:hyperlang.options.show
      * No options, returning "failure" to caller.
      */
     return:bool:false
-
-  /*
-   * Parametrising and invoking event responsible for "data binding" options window.
-   */
-  add:x:/../*/hyperlang.options._create-options/*/options
-    src:x:/@hyperlang.grammar-position.list-options/*
-  hyperlang.options._create-options
-    parent:hyperlang-help-list
-    options
 
   /*
    * Returning "success" to caller.
