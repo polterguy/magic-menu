@@ -89,6 +89,13 @@ create-event:hyperlang.start
                 set-widget-property:x:/@p5.web.widgets.get-children/*/*?value
                   class:icon-play3
 
+                /*
+                 * Notice, we also store in the session if speech is disabled or not.
+                 * This allows us to "persist" this change across multiple invocations.
+                 */
+                p5.web.session.set:hyperlang.speech-is-disabled
+                  src:bool:true
+
               else
 
                 /*
@@ -96,7 +103,30 @@ create-event:hyperlang.start
                  */
                 set-widget-property:x:/@p5.web.widgets.get-children/*/*?value
                   class:icon-pause2
-                hyperlang.listen:[OK]
+                hyperlang.listen:[Talk to me]
+
+                /*
+                 * Notice, we also store in the session if speech is disabled or not.
+                 * This allows us to "persist" this change across multiple invocations.
+                 */
+                p5.web.session.set:hyperlang.speech-is-disabled
+
+            oninit
+
+              /*
+               * Checking if we should disable speech engine by default.
+               */
+              p5.web.session.get:hyperlang.speech-is-disabled
+              if:x:/@p5.web.session.get/*?value
+
+                /*
+                 * Speech is by default disabled for current session.
+                 */
+                micro.css.delete:hyperlang-listener
+                  class:hyperlang-listening
+                p5.web.widgets.get-children:x:/../*/_event?value
+                set-widget-property:x:/@p5.web.widgets.get-children/*/*?value
+                  class:icon-play3
 
             widgets
               literal
@@ -165,18 +195,6 @@ create-event:hyperlang.start
 
           button
             style:"margin-bottom:0;"
-            innerValue:@"<span class=""icon-cross""></span>"
-            title:Close Hyperlang
-            accesskey:Q
-            onclick
-
-              /*
-               * Closing Hyperlang.
-               */
-              hyperlang.stop
-
-          button
-            style:"margin-bottom:0;"
             innerValue:@"<span class=""icon-question""></span>"
             title:Show options
             onclick
@@ -205,6 +223,18 @@ create-event:hyperlang.start
                 hyperlang.options.show
                 micro.css.add:x:/../*/_event?value
                   class:toggled
+
+          button
+            style:"margin-bottom:0;"
+            innerValue:@"<span class=""icon-cross""></span>"
+            title:Close Hyperlang
+            accesskey:Q
+            onclick
+
+              /*
+               * Closing Hyperlang.
+               */
+              hyperlang.stop
 
   /*
    * Greets user, and asks for input.
