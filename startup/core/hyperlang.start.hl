@@ -140,6 +140,12 @@ create-event:hyperlang.start
                 set-widget-property:x:/@p5.web.widgets.get-children/*/*?value
                   class:icon-play3
 
+                /*
+                 * When speech is by default disabled for user, we automatically
+                 * show our options, since no other input elements exists.
+                 */
+                hyperlang.options.show
+
             widgets
               literal
                 element:span
