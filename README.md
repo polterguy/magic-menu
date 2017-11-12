@@ -30,6 +30,8 @@ interfaced with, in the exact same way. Resulting in an extremely consistent use
 where once your users have learned how to navigate one app, they've effectively learned
 how to navigate all your apps.
 
+## Speech recognition and Speech synthesis
+
 As an additional bonus, it can be set into accepting natural speech as input, and provide
 output with speech synthesis, allowing you to choose menu items by speaking e.g. _"Can you 
 search for something for me"_. Although these features are for all practical concerns limited
