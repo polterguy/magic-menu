@@ -2,7 +2,7 @@
 /*
  * Creates the event that actually starts Magic menu.
  *
- * You can override the default greeting with [greeting]
+ * You can override the default greeting with [greeting].
  */
 create-event:magic-menu.start
 
@@ -27,6 +27,14 @@ create-event:magic-menu.start
   magic-menu.grammar-position.clear
 
   /*
+   * Unwrapping greeting.
+   *
+   * This is necessary to make sure we display the specified greeting as the
+   * text of our "info" widget.
+   */
+  magic-menu.unwrap-phrase:x:(/../*/greeting|/@.defaults/*/greeting)/$?value
+
+  /*
    * Creating main Magic menu widget.
    */
   create-widget:magic-menu-listener
@@ -38,7 +46,7 @@ create-event:magic-menu.start
         widgets
           button
             style:"margin-bottom:0;"
-            title:Pauses temporarily
+            title:Turns off speech
             events
 
               /*
@@ -67,71 +75,112 @@ create-event:magic-menu.start
                    */
                   return:bool:false
 
+              /*
+               * Turns off speech, both input and output
+               */
+              magic-menu.turn-off-speech
+
+                /*
+                 * Retrieving child, which contains either a microphone icon, or
+                 * a play icon, and determines if we should turn off speech according
+                 * to what icon is being displayed.
+                 */
+                p5.web.widgets.get-children:x:/../*/_event?value
+                get-widget-property:x:/-/*/*?value
+                  class
+                if:x:/@get-widget-property/*/*?value
+                  =:icon-pause2
+
+                  /*
+                   * Speech input/output needs to be disabled.
+                   *
+                   * Disabling "listening" class from main widget, changing icon
+                   * of our "pause button", and stops speech input/output.
+                   */
+                  micro.css.delete:magic-menu-listener
+                    class:magic-menu-listening
+                  set-widget-property:x:/@p5.web.widgets.get-children/*/*?value
+                    class:icon-mic
+                  micro.listen.stop
+                  micro.speak.stop
+
+                  /*
+                   * Notice, we also store in our p5.data database if speech is 
+                   * disabled for user, such that we remember the setting for
+                   * the next time Magic menu is launched.
+                   */
+                  whoami
+                  delete-data:x:/*/*/magic-menu.speech-is-disabled-{0}
+                    :x:/@whoami/*/username?value
+                  set:x:/+/*?name
+                    src:magic-menu.speech-is-disabled-{0}
+                      :x:/@whoami/*/username?value
+                  insert-data
+                    foo:bool:true
+
+                  /*
+                   * Notice, when speech is disabled, we make sure we show options
+                   * by default.
+                   */
+                  magic-menu.options.show
+
+              /*
+               * Turns on speech, both input and output
+               */
+              magic-menu.turn-on-speech
+
+                /*
+                 * Retrieving child, which contains either a microphone icon, or
+                 * a play icon, and determines if we should turn off speech according
+                 * to what icon is being displayed.
+                 */
+                p5.web.widgets.get-children:x:/../*/_event?value
+                get-widget-property:x:/-/*/*?value
+                  class
+                if:x:/@get-widget-property/*/*?value
+                  =:icon-mic
+
+                  /*
+                   * We should restart input loop.
+                   */
+                  set-widget-property:x:/@p5.web.widgets.get-children/*/*?value
+                    class:icon-pause2
+                  magic-menu.listen:[Talk to me]
+
+                  /*
+                   * Notice, we also store in our p5.data database if speech is 
+                   * disabled for user, hence we need to delete this setting, to
+                   * remember if speech is enabled if Magic menu is later launcehd.
+                   */
+                  whoami
+                  delete-data:x:/*/*/magic-menu.speech-is-disabled-{0}
+                    :x:/@whoami/*/username?value
+
             onclick
 
               /*
                * Figuring out if we should pause or restart.
                */
-              p5.web.widgets.get-children:x:/../*/_event?value
-              get-widget-property:x:/-/*/*?value
-                class
-              if:x:/@get-widget-property/*/*?value
-                =:icon-pause2
+              if
+                magic-menu.speech-is-enabled
 
                 /*
-                 * We should temporarily pause input loop.
-                 * Deletes the visual clue, indicating we're listening for input,
-                 * and makes sure we stop listening and speaking.
+                 * Disabling speech input.
                  */
-                micro.css.delete:magic-menu-listener
-                  class:magic-menu-listening
-                micro.listen.stop
-                micro.speak.stop
-                set-widget-property:x:/@p5.web.widgets.get-children/*/*?value
-                  class:icon-play3
-
-                /*
-                 * Notice, we also store in our p5.data database if speech is 
-                 * disabled for user.
-                 */
-                whoami
-                delete-data:x:/*/*/magic-menu.speech-is-disabled-{0}
-                  :x:/@whoami/*/username?value
-                set:x:/+/*?name
-                  src:magic-menu.speech-is-disabled-{0}
-                    :x:/@whoami/*/username?value
-                insert-data
-                  foo:bool:true
-
-                /*
-                 * Notice, when speech is disabled, we make sure we show options
-                 * by default.
-                 */
-                magic-menu.options.show
-                  
+                magic-menu.turn-off-speech
 
               else
 
                 /*
-                 * We should restart input loop.
+                 * Enabling speech input.
                  */
-                set-widget-property:x:/@p5.web.widgets.get-children/*/*?value
-                  class:icon-pause2
-                magic-menu.listen:[Talk to me]
-
-                /*
-                 * Notice, we also store in our p5.data database if speech is 
-                 * disabled for user.
-                 */
-                whoami
-                delete-data:x:/*/*/magic-menu.speech-is-disabled-{0}
-                  :x:/@whoami/*/username?value
+                magic-menu.turn-on-speech
 
             oninit
 
               /*
-               * Notice, we also store in our p5.data database if speech is 
-               * disabled for user.
+               * Figuring out if speech is enabled or disabled in database for
+               * current user.
                */
               whoami
               select-data:x:/*/*/magic-menu.speech-is-disabled-{0}
@@ -145,7 +194,7 @@ create-event:magic-menu.start
                   class:magic-menu-listening
                 p5.web.widgets.get-children:x:/../*/_event?value
                 set-widget-property:x:/@p5.web.widgets.get-children/*/*?value
-                  class:icon-play3
+                  class:icon-mic
 
                 /*
                  * When speech is by default disabled for user, we automatically
@@ -163,7 +212,7 @@ create-event:magic-menu.start
           literal:magic-menu-current-text
             element:label
             class:magic-menu-tip
-            visible:false
+            innerValue:x:/@magic-menu.unwrap-phrase?value
 
           button:magic-menu-show-options-button
             style:"margin-bottom:0;"
