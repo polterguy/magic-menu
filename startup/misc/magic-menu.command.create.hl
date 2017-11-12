@@ -27,6 +27,8 @@ create-event:magic-menu.command.create
  * Optionally, to handle the input yourself, pass in an [onfinish] lambda callback.
  *
  * Notice, you can write any Hyperlambda you wish here.
+ *
+ * To get auto-completion, click CTRL+Space.
  */
 magic-menu.listen:OK
 

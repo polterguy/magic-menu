@@ -62,3 +62,23 @@ used, to trigger the same Hyperlambda.
 Notice, it is probably most adequately used in combination with [Hypereval](https://github.com/polterguy/hypereval),
 since this allows you to create reusable snippets, making your actual menu snippets smaller,
 and DRY'er.
+
+## The tree structure
+
+Magic menu's items, are actually a tree structure, such that once you've evaluated one
+menu item, you can choose to change the scope of your available menu items in the next round.
+This allows you to create menu hierarchies which are nested, and dependent upon some choice
+performed in a previous action. An example could be e.g.
+
+* Create a new page
+* Add a widget to my page
+* Make my widget green
+* Etc ...
+
+Then the two latter menu items in the above example, would only be possible to select,
+if you had previously selected the _"Create a new page"_ item first. This allows you
+to purely logically, have _"discussions"_ with your application, and creating wizard
+steps in execution, where the evaluation of some step, is dependent upon the results
+of the evaluation of a previous step. The Magic menu is in such a regard, in fact a
+tree structure, the same way an execution tree is. Hence, in such a regard, it provides
+a _"bridge"_ between natural spoken language, and Hyperlambda.
