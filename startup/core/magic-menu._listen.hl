@@ -52,7 +52,7 @@ create-event:magic-menu._listen
   magic-menu.settings.get-language
 
   /*
-   * Applying [onfinish], or default value if none was given.
+   * Applying [onfinish], or default implementation if none was given.
    */
   add:x:/../*/micro.listen/*/onfinish/*/.lambda
     src:x:(/../*/onfinish|/@.defaults/*/onfinish)/$/*
@@ -74,7 +74,8 @@ create-event:magic-menu._listen
       .lambda
 
       /*
-       * If widget was closed, we simply abort.
+       * If widget was closed, we simply return early to abort evaluation of
+       * the rest of our lambda.
        */
       if
         fetch:x:/0/0?value

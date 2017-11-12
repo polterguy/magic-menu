@@ -5,7 +5,7 @@
  * Looks up [_arg] or [id] command from database, and if existing, evaluates it.
  * [id] is expected to be a "phrase ID" from database.
  *
- * Either supply [_arg] or [id], and not both.
+ * Either supply [_arg] or [id], not both.
  *
  * If the command does not exist, it will ask user if he wants to create 
  * a new command.
@@ -37,8 +37,8 @@ create-event:magic-menu.command.handle
       not
 
     /*
-     * Stopping Magic menu, and returning early to avoid evaluating the rest 
-     * of our event.
+     * Nothing was given, returning early to avoid evaluating the rest 
+     * of our lambda, making sure we restart listening before we return.
      */
     magic-menu.set-text:[Waiting]
     magic-menu.listen
@@ -70,6 +70,10 @@ create-event:magic-menu.command.handle
      *
      * Notice, since this is done before we invoke lambda for command, this allows
      * the lambda to override what's displayed to user.
+     *
+     * Notice, we also do a SOUNDEX lookup into database, to make it slightly stronger
+     * in regards to recognition, since [_arg] is highly likely something that was
+     * spoken by the user.
      */
     magic-menu.set-text:x:/../*/_arg?value
     set:x:/@_sql?value
@@ -121,7 +125,10 @@ create-event:magic-menu.command.handle
   p5.mysql.connect:[magic-menu]
 
     /*
-     * Evaluating paramtrised SQL now.
+     * Evaluating parametrised SQL now.
+     *
+     * Making sure we prioritise phrases in "current level", and making sure we
+     * only select one match.
      */
     p5.mysql.select:"{0} order by parent desc, global limit 1"
       :x:/@_sql?value
@@ -135,31 +142,40 @@ create-event:magic-menu.command.handle
     if:x:/@p5.mysql.select/*
 
       /*
+       * Success, we have a command in the current position, matching our specified [_arg].
+       *
        * Checking type of invocation, and if it's text search, we display the text,
        * to make sure user can see what we recognized.
        */
       if:x:/../*/_arg?value
 
         /*
-         * Make sure we show what we heard.
+         * Make sure we show the user what we heard.
          */
         magic-menu.set-text:x:/../*/_arg?value
 
       /*
-       * Success, we have a command in the current position, matching our 
-       * specified [_arg].
+       * Converting Hyperlambda to lambda, and evaluating it.
+       *
+       * Notice, we pass in [id] (from commands), [phraseid], [spoken] (what was spoken),
+       * and [matches] (the phrase's content from our database).
+       *
+       * Since we're using SOUNDEX matching, what was spoken, and what it was matched
+       * towards, might in theory be slightly different.
        */
       hyper2lambda:x:/@p5.mysql.select/*/*/hyperlambda?value
-
-      /*
-       * Evaluating the command.
-       */
       eval-x:x:/+/*
       eval:x:/@hyper2lambda
         id:x:/@p5.mysql.select/*/*/id?value
         phraseid:x:/@p5.mysql.select/*/*/phraseid?value
         spoken:x:/../*/_arg?value
         matches:x:/@p5.mysql.select/*/*/command?value
+
+      /*
+       * Checking if we should "push" current ID unto our "grammar-position" stack.
+       *
+       * This will only be done, if lambda for command returns true.
+       */
       if:x:/@eval?value
         !=:bool:false
 
@@ -174,7 +190,8 @@ create-event:magic-menu.command.handle
        *
        * This is done, since we always "prioritize" the last used phrase, when
        * suggesting phrases, and selecting from our phrases table. Such that the
-       * most commonly used phrases will always appear first.
+       * most commonly used phrases will always appear first, and be prioritised
+       * when spoken and trying to find a match.
        */
       p5.types.date.now
       p5.mysql.update:@"update phrases set lastused = @lastused where id = @id"
@@ -190,11 +207,11 @@ create-event:magic-menu.command.handle
        *
        * Waiting for user to tell us what to do.
        *
-       * Giving a visual clue to user, to inform him that he can say "teach"
-       * to teach the computer a new word.
+       * Giving a visual clue to user, to inform him or her, that he can teach the 
+       * computer a new word.
        *
        * Notice, the user is only allowed to configure new words, if he is root.
-       * If not, we simply say "I don't understand".
+       * If user is not root, we simply say "I don't understand".
        */
       whoami
       if:x:/@whoami/*/role?value
@@ -204,6 +221,7 @@ create-event:magic-menu.command.handle
          * Computer didn't understand phrase, and user is not root.
          *
          * Informing user and returning early.
+         * TODO: Allow user to create a new "association" towards an existing command.
          */
         magic-menu.listen:[I don't understand]
         return
@@ -211,7 +229,8 @@ create-event:magic-menu.command.handle
       /*
        * User is "root", allowing him the option to teach a new command.
        *
-       * First updating text widget of that user has the option to teach a new command.
+       * First updating text widget to show that the user has the option to 
+       * teach a new command.
        */
       magic-menu.language.get-localized-phrase:[Say 'teach' to teach the computer]
       magic-menu.set-text:{0} '{1}'
@@ -219,7 +238,8 @@ create-event:magic-menu.command.handle
         :x:/../*/_arg?value
 
       /*
-       * Making sure we display "add command" button.
+       * Making sure we display "add command" button, to allow user to teach computer
+       * using a button instead of speaking.
        */
       magic-menu.display-create-command-button:x:/../*/_arg?value
 
@@ -227,26 +247,32 @@ create-event:magic-menu.command.handle
        * Then asking the user if he wants to teach the computer or not.
        *
        * If user answers anything but what is found in [Teach] (localized phrase),
-       * we assume it's another command, and "recursively" invoke "self".
+       * we assume it's another command, and attempts to handle what was spoken.
        */
       eval-x:x:/+/*/*/*/*/magic-menu.command.create
       magic-menu.listen:[I don't understand]
         onfinish
 
           /*
-           * Checking if user said "I will teach you".
+           * Deletes the visual clue, indicating we're listening for input.
+           */
+          micro.css.delete:magic-menu-listener
+            class:magic-menu-listening
+
+          /*
+           * Getting the "I will teach you phrase", and making sure our switch
+           * below is correctly parametrised accordingly.
            */
           magic-menu.language.get-localized-phrase:[Teach]
           set:x:/../*/switch/*/case/=teach?value
             src:x:/@magic-menu.language.get-localized-phrase?value
+
+          /*
+           * Checking what user said, and if he wants to teach the computer a new
+           * phrase or command.
+           */
           switch:x:/../*/text?value
             case:teach
-
-              /*
-               * Deletes the visual clue, indicating we're listening for input.
-               */
-              micro.css.delete:magic-menu-listener
-                class:magic-menu-listening
 
               /*
                * Invoking Active Event responsible for creating a "phrase2hyper"
@@ -264,7 +290,8 @@ create-event:magic-menu.command.handle
             default
 
               /*
-               * Hiding our "create command button".
+               * Hiding our "create command button", since user obviously didn't
+               * want to teach the computer a new phrase.
                */
               magic-menu.hide-create-command-button
 
@@ -273,7 +300,7 @@ create-event:magic-menu.command.handle
                * erronously, and that what he spoke now, was what he actually wants to
                * do, for simplicity reasons.
                *
-               * This allows for saving one roundtrip to speech recognition engine, asking
-               * user to not wanting to create a new command.
+               * This allows for saving one roundtrip to speech recognition engine, 
+               * avoiding having user to explicitly telling us "no, I don't want to teach you".
                */
               magic-menu.command.handle:x:/../*/text?value
