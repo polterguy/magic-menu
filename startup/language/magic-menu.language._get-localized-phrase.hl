@@ -1,0 +1,37 @@
+﻿
+/*
+ * Implementation of event that retrieves localised phrase.
+ */
+create-event:magic-menu.language._get-localized-phrase
+
+  /*
+   * Sanity checking arguments.
+   */
+  micro.lambda.contract.min:x:/..
+    _arg:string
+    lang:string
+
+  /*
+   * Checking if specified [lang] file exists.
+   */
+  if
+    fetch:x:/0/0?value
+      file-exists:@MAGIC/configuration/lang-{0}.hl
+        :x:/../*/lang?value
+
+    /*
+     * [lang] file exists, loading it.
+     */
+    load-file:@MAGIC/configuration/lang-{0}.hl
+      :x:/../*/lang?value
+
+    /*
+     * Returning value from language file to caller.
+     *
+     * Notice, this will return "null" if the value is not found, at which point 
+     * the caller is expected to "traverse upwards" in language hierarchy.
+     *
+     * With English ("/configuration/lang-en.hl") expected to be the "root language".
+     */
+    return:x:/@load-file/*/*/\{0}?value
+      :x:/../*/_arg?value
