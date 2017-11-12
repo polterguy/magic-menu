@@ -43,6 +43,19 @@ create-event:magic-menu.options.show
     options
 
   /*
+   * Disabling/enabling pager buttons.
+   */
+  set-widget-property:magic-menu-options-page-previous
+    disabled
+  if:x:/@magic-menu.grammar-position.list-options/*?count
+    <:x:/@magic-menu.settings.get?value.int
+    set-widget-property:magic-menu-options-page-next
+      disabled
+  else
+    delete-widget-property:magic-menu-options-page-next
+      disabled
+
+  /*
    * Checking if there are any options, and returning accordingly to caller.
    */
   if:x:/@magic-menu.grammar-position.list-options/*?count

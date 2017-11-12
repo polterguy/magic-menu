@@ -30,7 +30,7 @@ create-event:magic-menu.start
    * Creating main Magic menu widget.
    */
   create-widget:magic-menu-listener
-    class:magic-menu-listener shaded rounded bg
+    class:magic-menu-listener shaded rounded
     widgets
       container:magic-menu-help-wrapper
       div

@@ -3,113 +3,12 @@
  * Styles for main plugin button, which initiates Hyperlang.
  */
 
+
+/*
+ * These styles are for the administrative interface.
+ */
 .magic-menu-editor {
     padding-bottom:150px;
-}
-
-/*
- * Button to start Hyperlang.
- */
-.magic-menu-start {
-}
-
-/*
- * Main Hyperlang "listener", and its animation.
- */
-@keyframes magic-menu-listener {
-    0% {background-color:#fefefe;}
-    100% {background-color:#fefeaa;}
-}
-.magic-menu-listener {
-    position:fixed;
-    bottom:0;
-    left:1rem;
-    background-color:#fefefe;
-    z-index:999;
-    padding:.5rem;
-}
-.magic-menu-listening {
-    animation-name: magic-menu-listener;
-    animation-duration: 2s;
-    animation-iteration-count: infinite;
-    animation-direction:alternate;
-    animation-timing-function:ease-in-out;
-}
-.magic-menu-listener button {
-}
-label.magic-menu-tip {
-    color:black;
-    background:#fefefe;
-    font-style:italic;
-    margin-bottom:0;
-    width:100%;
-    user-select:none;
-}
-.magic-menu-tip:before {
-    content:'"';
-    font-style:italic;
-}
-.magic-menu-tip:after {
-    content:'"';
-    font-style:italic;
-}
-.magic-menu-help {
-}
-.magic-menu-help .magic-menu-options-pager-toolbar {
-}
-.magic-menu-help .magic-menu-options-pager-toolbar button {
-    height:30px;
-    width:35px;
-    padding-left:9px;
-    padding-top:7px;
-    margin-bottom:0;
-}
-.magic-menu-help .magic-menu-options-pager-toolbar input[type=text] {
-    height:30px;
-    margin-bottom:0;
-}
-.magic-menu-help ul {
-    margin-top:.5rem;
-    margin-bottom:.5rem;
-    margin-left:0;
-}
-.magic-menu-help ul li {
-    cursor:pointer;
-    list-style:none;
-    border:solid var(--border-width) var(--wid-border-col);
-    border-bottom:none;
-    padding:.2rem;
-    background-color:#fefefe;
-}
-.magic-menu-help ul li:first-child {
-    border-top-left-radius:var(--border-radius);
-    border-top-right-radius:var(--border-radius);
-}
-.magic-menu-help ul li:last-child {
-    border-bottom:solid var(--border-width) var(--wid-border-col);
-    border-bottom-left-radius:var(--border-radius);
-    border-bottom-right-radius:var(--border-radius);
-}
-.magic-menu-help ul li:hover {
-    background-color:rgba(0,0,0,.1);
-}
-.magic-menu-help ul.magic-menu-options {
-}
-.magic-menu-help ul li a {
-    display:block;
-}
-.magic-menu-options-root {
-}
-.magic-menu-options-local {
-    color: #0000ff;
-}
-.magic-menu-options-global {
-    text-decoration:underline;
-}
-label.input-label {
-    min-width:0;
-}
-.magic-menu-grid {
 }
 .magic-menu-grid tr th:nth-child(1),
 .magic-menu-grid tr td:nth-child(1) {
@@ -158,4 +57,90 @@ label.input-label {
     .magic-menu-grid tr td:nth-child(2) {
         display: table-cell;
     }
+}
+
+
+/*
+ * These styles are for the "Magic Menu plugin".
+ */
+@keyframes magic-menu-listener {
+    0% {background-color:#fefefe;}
+    100% {background-color:#fefeaa;}
+}
+.magic-menu-listener {
+    position:fixed;
+    bottom:0;
+    left:1rem;
+    background-color:#fefefe;
+    z-index:999;
+    padding:.5rem;
+}
+.magic-menu-listening {
+    animation-name: magic-menu-listener;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction:alternate;
+    animation-timing-function:ease-in-out;
+}
+label.magic-menu-tip {
+    color:#a0a0a0;
+    margin-bottom:0;
+    width:100%;
+}
+.magic-menu-tip:before {
+    content:'\00ab';
+}
+.magic-menu-tip:after {
+    content:'\00bb';
+}
+.magic-menu-help .magic-menu-options-pager-toolbar button {
+    height:30px;
+    width:35px;
+    padding-left:9px;
+    padding-top:7px;
+    margin-bottom:0;
+}
+.magic-menu-help .magic-menu-options-pager-toolbar input[type=text] {
+    height:30px;
+    margin-bottom:0;
+}
+.magic-menu-help ul {
+    margin-top:.5rem;
+    margin-bottom:.5rem;
+    margin-left:0;
+    background:var(--wid-dark-col);
+}
+.magic-menu-help ul li {
+    cursor:pointer;
+    list-style:none;
+    border:solid var(--border-width) var(--wid-border-col);
+    border-top-color:rgba(0,0,0,.02);
+    border-bottom:none;
+    padding:.2rem;
+}
+.magic-menu-help ul li:first-child {
+    border-top-left-radius:var(--border-radius);
+    border-top-right-radius:var(--border-radius);
+}
+.magic-menu-help ul li:last-child {
+    border-bottom:solid var(--border-width) var(--wid-border-col);
+    border-bottom-left-radius:var(--border-radius);
+    border-bottom-right-radius:var(--border-radius);
+}
+.magic-menu-help ul li:hover {
+    background-color:rgba(0,0,0,.1);
+}
+.magic-menu-help ul li a {
+    display:block;
+}
+.magic-menu-options-root {
+}
+.magic-menu-options-local {
+    color: #0000ff;
+}
+.magic-menu-options-global {
+    font-style:italic;
+}
+label.input-label {
+    min-width:0;
 }
