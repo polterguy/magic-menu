@@ -54,6 +54,16 @@ create-event:magic-menu.options.show-previous
     offset:x:/@-?value.long
 
   /*
+   * Enabling disabling next/previous pager buttons.
+   */
+  delete-widget-property:magic-menu-options-page-next
+    disabled
+  if:x:/@-?value.int
+    =:int:0
+    set-widget-property:magic-menu-options-page-previous
+      disabled
+
+  /*
    * Updating "current page" value.
    */
   p5.web.viewstate.set:magic-menu.options.offset

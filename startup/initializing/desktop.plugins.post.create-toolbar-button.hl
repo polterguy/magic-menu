@@ -47,9 +47,9 @@ create-event:desktop.plugins.post.create-toolbar-button
     create-widget:magic-menu-start-button
       element:button
       class:magic-menu-start
-      title:Start Magic menu, shortcut H
+      title:Start Magic menu, shortcut M
       innerValue:@"<span class=""icon-magic-wand""></span>"
-      accesskey:H
+      accesskey:M
       oninit
 
         /*

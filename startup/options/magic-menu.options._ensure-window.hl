@@ -117,8 +117,9 @@ create-event:magic-menu.options._ensure-window
               micro.page.set-focus:magic-menu-options-search-textbox
               magic-menu.hide-create-command-button
 
-          button
+          button:magic-menu-options-page-previous
             innerValue:@"<span class=""icon-arrow-left""></span>"
+            disabled
             onclick
 
               /*
@@ -126,7 +127,7 @@ create-event:magic-menu.options._ensure-window
                */
               magic-menu.options.show-previous
 
-          button
+          button:magic-menu-options-page-next
             innerValue:@"<span class=""icon-arrow-right""></span>"
             onclick
 

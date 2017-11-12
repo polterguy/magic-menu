@@ -42,6 +42,20 @@ create-event:magic-menu.options.show-next
     offset:x:/@+?value.long
 
   /*
+   * Checking if we should disable or enable the next button.
+   */
+  delete-widget-property:magic-menu-options-page-previous
+    disabled
+  if:x:/@magic-menu.grammar-position.list-options/*?count
+    <:x:/@magic-menu.settings.get?value.int
+
+    /*
+     * No more next items.
+     */
+    set-widget-property:magic-menu-options-page-next
+      disabled
+
+  /*
    *
    */
   if:x:/@magic-menu.grammar-position.list-options/*?count

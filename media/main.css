@@ -17,8 +17,8 @@
  * Main Hyperlang "listener", and its animation.
  */
 @keyframes magic-menu-listener {
-    0% {background-position-x:0px;}
-    100% {background-position-x:50px;}
+    0% {background-color:#fefefe;}
+    100% {background-color:#fefeaa;}
 }
 .magic-menu-listener {
     position:fixed;
@@ -26,8 +26,7 @@
     left:1rem;
     background-color:#fefefe;
     z-index:999;
-    background:url(/modules/micro/media/skins/sea-breeze/bg.svg);
-    background-color:#fefefe;
+    padding:.5rem;
 }
 .magic-menu-listening {
     animation-name: magic-menu-listener;
@@ -44,6 +43,7 @@ label.magic-menu-tip {
     font-style:italic;
     margin-bottom:0;
     width:100%;
+    user-select:none;
 }
 .magic-menu-tip:before {
     content:'"';
