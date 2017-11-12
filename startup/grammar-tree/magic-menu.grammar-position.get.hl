@@ -1,6 +1,6 @@
 ﻿
 /*
- * Creates the event that returns the current position in our command hierarchy.
+ * Returns the current position in our "grammar-tree" hierarchy.
  */
 create-event:magic-menu.grammar-position.get
 

@@ -5,6 +5,7 @@
 try
   p5.mysql.connect:[magic-menu]
     p5.mysql.execute:@"
+
 create table if not exists `commands` (
   `id` int(10) unsigned not null auto_increment,
   `parent` int(10) unsigned null,
@@ -32,6 +33,7 @@ create table if not exists `phrases` (
   unique key `command_lang_commandid_UNIQUE` (`command`, `lang`, `commandid`),
   constraint `fk_phrases_commands` foreign key (`commandid`) references `commands` (`id`) on delete cascade on update cascade
 ) engine=InnoDB auto_increment=0 default charset=utf8mb4 collate=utf8mb4_unicode_ci;
+
 "
 
 catch

@@ -13,13 +13,19 @@ create-event:magic-menu.start
     greeting:[Hello]
 
   /*
-   * Checking if Magic menu is already initiated from before, and if so, making
-   * sure we close any previous instances first.
+   * Sanity checking arguments.
+   */
+  micro.lambda.contract.optional:x:/..
+    greeting:string
+
+  /*
+   * Checking if Magic menu is already initiated from before, and if so, simply
+   * returning early.
    */
   if
     fetch:x:/0/0?value
       widget-exists:magic-menu-listener
-    delete-widget:magic-menu-listener
+    return
 
   /*
    * Making sure we reset grammar position.
@@ -39,33 +45,73 @@ create-event:magic-menu.start
    */
   create-widget:magic-menu-listener
     class:magic-menu-listener shaded rounded
+    events
+
+
+      /*
+       * Quits Magic menu.
+       */
+      magic-menu.quit
+
+        /*
+         * Speaks "Goodbye" and deletes widget.
+         */
+        magic-menu.speak:[Goodbye]
+        delete-widget:x:/../*/_event?value
+
+
     widgets
+
+      /*
+       * This is the container for our actual help items.
+       */
       container:magic-menu-help-wrapper
+
+      /*
+       * Toolbar strip at the bottom of our widget, which allows the user to turn on
+       * or off speech input/output, in addition to displaying help and closing 
+       * the Magic menu.
+       */
       div
         class:strip fill
         widgets
           button
             style:"margin-bottom:0;"
-            title:Turns off or on speech input and output
+            title:Pauses or turns off/on speech input/output, keyboard shortcut P
+            accesskey:P
             onclick
 
               /*
-               * Figuring out if we should pause or restart.
+               * Toggles speech input/output.
                */
-              if
-                magic-menu.speech.is-enabled
+              magic-menu.speech.toggle
+
+            events
+
+
+              /*
+               * Toggles speech input/output.
+               */
+              magic-menu.speech.toggle
 
                 /*
-                 * Disabling speech input.
+                 * Figuring out if we should pause or restart.
                  */
-                magic-menu.speech.turn-off
+                if
+                  magic-menu.speech.is-enabled
 
-              else
+                  /*
+                   * Disabling speech input.
+                   */
+                  magic-menu.speech.turn-off
 
-                /*
-                 * Enabling speech input.
-                 */
-                magic-menu.speech.turn-on
+                else
+
+                  /*
+                   * Enabling speech input.
+                   */
+                  magic-menu.speech.turn-on
+
 
             widgets
               literal
@@ -90,24 +136,21 @@ create-event:magic-menu.start
 
                     /*
                      * When speech is by default disabled for user, we automatically
-                     * show our options, since no other input elements exists.
+                     * show our options by default, since no other UI exists, and 
+                     * not showing the options for such scenarios, would highly likely
+                     * not make much sense.
                      */
                     magic-menu.options.show
 
-                    /*
-                     * We also "toggle" our "Help" button, since options are being shown.
-                     */
-                    micro.css.add:magic-menu-show-options-button
-                      class:toggled
-
                 events
+
 
                   /*
                    * Turns off speech, both input and output.
                    *
-                   * Notice, this only updates our GUI, since the actual persisting
-                   * of whether or not speech is enabled or not, is being done in a
-                   * global Active Event.
+                   * Notice, this only updates our GUI, and stops our "input loop", 
+                   * since the actual persisting of whether or not speech is enabled 
+                   * or not, is being done in a global Active Event.
                    */
                   magic-menu.speech.turn-off
 
@@ -137,12 +180,13 @@ create-event:magic-menu.start
                     micro.css.add:magic-menu-show-options-button
                       class:toggled
 
+
                   /*
                    * Turns on speech, both input and output.
                    *
-                   * Notice, this only updates our GUI, since the actual persisting
-                   * of whether or not speech is enabled or not, is being done in a
-                   * global Active Event.
+                   * Notice, this only updates our GUI, and stops our "input loop", 
+                   * since the actual persisting of whether or not speech is enabled 
+                   * or not, is being done in a global Active Event.
                    */
                   magic-menu.speech.turn-on
 
@@ -168,8 +212,10 @@ create-event:magic-menu.start
           button:magic-menu-show-options-button
             style:"margin-bottom:0;"
             innerValue:@"<span class=""icon-question""></span>"
-            title:Show options
+            title:Help, or show options, keyboard shortcut H
+            accesskey:H
             events
+
 
               /*
                * Trapping when options are displayed, to make sure we toggle
@@ -184,15 +230,15 @@ create-event:magic-menu.start
                   class:toggled
 
                 /*
-                 * This might look funny, but since we're attaching ourselves to
-                 * an event that is already handled other places, which also
+                 * This might look weird, but since we're attaching ourselves to
+                 * an event that is already handled another place, which also
                  * is expected to return results to its caller, we'll need to
                  * make sure we return whatever that event returned.
-                 *
                  * Otherwise, we'll end up "swallowing" that return value, making
-                 * the event invocation return nothing.
+                 * the event invocation return null.
                  */
                 return:x:/../*/_arg?value
+
 
               /*
                * Trapping when options are hidden, to make sure we toggle
@@ -206,40 +252,49 @@ create-event:magic-menu.start
                 micro.css.delete:x:/../*/_event?value
                   class:toggled
 
+
             onclick
 
               /*
-               * Checking if widget exists already, and if so, we hide it.
+               * Checking if "Help" widget exists, and if so, we hide it, otherwise
+               * we display it.
                */
               if
-                fetch:x:/0/0?value
-                  widget-exists:magic-menu-help
+                magic-menu.options.exists
 
                 /*
-                 * Hides options for Magic menu, and deletes CSS "toggled" class
-                 * for button.
+                 * Hides options for Magic menu.
                  */
                 magic-menu.options.close
 
               else
 
                 /*
-                 * Showing options for Magic menu, and adds CSS "toggled" class
-                 * for button.
+                 * Showing options for Magic menu.
                  */
                 magic-menu.options.show
 
           button
             style:"margin-bottom:0;"
             innerValue:@"<span class=""icon-plus""></span>"
-            title:Teach computer phrase
+            title:Teach computer phrase, keyboard shortcut T
             visible:false
+            accesskey:T
             events
+
 
               /*
                * Event that displays our "create-command" button.
+               *
+               * Expects [_arg] being command to (optionally) be created by user.
                */
               magic-menu.display-create-command-button
+
+                /*
+                 * Sanity check.
+                 */
+                micro.lambda.contract.min:x:/..
+                  _arg:string
 
                 /*
                  * Simply making widget visible.
@@ -248,31 +303,48 @@ create-event:magic-menu.start
                   visible:true
                   .spoken:x:/../*/_arg?value
 
+
               /*
                * Event that hides our "create-command" button.
                */
               magic-menu.hide-create-command-button
 
                 /*
-                 * Simply making widget visible.
+                 * Simply making widget visible, and removing any reference to
+                 * previously spoken phrase.
                  */
                 set-widget-property:x:/../*/_event?value
                   visible:false
+                delete-widget-property:x:/../*/_event?value
+                  .spoken
+
 
             onclick
 
               /*
                * Invokes event responsible for creating a new association, making
                * sure we pass in proper arguments.
+               *
+               * First we retrieve what was spoken, and whether or not we have 
+               * a "grammar-position" or not.
                */
               get-widget-property:x:/../*/_event?value
                 .spoken
               magic-menu.grammar-position.get
+
+              /*
+               * Applying arguments to our [magic-menu.command.create] invocation.
+               */
               if:x:/@magic-menu.grammar-position.get?value
                 eval-x:x:/+/*/*
                 add:x:/../*/magic-menu.command.create
                   src
                     pos:x:/@magic-menu.grammar-position.get?value
+
+              /*
+               * Invoking event responsible for creating a new phrase to command 
+               * association.
+               */
               magic-menu.command.create:x:/@get-widget-property/*/*?value
 
               /*
@@ -287,14 +359,14 @@ create-event:magic-menu.start
           button
             style:"margin-bottom:0;"
             innerValue:@"<span class=""icon-cross""></span>"
-            title:Close Magic menu
-            accesskey:Q
+            title:Exit Magic menu, keyboard shortcut X
+            accesskey:X
             onclick
 
               /*
                * Closing Magic menu.
                */
-              magic-menu.stop
+              magic-menu.quit
 
   /*
    * Greets user, and asks for input.

@@ -1,6 +1,17 @@
 ﻿
 /*
  * Returns the localized specified phrase.
+ *
+ * Notice, this implies traversing our "language files", which can be found in
+ * the folder "/configuration/" for the specified [xxx] string, and returning
+ * the value of that ndoe back to caller.
+ *
+ * The language files are traversed as a tree structure, implying first looking
+ * for an exact match (e.g. "en-AU"), for then to look for the major 
+ * language (e.g. "en"), if the "en-AU" didn't exist, and defaulting to "en" if
+ * nothing was found for that language.
+ *
+ * TODO: Refactor, too much repetition.
  */
 create-event:magic-menu.language.get-localized-phrase
 
@@ -18,12 +29,54 @@ create-event:magic-menu.language.get-localized-phrase
         :x:/@magic-menu.settings.get-language/*/sublang?value
 
     /*
-     * Localized file exists.
+     * Localized file exists for "sublang".
      */
     load-file:@MAGIC/configuration/lang-{0}.hl
       :x:/@magic-menu.settings.get-language/*/sublang?value
-    return:x:/@load-file/*/*/\{0}?value
+
+    /*
+     * Checking if current phrase has been localised in "sublang" file.
+     */
+    if:x:/@load-file/*/*/\{0}?value
       :x:/../*/_arg?value
+
+      /*
+       * Current "sublang" file has a value for specified [_arg] value.
+       */
+      return:x:/@load-file/*/*/\{0}?value
+        :x:/../*/_arg?value
+
+    else-if
+      fetch:x:/0/0?value
+        file-exists:@MAGIC/configuration/lang-{0}.hl
+          :x:/@magic-menu.settings.get-language/*/lang?value
+
+      /*
+       * Localized file for major language exists.
+       */
+      load-file:@MAGIC/configuration/lang-{0}.hl
+        :x:/@magic-menu.settings.get-language/*/lang?value
+
+      /*
+       * Checking if current value has been localised in "major lang" file.
+       */
+      if:x:/@load-file/*/*/\{0}?value
+        :x:/../*/_arg?value
+
+        /*
+         * Current language has a value for specified [_arg] value.
+         */
+        return:x:/@load-file/*/*/\{0}?value
+          :x:/../*/_arg?value
+
+      else
+
+        /*
+         * Returning English value, if existing.
+         */
+        load-file:@MAGIC/configuration/lang-en.hl
+        return:x:/@load-file/*/*/\{0}?value
+          :x:/../*/_arg?value
 
   else
 
@@ -40,8 +93,27 @@ create-event:magic-menu.language.get-localized-phrase
        */
       load-file:@MAGIC/configuration/lang-{0}.hl
         :x:/@magic-menu.settings.get-language/*/lang?value
-      return:x:/@load-file/*/*/\{0}?value
+
+      /*
+       * Checking if value exists in "lang" file.
+       */
+      if:x:/@load-file/*/*/\{0}?value
         :x:/../*/_arg?value
+
+        /*
+         * Value found.
+         */
+        return:x:/@load-file/*/*/\{0}?value
+          :x:/../*/_arg?value
+
+      else
+
+        /*
+         * Returning English value, if existing.
+         */
+        load-file:@MAGIC/configuration/lang-en.hl
+        return:x:/@load-file/*/*/\{0}?value
+          :x:/../*/_arg?value
 
     else
 

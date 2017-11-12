@@ -5,13 +5,7 @@
 create-event:magic-menu.speech.turn-off
 
   /*
-   * Persisting "off" value in database for user.
+   * Persisting "off" value for user in settings.
    */
-  whoami
-  delete-data:x:/*/*/magic-menu.speech-is-disabled-{0}
-    :x:/@whoami/*/username?value
-  set:x:/+/*?name
-    src:magic-menu.speech-is-disabled-{0}
-      :x:/@whoami/*/username?value
-  insert-data
-    foo:bool:true
+  magic-menu.settings.set:speech-enabled
+    value:no

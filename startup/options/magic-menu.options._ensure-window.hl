@@ -18,6 +18,14 @@ create-event:magic-menu.options._ensure-window
   create-widget:magic-menu-help
     parent:magic-menu-help-wrapper
     class:magic-menu-help
+    events
+
+      /*
+       * Returns true if options are being displayed.
+       */
+      magic-menu.options.exists
+        return:bool:true
+
     widgets
       div
         class:strip fill magic-menu-options-pager-toolbar

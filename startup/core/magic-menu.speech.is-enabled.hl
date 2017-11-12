@@ -8,24 +8,9 @@ create-event:magic-menu.speech.is-enabled
    * Checking if speech is enabled, and returning accordingly true or 
    * false to caller.
    */
-  whoami
-  select-data:x:/*/*/magic-menu.speech-is-disabled-{0}
-    :x:/@whoami/*/username?value
-  if:x:/@select-data/*?value
-
-    /*
-     * Speech is disabled.
-     */
+  magic-menu.settings.get:speech-enabled
+    default:no
+  if:x:/@magic-menu.settings.get?value
+    =:no
     return:bool:false
-
-  else
-
-    /*
-     * Speech is enabled.
-     *
-     * Notice, speech is also enabled if there is no data entry for
-     * current user. Hence, it can also be the absence of a data entry
-     * that enables speech for current user.
-     */
-    return:bool:true
-
+  return:bool:true

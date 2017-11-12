@@ -1,6 +1,6 @@
 ﻿
 /*
- * Creates the event that sets the current position in our command hierarchy.
+ * Pushes the given [_arg] position (database ID) unto our "grammar-tree instruction pointer".
  *
  * Requires [_arg] being the database ID of a "command" from magic-menu.
  */
@@ -15,7 +15,7 @@ create-event:magic-menu.grammar-position.push
   /*
    * Retrieving current position, to see if specified position is the
    * same as our current position, and if it is, we don't evaluate the rest
-   * of our lambda, but return early instead.
+   * of our lambda, but return early instead, to avoid pushing the same ID twice.
    */
   magic-menu.grammar-position.get
   if:x:/@magic-menu.grammar-position.get?value

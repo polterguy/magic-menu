@@ -1,15 +1,15 @@
 ﻿
 /*
  * Creates our plugin Active Event, that initialized Magic menu, by creating
- * a "toolbar button" that allows us to start Magic menu.
+ * a "toolbar button", that allows us to start Magic menu.
  *
  * Notice, this button is only created if there exists a widget with a 
- * CSS class containing the string "toolbar" on the page, and the button 
+ * CSS class containing the CSS class "toolbar" on the page, and the button 
  * is automatically injected into the first matching widget.
  *
  * Notice, this toolbar button is also only created if user is logged in,
  * which implies that Magic menu is only available for "actual users" in
- * your system, and not guest accounts or guest visitors.
+ * your system, and not guest accounts, or random visitors that are not logged in.
  */
 create-event:desktop.plugins.post.create-toolbar-button
 
@@ -33,13 +33,33 @@ create-event:desktop.plugins.post.create-toolbar-button
     p5.web.include-css-file:@MAGIC/media/main.css
 
     /*
-     * Making sure we insert our widget as the second last widget into our "toolbar".
+     * Try to insert our widget as the second last widget into our "toolbar".
      */
     p5.web.widgets.get-children:x:/@p5.web.widgets.find-first-like/*/0?value
-    eval-x:x:/+/*/*
-    add:x:/./*/create-widget
-      src
-        before:x:/@p5.web.widgets.get-children/*/0/-?value
+
+    /*
+     * Checking if our toolbar actually had any children at all.
+     */
+    if:x:/@p5.web.widgets.get-children/*/*
+
+      /*
+       * Toolbar had children, adding our Magic menu button as the second 
+       * last button within it.
+       */
+      eval-x:x:/+/*/*
+      add:x:/././*/create-widget
+        src
+          before:x:/@p5.web.widgets.get-children/*/0/-?value
+
+    else
+
+      /*
+       * The toolbar had no children, simply appending Magic menu into it.
+       */
+      eval-x:x:/+/*/*
+      add:x:/././*/create-widget
+        src
+          parent:x:/@p5.web.widgets.find-first-like/*/*?value
 
     /*
      * Creating our button widget.
@@ -47,7 +67,7 @@ create-event:desktop.plugins.post.create-toolbar-button
     create-widget:magic-menu-start-button
       element:button
       class:magic-menu-start
-      title:Start Magic menu, shortcut M
+      title:Start Magic menu, keyboard shortcut M
       innerValue:@"<span class=""icon-magic-wand""></span>"
       accesskey:M
       oninit
@@ -63,7 +83,7 @@ create-event:desktop.plugins.post.create-toolbar-button
            * Starts Magic menu.
            */
           magic-menu.start
-            greeting:OK
+            greeting:[OK]
 
         /*
          * Clearing session variable, to avoid automatically starting it during

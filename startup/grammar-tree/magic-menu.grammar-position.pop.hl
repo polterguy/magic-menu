@@ -1,8 +1,8 @@
 ﻿
 /*
- * Creates the event that pops one position off from the hierarchy.
+ * Pops off one position from our "grammar-tree" hierarchy.
  *
- * Optionally pass in [_arg] being an integer value, to pop [_arg] number of
+ * Optionally pass in [_arg] being an integer value, to pop off [_arg] number of
  * positions in one invocation.
  */
 create-event:magic-menu.grammar-position.pop

@@ -1,8 +1,7 @@
 ﻿
 /*
- * Creates the event that sets the current position in our command hierarchy.
- *
- * Requires [_arg] being the database ID of a "command" from magic-menu.
+ * Clears "grammar-tree" position, meaning the position of our "instruction pointer" in
+ * our language hierarchy, or graph object/tree structure.
  */
 create-event:magic-menu.grammar-position.clear
 

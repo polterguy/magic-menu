@@ -12,7 +12,7 @@ create-event:magic-menu.settings.get
   micro.lambda.contract.min:x:/..
     _arg:string
   micro.lambda.contract.optional:x:/..
-    default:string
+    default
 
   /*
    * Retrieving settings for user.
