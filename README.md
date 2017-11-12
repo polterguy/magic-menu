@@ -34,24 +34,31 @@ how to navigate all your apps.
 
 As an additional bonus, the Magic menu can be set into accepting natural speech as input, and provide
 output with speech synthesis, allowing you to choose menu items by speaking e.g. _"Can you 
-search for something for me"_. Although these features are for all practical concerns limited
+search for something for me"_ - Although these features are for all practical concerns limited
 to Google Chrome, since this is the only browser that adequately implements the W3C Speech API.
 
-The Magic menu is easily edited through its administrative dashboard, which you can see an
-example of below.
+The Magic menu is easily edited through its administrative dashboard, which you can see a
+screenshot of below.
 
 ![alt screenshot](media/screenshots/screenshot-2.png)
 
 It is not entirely finished implemented, and should still be considered BETA technology.
 
 The Magic menu will automatically create a _"trigger button"_ in your app, if you have
-a widget in your form, with the CSS class of _"toolbar"_, and inject a button with a
-magic wand icon which you can see in the first screenshot above, which launches the menu.
+a widget in your app, with the CSS class of _"toolbar"_, and inject a button with a
+magic wand icon, which you can see in the first screenshot above, which launches the menu.
+It is doing this, by being a core Phosphorus Five plugin.
 
-It contains a very rich API though, to allow you to launch it yourself, or manipulate it
+It contains a very rich API, to allow you to launch it yourself, or manipulate it
 in any ways you see fit. If you choose to turn on voice recognition, you can completely
 control your app, using exclusively your voice, and the Magic menu will provide feedback
 to the user, using speech synthesis.
 
 Magic menu is localisable in any language your browser supports speech recognition for,
-and speech synthesis.
+and speech synthesis, and it is easily localisable. You can declare multiple phrases, words,
+and sentences, to trigger the same action. Allowing for having multiple similar phrases being
+used, to trigger the same Hyperlambda.
+
+Notice, it is probably most adequately used in combination with [Hypereval](https://github.com/polterguy/hypereval),
+since this allows you to create reusable snippets, making your actual menu snippets smaller,
+and DRY'er.
