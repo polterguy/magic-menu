@@ -1,0 +1,17 @@
+﻿
+/*
+ * Turns off speech for user.
+ */
+create-event:magic-menu.speech.turn-off
+
+  /*
+   * Persisting "off" value in database for user.
+   */
+  whoami
+  delete-data:x:/*/*/magic-menu.speech-is-disabled-{0}
+    :x:/@whoami/*/username?value
+  set:x:/+/*?name
+    src:magic-menu.speech-is-disabled-{0}
+      :x:/@whoami/*/username?value
+  insert-data
+    foo:bool:true

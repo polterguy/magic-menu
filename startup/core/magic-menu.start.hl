@@ -46,168 +46,119 @@ create-event:magic-menu.start
         widgets
           button
             style:"margin-bottom:0;"
-            title:Turns off speech
-            events
-
-              /*
-               * Returns true if speech is enabled, otherwise false.
-               */
-              magic-menu.speech-is-enabled
-
-                /*
-                 * Checking if speech is enabled.
-                 */
-                p5.web.widgets.get-children:x:/../*/_event?value
-                get-widget-property:x:/-/*/*?value
-                  class
-                if:x:/@get-widget-property/*/*?value
-                  =:icon-pause2
-
-                  /*
-                   * Speech is enabled.
-                   */
-                  return:bool:true
-
-                else
-
-                  /*
-                   * Speech is disabled.
-                   */
-                  return:bool:false
-
-              /*
-               * Turns off speech, both input and output
-               */
-              magic-menu.turn-off-speech
-
-                /*
-                 * Retrieving child, which contains either a microphone icon, or
-                 * a play icon, and determines if we should turn off speech according
-                 * to what icon is being displayed.
-                 */
-                p5.web.widgets.get-children:x:/../*/_event?value
-                get-widget-property:x:/-/*/*?value
-                  class
-                if:x:/@get-widget-property/*/*?value
-                  =:icon-pause2
-
-                  /*
-                   * Speech input/output needs to be disabled.
-                   *
-                   * Disabling "listening" class from main widget, changing icon
-                   * of our "pause button", and stops speech input/output.
-                   */
-                  micro.css.delete:magic-menu-listener
-                    class:magic-menu-listening
-                  set-widget-property:x:/@p5.web.widgets.get-children/*/*?value
-                    class:icon-mic
-                  micro.listen.stop
-                  micro.speak.stop
-
-                  /*
-                   * Notice, we also store in our p5.data database if speech is 
-                   * disabled for user, such that we remember the setting for
-                   * the next time Magic menu is launched.
-                   */
-                  whoami
-                  delete-data:x:/*/*/magic-menu.speech-is-disabled-{0}
-                    :x:/@whoami/*/username?value
-                  set:x:/+/*?name
-                    src:magic-menu.speech-is-disabled-{0}
-                      :x:/@whoami/*/username?value
-                  insert-data
-                    foo:bool:true
-
-                  /*
-                   * Notice, when speech is disabled, we make sure we show options
-                   * by default.
-                   */
-                  magic-menu.options.show
-
-              /*
-               * Turns on speech, both input and output
-               */
-              magic-menu.turn-on-speech
-
-                /*
-                 * Retrieving child, which contains either a microphone icon, or
-                 * a play icon, and determines if we should turn off speech according
-                 * to what icon is being displayed.
-                 */
-                p5.web.widgets.get-children:x:/../*/_event?value
-                get-widget-property:x:/-/*/*?value
-                  class
-                if:x:/@get-widget-property/*/*?value
-                  =:icon-mic
-
-                  /*
-                   * We should restart input loop.
-                   */
-                  set-widget-property:x:/@p5.web.widgets.get-children/*/*?value
-                    class:icon-pause2
-                  magic-menu.listen:[Talk to me]
-
-                  /*
-                   * Notice, we also store in our p5.data database if speech is 
-                   * disabled for user, hence we need to delete this setting, to
-                   * remember if speech is enabled if Magic menu is later launcehd.
-                   */
-                  whoami
-                  delete-data:x:/*/*/magic-menu.speech-is-disabled-{0}
-                    :x:/@whoami/*/username?value
-
+            title:Turns off or on speech input and output
             onclick
 
               /*
                * Figuring out if we should pause or restart.
                */
               if
-                magic-menu.speech-is-enabled
+                magic-menu.speech.is-enabled
 
                 /*
                  * Disabling speech input.
                  */
-                magic-menu.turn-off-speech
+                magic-menu.speech.turn-off
 
               else
 
                 /*
                  * Enabling speech input.
                  */
-                magic-menu.turn-on-speech
-
-            oninit
-
-              /*
-               * Figuring out if speech is enabled or disabled in database for
-               * current user.
-               */
-              whoami
-              select-data:x:/*/*/magic-menu.speech-is-disabled-{0}
-                :x:/@whoami/*/username?value
-              if:x:/@select-data/*?value
-
-                /*
-                 * Speech is by default disabled for current session.
-                 */
-                micro.css.delete:magic-menu-listener
-                  class:magic-menu-listening
-                p5.web.widgets.get-children:x:/../*/_event?value
-                set-widget-property:x:/@p5.web.widgets.get-children/*/*?value
-                  class:icon-mic
-
-                /*
-                 * When speech is by default disabled for user, we automatically
-                 * show our options, since no other input elements exists.
-                 */
-                magic-menu.options.show
-                micro.css.add:magic-menu-show-options-button
-                  class:toggled
+                magic-menu.speech.turn-on
 
             widgets
               literal
                 element:span
                 class:icon-pause2
+                oninit
+
+                  /*
+                   * Figuring out if speech is enabled or disabled for the current user.
+                   */
+                  if
+                    magic-menu.speech.is-enabled
+                    not
+
+                    /*
+                     * Speech is by default disabled for current session.
+                     */
+                    micro.css.delete:magic-menu-listener
+                      class:magic-menu-listening
+                    set-widget-property:x:/../*/_event?value
+                      class:icon-mic
+
+                    /*
+                     * When speech is by default disabled for user, we automatically
+                     * show our options, since no other input elements exists.
+                     */
+                    magic-menu.options.show
+
+                    /*
+                     * We also "toggle" our "Help" button, since options are being shown.
+                     */
+                    micro.css.add:magic-menu-show-options-button
+                      class:toggled
+
+                events
+
+                  /*
+                   * Turns off speech, both input and output.
+                   *
+                   * Notice, this only updates our GUI, since the actual persisting
+                   * of whether or not speech is enabled or not, is being done in a
+                   * global Active Event.
+                   */
+                  magic-menu.speech.turn-off
+
+                    /*
+                     * Updating CSS class for button and main widget.
+                     */
+                    micro.css.delete:magic-menu-listener
+                      class:magic-menu-listening
+                    set-widget-property:x:/../*/_event?value
+                      class:icon-mic
+
+                    /*
+                     * Stopping all speech, both input and output.
+                     */
+                    micro.listen.stop
+                    micro.speak.stop
+
+                    /*
+                     * Notice, when speech is disabled, we make sure we show options
+                     * by default.
+                     */
+                    magic-menu.options.show
+
+                    /*
+                     * We also "toggle" our "Help" button, since options are being shown.
+                     */
+                    micro.css.add:magic-menu-show-options-button
+                      class:toggled
+
+                  /*
+                   * Turns on speech, both input and output.
+                   *
+                   * Notice, this only updates our GUI, since the actual persisting
+                   * of whether or not speech is enabled or not, is being done in a
+                   * global Active Event.
+                   */
+                  magic-menu.speech.turn-on
+
+                    /*
+                     * Updating CSS class for button and main widget.
+                     */
+                    micro.css.add:magic-menu-listener
+                      class:magic-menu-listening
+                    set-widget-property:x:/../*/_event?value
+                      class:icon-pause2
+
+                    /*
+                     * Restarting input loop.
+                     */
+                    magic-menu.listen:[Talk to me]
+
 
           literal:magic-menu-current-text
             element:label
@@ -227,10 +178,20 @@ create-event:magic-menu.start
               magic-menu.options.show
 
                 /*
-                 * Making sure button becomes "toggled".
+                 * Making sure our "Help" button becomes "toggled".
                  */
                 micro.css.add:x:/../*/_event?value
                   class:toggled
+
+                /*
+                 * This might look funny, but since we're attaching ourselves to
+                 * an event that is already handled other places, which also
+                 * is expected to return results to its caller, we'll need to
+                 * make sure we return whatever that event returned.
+                 *
+                 * Otherwise, we'll end up "swallowing" that return value, making
+                 * the event invocation return nothing.
+                 */
                 return:x:/../*/_arg?value
 
               /*
@@ -240,7 +201,7 @@ create-event:magic-menu.start
               magic-menu.options.close
 
                 /*
-                 * Making sure button becomes "untoggled".
+                 * Making sure our "Help" button becomes "untoggled".
                  */
                 micro.css.delete:x:/../*/_event?value
                   class:toggled
@@ -338,4 +299,4 @@ create-event:magic-menu.start
   /*
    * Greets user, and asks for input.
    */
-  magic-menu.listen:x:(/../*/greeting|/@.defaults/*/greeting)/$?value
+  magic-menu.listen:x:/@magic-menu.unwrap-phrase?value

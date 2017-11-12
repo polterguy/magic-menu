@@ -1,0 +1,15 @@
+﻿
+/*
+ * Turns on speech for user.
+ */
+create-event:magic-menu.speech.turn-on
+
+  /*
+   * Removing persisting of "off" value in database for user.
+   *
+   * Notice, speech is enabled by default, hence to enable it, simply implies
+   * removing the database "off" value for user.
+   */
+  whoami
+  delete-data:x:/*/*/magic-menu.speech-is-disabled-{0}
+    :x:/@whoami/*/username?value

@@ -425,7 +425,7 @@ return:bool:false
                      */
                     magic-menu.hide-create-command-button
                     if
-                      magic-menu.speech-is-enabled
+                      magic-menu.speech.is-enabled
 
                       /*
                        * Speech is enabled.

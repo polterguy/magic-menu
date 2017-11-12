@@ -32,7 +32,7 @@ create-event:magic-menu._listen
    * Checking if speech is enabled, and if not, returning early.
    */
   if
-    magic-menu.speech-is-enabled
+    magic-menu.speech.is-enabled
     not
 
     /*

@@ -43,7 +43,7 @@ create-event:magic-menu.speak
    * be spoken, and returning early.
    */
   if
-    magic-menu.speech-is-enabled
+    magic-menu.speech.is-enabled
     not
 
     /*
