@@ -81,4 +81,5 @@ to purely logically, have _"discussions"_ with your application, and creating wi
 steps in execution, where the evaluation of some step, is dependent upon the results
 of the evaluation of a previous step. The Magic menu is in such a regard, in fact a
 tree structure, the same way an execution tree is. Hence, in such a regard, it provides
-a _"bridge"_ between natural spoken language, and Hyperlambda.
+a _"bridge"_ between natural spoken language, and Hyperlambda, since both are effectively
+_"execution trees"_.
