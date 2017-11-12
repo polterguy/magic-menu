@@ -35,3 +35,9 @@ output with speech synthesis, allowing you to choose menu items by speaking e.g.
 search for something for me"_. Although these features are for all practical concerns limited
 to Google Chrome, since this is the only browser that adequately implements the W3C Speech API.
 
+The Magic menu is easily edited through its administrative dashboard, which you can see an
+example of below.
+
+![alt screenshot](media/screenshots/screenshot-2.png)
+
+It is not entirely finished implemented, and should still be considered BETA technology.
