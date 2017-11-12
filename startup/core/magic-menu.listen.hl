@@ -4,6 +4,9 @@
  *
  * Optionally pass in [_arg] being something to speak before listening is initiated,
  * and an [onfinish] lambda, to be invoked after something has been spoken.
+ *
+ * The default [onfinish], if none is given, will simply try to "handle" the spoken
+ * phrase as a command.
  */
 create-event:magic-menu.listen
 

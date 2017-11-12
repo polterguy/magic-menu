@@ -3,10 +3,12 @@
  * Invoked when Magic menu should speak something.
  *
  * Expects [_arg] to be whatever should be spoken, and [onfinish] being what to
- * do once content has been spoken.
+ * do once [_arg] has been spoken.
  *
  * Optionally, pass in [voice] to override the default voice to use, which is 
  * fetched from the user's settings.
+ *
+ * Notice, this event will apply all arguments, except [_arg], into [micro.speak].
  */
 create-event:magic-menu.speak
 
@@ -31,26 +33,26 @@ create-event:magic-menu.speak
     return
 
   /*
+   * Unwrapping any references in [_arg] given.
+   */
+  magic-menu.unwrap-phrase:x:/../*/_arg?value
+
+  /*
    * Checking if speech is enabled, and if not, evaluating any potential
-   * [onfinish] lambdas immediately, setting text to what was supposed to be spoken,
-   * and returning early.
+   * [onfinish] lambdas immediately, setting text to whatever was supposed to 
+   * be spoken, and returning early.
    */
   if
     magic-menu.speech-is-enabled
     not
 
     /*
-     * Speech is not enabled, evaluating [onfinish] if existing, updating text, 
+     * Speech is not enabled, updating text, evaluating [onfinish] if existing, 
      * and returning early.
      */
-    magic-menu.set-text:x:/../*/_arg?value
+    magic-menu.set-text:x:/@magic-menu.unwrap-phrase?value
     eval:x:/../*/onfinish
     return
-
-  /*
-   * Unwrapping any references in [_arg] given.
-   */
-  magic-menu.unwrap-phrase:x:/../*/_arg?value
 
   /*
    * Applies arguments, and adds [voice] unless an explicit voice was given as an argument.
@@ -70,10 +72,16 @@ create-event:magic-menu.speak
           :x:/@magic-menu.settings.get-language/*/voice?value
           :x:/@magic-menu.settings.get-language/*/lang?value
           :x:/@magic-menu.settings.get-language/*/sublang?value
+
+  /*
+   * Applying all arguments given to [micro.speak] except [_arg], which among 
+   * other things, also will apply [onfinish].
+   */
   add:x:/../*/micro.speak
     src:x:/@.signal/--(!/_arg)
 
   /*
-   * Speaks given [_arg], now "unwrapped" with any references, with our configured voice.
+   * Speaks given [_arg], now "unwrapped" with any references, with the 
+   * requested voice.
    */
   micro.speak:x:/@magic-menu.unwrap-phrase?value
