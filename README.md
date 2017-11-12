@@ -41,3 +41,15 @@ example of below.
 ![alt screenshot](media/screenshots/screenshot-2.png)
 
 It is not entirely finished implemented, and should still be considered BETA technology.
+
+The Magic menu will automatically create a _"trigger button"_ in your app, if you have
+a widget in your form, with the CSS class of _"toolbar"_, and inject a button with a
+magic wand icon which you can see in the first screenshot above, which launches the menu.
+
+It contains a very rich API though, to allow you to launch it yourself, or manipulate it
+in any ways you see fit. If you choose to turn on voice recognition, you can completely
+control your app, using exclusively your voice, and the Magic menu will provide feedback
+to the user, using speech synthesis.
+
+Magic menu is localisable in any language your browser supports speech recognition for,
+and speech synthesis.
