@@ -59,9 +59,9 @@ and speech synthesis, and it is easily localisable. You can declare multiple phr
 and sentences, to trigger the same action. Allowing for having multiple similar phrases being
 used, to trigger the same Hyperlambda.
 
-Notice, it is probably most adequately used in combination with [Hypereval](https://github.com/polterguy/hypereval),
-since this allows you to create reusable snippets, making your actual menu snippets smaller,
-and DRY'er.
+Notice, it is dependent upon [Hypereval](https://github.com/polterguy/hypereval),
+which allows you to create reusable snippets, making your actual menu snippets smaller,
+and DRY'er. It also depens upon the CodeMirror extension widget found in Hypereval.
 
 ## The tree structure
 
