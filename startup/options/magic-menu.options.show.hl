@@ -35,19 +35,71 @@ create-event:magic-menu.options.show
     limit:x:/@magic-menu.settings.get?value
 
   /*
+   * Finding our last "ul" widget, with correct class, to know which widget
+   * we should add our items into.
+   */
+  p5.web.widgets.find
+    element:ul
+    class:magic-menu-options
+
+  /*
+   * Checking if this is [is-push] invocation, at which point we change the CSS
+   * class of the existing widget, and create a new bulleted list, animating the 
+   * previous guy "off page", to give user a visual clue that this is another level.
+   */
+  if:x:/../*/is-push?value
+
+    /*
+     * Adding our "animation" CSS class to existing "ul" widget.
+     */
+    set-widget-property:x:/@p5.web.widgets.find/*/*?value
+      class:magic-menu-options-push
+
+    /*
+     * Creating a new widget to use as "host".
+     */
+    create-container-widget
+      after:x:/@p5.web.widgets.find/*/*?value
+      element:ul
+      class:magic-menu-options
+    set:x:/@p5.web.widgets.find/*/*?value
+      src:x:/@create-container-widget?value
+
+  /*
    * Parametrising and invoking event responsible for "data binding" options window.
    */
   add:x:/../*/magic-menu.options._create-options/*/options
     src:x:/@magic-menu.grammar-position.list-options/*
+  eval-x:x:/+/*/parent
   magic-menu.options._create-options
-    parent:magic-menu-help-list
+    parent:x:/@p5.web.widgets.find/*/*?value
     options
 
   /*
-   * Making sure we initialize options.
+   * Disabling "previous page" button.
    */
-  magic-menu.options._initialize:x:/@magic-menu.grammar-position.list-options/*?count
-    offset:int:0
+  set-widget-property:magic-menu-options-page-previous
+    disabled
+
+  /*
+   * Making sure we enable/disable next/previous buttons.
+   */
+  if:x:/@magic-menu.grammar-position.list-options/*?count
+    >=:x:/@magic-menu.settings.get?value.int
+
+    /*
+     * "Full page", enabling next pager button.
+     */
+    delete-widget-property:magic-menu-options-page-next
+      disabled
+
+  else
+
+    /*
+     * Not a "full page", disabling next pager button.
+     */
+    set-widget-property:magic-menu-options-page-next
+      disabled
 
   /*
    * Checking if there are any options, and returning accordingly to caller.
@@ -56,8 +108,10 @@ create-event:magic-menu.options.show
     =:int:0
 
     /*
-     * No options, returning "failure" to caller.
+     * No options, returning "failure" to caller, making sure we enable
+     * our "create new command" button.
      */
+    magic-menu.display-create-command-button
     return:bool:false
 
   else
@@ -65,4 +119,5 @@ create-event:magic-menu.options.show
     /*
      * Returning "success" to caller.
      */
+    magic-menu.hide-create-command-button
     return:bool:true

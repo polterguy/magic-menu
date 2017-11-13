@@ -74,6 +74,7 @@
     background-color:#fefefe;
     z-index:999;
     padding:.5rem;
+    overflow:hidden;
 }
 .magic-menu-listening {
     animation-name: magic-menu-listener;
@@ -93,8 +94,33 @@ label.magic-menu-tip {
 .magic-menu-tip:after {
     content:'\00bb';
 }
+@keyframes magic-menu-options {
+    0% {margin-left:-500px;}
+    100% {margin-left:0;}
+}
 .magic-menu-options {
     min-height:128px;
+    animation-name: magic-menu-options;
+    animation-duration: .3s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+@keyframes magic-menu-options-push {
+    0% {margin-left:0;}
+    100% {margin-left:-1000px;}
+}
+.magic-menu-options-push {
+    min-height: 128px;
+    animation-name: magic-menu-options-push;
+    animation-duration: .5s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+    position: absolute;
+    z-index: 1;
+    top: 38px;
+    width: calc(100% - 1rem);
 }
 .magic-menu-help .magic-menu-options-pager-toolbar button {
     height:30px;

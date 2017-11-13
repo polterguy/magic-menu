@@ -25,6 +25,33 @@ create-event:magic-menu.options._ensure-window
 
 
       /*
+       * Invoked when current options have changed.
+       */
+      magic-menu.position.changed
+
+        /*
+         * Simply re-displaying options will do the trick for us here.
+         *
+         * Making sure we forward [is-push] signal from caller.
+         */
+        if:x:/../*/is-push
+          add:x:/../*/magic-menu.options.show
+            src:x:/../*/is-push
+        magic-menu.options.show
+
+
+      /*
+       * Invoked when options should be refreshed for some reasons.
+       */
+      magic-menu.options.changed
+
+        /*
+         * Simply re-displaying options will do the trick for us here.
+         */
+        magic-menu.options.show
+
+
+      /*
        * Returns true if options are being displayed.
        */
       magic-menu.options.exists
@@ -100,20 +127,32 @@ create-event:magic-menu.options._ensure-window
         magic-menu.options.set-offset:x:/@-?value.int
 
         /*
+         * Finding our last "ul" widget, with correct class, to know which widget
+         * we should add our items into.
+         */
+        p5.web.widgets.find
+          element:ul
+          class:magic-menu-options
+
+        /*
          * Parametrising and invoking event responsible for "data binding" options window.
          */
         add:x:/../*/magic-menu.options._create-options/*/options
           src:x:/@magic-menu.grammar-position.list-options/*
+        eval-x:x:/+/*/parent
         magic-menu.options._create-options
-          parent:magic-menu-help-list
+          parent:x:/@p5.web.widgets.find/*/*?value
           options
 
         /*
-         * Making sure we initialize options.
+         * Making sure we enable/disable next/previous buttons.
          */
-        eval-x:x:/+/*
-        magic-menu.options._initialize:x:/@magic-menu.grammar-position.list-options/*?count
-          offset:x:/@-?value.int
+        if:x:/@-?value.int
+          =:int:0
+          set-widget-property:magic-menu-options-page-previous
+            disabled
+        delete-widget-property:magic-menu-options-page-next
+          disabled
 
         /*
          * Returning success to caller.
@@ -173,11 +212,14 @@ create-event:magic-menu.options._ensure-window
           return:bool:false
 
         /*
-         * Making sure we initialize options.
+         * Making sure we enable/disable next/previous buttons.
          */
-        eval-x:x:/+/*
-        magic-menu.options._initialize:x:/@magic-menu.grammar-position.list-options/*?count
-          offset:x:/@+?value.int
+        if:x:/@magic-menu.grammar-position.list-options/*?count
+          <:x:/@magic-menu.settings.get?value.int
+          set-widget-property:magic-menu-options-page-next
+            disabled
+        delete-widget-property:magic-menu-options-page-previous
+          disabled
 
         /*
          * We have more options, first updating "current page" value.
@@ -185,12 +227,21 @@ create-event:magic-menu.options._ensure-window
         magic-menu.options.set-offset:x:/@+?value
 
         /*
+         * Finding our last "ul" widget, with correct class, to know which widget
+         * we should add our items into.
+         */
+        p5.web.widgets.find
+          element:ul
+          class:magic-menu-options
+
+        /*
          * Parametrising and invoking event responsible for "data binding" options window.
          */
         add:x:/../*/magic-menu.options._create-options/*/options
           src:x:/@magic-menu.grammar-position.list-options/*
+        eval-x:x:/+/*/parent
         magic-menu.options._create-options
-          parent:magic-menu-help-list
+          parent:x:/@p5.web.widgets.find/*/*?value
           options
 
         /*
@@ -423,37 +474,6 @@ create-event:magic-menu.options._ensure-window
           button:magic-menu-options-page-previous
             innerValue:@"<span class=""icon-arrow-left""></span>"
             disabled
-            events
-
-
-              /*
-               * Invoked when options are initialized initially.
-               *
-               * Expects [offset] integer value, being database offset.
-               */
-              magic-menu.options._initialize
-
-                /*
-                 * Checking if there are any reasons to display our "next button".
-                 */
-                if:x:/../*/offset?value.int
-                  =:int:0
-
-                  /*
-                   * Hiding "previous" button.
-                   */
-                  set-widget-property:x:/../*/_event?value
-                    disabled
-
-                else
-
-                  /*
-                   * Showing "previous" button.
-                   */
-                  delete-widget-property:x:/../*/_event?value
-                    disabled
-
-
             onclick
 
               /*
@@ -464,40 +484,6 @@ create-event:magic-menu.options._ensure-window
           button:magic-menu-options-page-next
             innerValue:@"<span class=""icon-arrow-right""></span>"
             disabled
-            events
-
-
-              /*
-               * Invoked when options are initialized initially.
-               *
-               * Expects integer value, being number of options widget initially
-               * were given.
-               */
-              magic-menu.options._initialize
-
-                /*
-                 * Checking if there are any reasons to display our "next button".
-                 */
-                magic-menu.settings.get:no-options
-                  default:5
-                if:x:/../*/_arg?value.int
-                  =:x:/@magic-menu.settings.get?value.int
-
-                  /*
-                   * Showing "next" button.
-                   */
-                  delete-widget-property:x:/../*/_event?value
-                    disabled
-
-                else
-
-                  /*
-                   * Hiding widget.
-                   */
-                  set-widget-property:x:/../*/_event?value
-                    disabled
-
-
             onclick
 
               /*
@@ -522,29 +508,6 @@ create-event:magic-menu.options._ensure-window
             clear-widget:x:/../*/_event?value
 
 
-      container:magic-menu-help-list
+      container
         element:ul
         class:magic-menu-options
-        events
-
-
-          /*
-           * Invoked when current options have changed.
-           */
-          magic-menu.position.changed
-
-            /*
-             * Simply re-displaying options will do the trick for us here.
-             */
-            magic-menu.options.show
-
-
-          /*
-           * Invoked when options should be refreshed for some reasons.
-           */
-          magic-menu.options.changed
-
-            /*
-             * Simply re-displaying options will do the trick for us here.
-             */
-            magic-menu.options.show

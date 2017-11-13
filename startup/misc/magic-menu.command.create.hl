@@ -427,7 +427,6 @@ return:bool:false
                      *
                      * Notice, we don't restart input loop, unless speach is enabled.
                      */
-                    magic-menu.hide-create-command-button
                     if
                       magic-menu.speech.is-enabled
 
@@ -436,10 +435,3 @@ return:bool:false
                        */
                       magic-menu.listen:[Talk to me]
                       magic-menu.set-text:[Talk to me]
-
-                    else
-
-                      /*
-                       * Speech is not enabled.
-                       */
-                      magic-menu.set-text

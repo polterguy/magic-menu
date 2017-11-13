@@ -34,8 +34,7 @@ create-event:magic-menu.grammar-position.push
   add:x:/../*/p5.web.viewstate.set/*/*
     src:x:/@p5.web.viewstate.get/*/*/*
   add:x:/../*/p5.web.viewstate.set/*/*
-    src:":{0}"
-      :x:/../*/_arg?value
+    src:x:/../*/_arg?value
   p5.web.viewstate.set:magic-menu.position
     src
       positions
@@ -44,3 +43,4 @@ create-event:magic-menu.grammar-position.push
    * Posting "changed" event.
    */
   magic-menu.position.changed
+    is-push:bool:true
