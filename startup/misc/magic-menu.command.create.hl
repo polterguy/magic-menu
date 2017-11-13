@@ -1,7 +1,9 @@
 ﻿
 /*
- * Creates the event that allows the user to configure a phrase to a piece of
- * Hyperlambda. User is expected to be "root" to be allowed evaluating this lambda.
+ * Allows the user to configure a phrase to a piece of Hyperlambda that will be 
+ * evaluated once the phrase is uttered or selected somehow.
+ *
+ * User is expected to be "root" to be allowed evaluating this lambda.
  *
  * Event will create a modal widget, allowing user to create a new command.
  *

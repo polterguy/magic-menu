@@ -27,6 +27,12 @@ create-event:magic-menu.command.handle
     throw:Supply either [_arg] or [id], and not both.
 
   /*
+   * Stopping speech engine.
+   */
+  micro.speak.stop
+  micro.listen.stop
+
+  /*
    * Checking if anything was given, and if not, restarting listening loop.
    */
   if:x:/../*/_arg?value

@@ -22,13 +22,23 @@ create-event:magic-menu.options._create-options
        * Invokes command with specified commands ID, making sure we stop speech
        * engine first, to avoid "race conditions".
        */
-      micro.speak.stop
-      micro.listen.stop
       get-widget-property:x:/../*/_event?value
         .id
+
+      /*
+       * Evaluating command.
+       */
       eval-x:x:/+/*
       magic-menu.command.handle
         id:x:/@get-widget-property/*/*?value
+
+      /*
+       * Removing filter, if there is any.
+       *
+       * Notice, since we do this after evaluating command, the command can actually
+       * use the filter value for something, if it wants to.
+       */
+      magic-menu.options.set-filter
 
   /*
    * Sanity checking arguments.

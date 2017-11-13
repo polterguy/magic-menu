@@ -82,6 +82,13 @@ create-event:magic-menu.options.show-next
     options
 
   /*
+   * Making sure we initialize options.
+   */
+  eval-x:x:/+/*
+  magic-menu.options._initialize:x:/@magic-menu.grammar-position.list-options/*?count
+    offset:x:/@+?value.int
+
+  /*
    * Returning success to caller.
    */
   return:bool:true

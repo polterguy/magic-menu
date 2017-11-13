@@ -54,20 +54,10 @@ create-event:magic-menu.options.show-previous
     offset:x:/@-?value.long
 
   /*
-   * Enabling disabling next/previous pager buttons.
-   */
-  delete-widget-property:magic-menu-options-page-next
-    disabled
-  if:x:/@-?value.int
-    =:int:0
-    set-widget-property:magic-menu-options-page-previous
-      disabled
-
-  /*
    * Updating "current page" value.
    */
   p5.web.viewstate.set:magic-menu.options.offset
-    src:x:/@-?value
+    src:x:/@-?value.int
 
   /*
    * Parametrising and invoking event responsible for "data binding" options window.
@@ -77,6 +67,13 @@ create-event:magic-menu.options.show-previous
   magic-menu.options._create-options
     parent:magic-menu-help-list
     options
+
+  /*
+   * Making sure we initialize options.
+   */
+  eval-x:x:/+/*
+  magic-menu.options._initialize:x:/@magic-menu.grammar-position.list-options/*?count
+    offset:x:/@-?value.int
 
   /*
    * Returning success to caller.

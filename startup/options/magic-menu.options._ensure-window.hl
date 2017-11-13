@@ -8,32 +8,59 @@ create-event:magic-menu.options._ensure-window
    * Checking if widget exists already, and if so, returning early.
    */
   if
-    fetch:x:/0/0?value
-      widget-exists:magic-menu-help
+    magic-menu.options.exists
+
+    /*
+     * Widget already exists, hence returning early.
+     */
     return
 
   /*
-   * Creates common helper window, that displays options.
+   * Creates widget that displays options.
    */
   create-widget:magic-menu-help
     parent:magic-menu-help-wrapper
     class:magic-menu-help
     events
 
+
       /*
        * Returns true if options are being displayed.
        */
       magic-menu.options.exists
+
+        /*
+         * Simply returning true, because event is a lambda event, and only 
+         * existing if widget exists.
+         */
         return:bool:true
+
+
+      /*
+       * Close options widget.
+       */
+      magic-menu.options.close
+
+        /*
+         * Simply deleting widget, will clean up everything for us automatically.
+         */
+        delete-widget:x:/../*/_event?value
+
 
     widgets
       div
         class:strip fill magic-menu-options-pager-toolbar
         widgets
+
+          /*
+           * Filter/search textbox.
+           */
           input:magic-menu-options-search-textbox
             type:text
+            title:Search for commands, keyboard shortcut S
             placeholder:Search ...
             class:smaller
+            accesskey:S
             oninit
 
               /*
@@ -42,6 +69,7 @@ create-event:magic-menu.options._ensure-window
               p5.web.viewstate.set:magic-menu.options-filter
 
             events
+
 
               /*
                * Returns the current filter to caller.
@@ -54,80 +82,194 @@ create-event:magic-menu.options._ensure-window
                 p5.web.viewstate.get:magic-menu.options-filter
                 return:x:/@p5.web.viewstate.get/*?value
 
+
+              /*
+               * Sets the current filter to given [_arg], if any.
+               */
+              magic-menu.options.set-filter
+
+                /*
+                 * Retrieving filter, to see if anything was actually changed, to
+                 * shave off a couple of CPU cycles in case filter wasn't changed.
+                 */
+                magic-menu.options.get-filter
+                if:x:/@magic-menu.options.get-filter?value
+                  =:x:/../*/_arg?value
+
+                  /*
+                   * No reasons to proceed.
+                   */
+                  return
+
+                /*
+                 * Checking if caller supplied a filter at all, and if not, simply
+                 * removing any existing filters.
+                 */
+                if:x:/../*/_arg?value
+
+                  /*
+                   * Updating filter.
+                   */
+                  p5.web.viewstate.set:magic-menu.options-filter
+                    src:x:/../*/_arg?value
+
+                else
+
+                  /*
+                   * Clearing filter.
+                   */
+                  p5.web.viewstate.set:magic-menu.options-filter
+
+                /*
+                 * Changing textbox' value to whatever was given, if anything.
+                 */
+                set-widget-property:x:/../*/_event?value
+                  value:x:/../*/_arg?value
+
+                /*
+                 * Re-databinding our options widget, since filter has been updated.
+                 */
+                magic-menu.options.show
+
+
             onkeydown:@"if (event.keyCode == 13) {p5.$('magic-menu-options-search-textbox').raise('.onsearch');return false;}"
             .onsearch
 
               /*
-               * Making sure we store current filter in ViewState
+               * Making sure we store current filter, and invoke event responsible
+               * for actually handling filtering.
                */
               get-widget-property:magic-menu-options-search-textbox
                 value
-              if:x:/@get-widget-property/*/*?value
-                =:
-
-                /*
-                 * Filter was cleared.
-                 */
-                p5.web.viewstate.set:magic-menu.options-filter
-                set-widget-property:magic-menu-options-search-clear
-                  disabled
-
-              else
-
-                /*
-                 * Some filter was supplied.
-                 */
-                p5.web.viewstate.set:magic-menu.options-filter
-                  src:x:/@get-widget-property/*/*?value
-                delete-widget-property:magic-menu-options-search-clear
-                  disabled
+              magic-menu.options.set-filter:x:/@get-widget-property/*/*?value
 
               /*
-               * Reloading options, now with filter (or with filter removed).
-               *
-               * Notice, if filter yields zero results, we assume user wants to
-               * possibly create a new command, and hence we enable our "create new
-               * command button".
+               * Making sure we set focus to "filter" textbox, to make it easier
+               * to perform consecutive filterings/searches.
                */
-              magic-menu.options.show
-              if:x:/@magic-menu.options.show?value
-                =:bool:true
-
-                /*
-                 * Disabling "create new command button".
-                 */
-                magic-menu.hide-create-command-button
-
-              else
-
-                /*
-                 * Enabling "create new command button".
-                 */
-                magic-menu.set-text:x:/@get-widget-property/*/*?value
-                magic-menu.display-create-command-button:x:/@get-widget-property/*/*?value
-
               micro.page.set-focus:x:/../*/_event?value
+
+          button:magic-menu-options-go-back
+            innerValue:@"<span class=""icon-reply""></span>"
+            title:Go back to previous level, keyboard shortcut P
+            accesskey:P
+            disabled
+            events
+
+
+              /*
+               * Handled to make sure we hide/show "go back" button.
+               */
+              magic-menu.position.changed
+
+                /*
+                 * Checking if we have a current "grammar-position", and if not,
+                 * we hide widget entirely.
+                 */
+                magic-menu.grammar-position.get
+                if:x:/@magic-menu.grammar-position.get?value
+
+                  /*
+                   * We have a current "grammar-position", making sure we display
+                   * "back button".
+                   */
+                  delete-widget-property:x:/../*/_event?value
+                    disabled
+
+                else
+
+                  /*
+                   * No current "grammar-position", hiding "back button".
+                   */
+                  set-widget-property:x:/../*/_event?value
+                    disabled
+
+
+            onclick
+
+              /*
+               * Popping off option.
+               *
+               * Notice, this will indirectly refresh our options, so there's
+               * no point in doing anything else here.
+               */
+              magic-menu.grammar-position.pop
 
           button:magic-menu-options-search-clear
             innerValue:@"<span class=""icon-cross""></span>"
             disabled
+            events
+
+
+              /*
+               * Handled to make sure we show/hide "clear filter" button.
+               */
+              magic-menu.options.set-filter
+
+                /*
+                 * If we have no filter, we hide the button, otherwise we show it.
+                 */
+                if:x:/../*/_arg?value
+                  and:x:/../*/_arg?value
+                    !=:
+
+                  /*
+                   * Showing button.
+                   */
+                  delete-widget-property:x:/../*/_event?value
+                    disabled
+
+                else
+
+                  /* 
+                   * Hiding button.
+                   */
+                  set-widget-property:x:/../*/_event?value
+                    disabled
+
+
             onclick
 
               /*
-               * Removes current filter, and re-databinds options.
+               * Removes current filter, and sets focus to "filter" textbox.
                */
-              p5.web.viewstate.set:magic-menu.options-filter
-              magic-menu.options.show
-              set-widget-property:x:/../*/_event?value
-                disabled
-              set-widget-property:magic-menu-options-search-textbox
-                value:
+              magic-menu.options.set-filter
               micro.page.set-focus:magic-menu-options-search-textbox
-              magic-menu.hide-create-command-button
 
           button:magic-menu-options-page-previous
             innerValue:@"<span class=""icon-arrow-left""></span>"
             disabled
+            events
+
+
+              /*
+               * Invoked when options are initialized initially.
+               *
+               * Expects [offset] integer value, being database offset.
+               */
+              magic-menu.options._initialize
+
+                /*
+                 * Checking if there are any reasons to display our "next button".
+                 */
+                if:x:/../*/offset?value.int
+                  =:int:0
+
+                  /*
+                   * Hiding "previous" button.
+                   */
+                  set-widget-property:x:/../*/_event?value
+                    disabled
+
+                else
+
+                  /*
+                   * Showing "previous" button.
+                   */
+                  delete-widget-property:x:/../*/_event?value
+                    disabled
+
+
             onclick
 
               /*
@@ -137,6 +279,41 @@ create-event:magic-menu.options._ensure-window
 
           button:magic-menu-options-page-next
             innerValue:@"<span class=""icon-arrow-right""></span>"
+            disabled
+            events
+
+
+              /*
+               * Invoked when options are initialized initially.
+               *
+               * Expects integer value, being number of options widget initially
+               * were given.
+               */
+              magic-menu.options._initialize
+
+                /*
+                 * Checking if there are any reasons to display our "next button".
+                 */
+                magic-menu.settings.get:no-options
+                  default:5
+                if:x:/../*/_arg?value.int
+                  =:x:/@magic-menu.settings.get?value.int
+
+                  /*
+                   * Showing "next" button.
+                   */
+                  delete-widget-property:x:/../*/_event?value
+                    disabled
+
+                else
+
+                  /*
+                   * Hiding widget.
+                   */
+                  set-widget-property:x:/../*/_event?value
+                    disabled
+
+
             onclick
 
               /*
@@ -149,25 +326,6 @@ create-event:magic-menu.options._ensure-window
         class:magic-menu-custom-options
         events
 
-          /*
-           * Invoked when current options have changed.
-           */
-          magic-menu.position.changed
-
-            /*
-             * Simply re-displaying options will do the trick for us here.
-             */
-            magic-menu.options.show
-
-          /*
-           * Invoked when options should be refreshed for some reasons.
-           */
-          magic-menu.options.changed
-
-            /*
-             * Simply re-displaying options will do the trick for us here.
-             */
-            magic-menu.options.show
 
           /*
            * Helper active event to clear custom options
@@ -179,6 +337,30 @@ create-event:magic-menu.options._ensure-window
              */
             clear-widget:x:/../*/_event?value
 
+
       container:magic-menu-help-list
         element:ul
         class:magic-menu-options
+        events
+
+
+          /*
+           * Invoked when current options have changed.
+           */
+          magic-menu.position.changed
+
+            /*
+             * Simply re-displaying options will do the trick for us here.
+             */
+            magic-menu.options.show
+
+
+          /*
+           * Invoked when options should be refreshed for some reasons.
+           */
+          magic-menu.options.changed
+
+            /*
+             * Simply re-displaying options will do the trick for us here.
+             */
+            magic-menu.options.show
