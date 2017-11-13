@@ -29,3 +29,4 @@ create-event:magic-menu.grammar-position.clear
    * Posting "changed" event.
    */
   magic-menu.position.changed
+    is-clear:bool:true

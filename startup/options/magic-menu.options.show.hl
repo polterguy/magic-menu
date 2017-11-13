@@ -48,6 +48,8 @@ create-event:magic-menu.options.show
    * previous guy "off page", to give user a visual clue that this is another level.
    */
   if:x:/../*/is-push?value
+    or:x:/../*/is-pop?value
+    or:x:/../*/is-clear?value
 
     /*
      * Adding our "animation" CSS class to existing "ul" widget.

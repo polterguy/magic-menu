@@ -66,3 +66,4 @@ create-event:magic-menu.grammar-position.pop
    * Posting "changed" event.
    */
   magic-menu.position.changed
+    is-pop:bool:true

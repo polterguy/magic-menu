@@ -34,9 +34,8 @@ create-event:magic-menu.options._ensure-window
          *
          * Making sure we forward [is-push] signal from caller.
          */
-        if:x:/../*/is-push
-          add:x:/../*/magic-menu.options.show
-            src:x:/../*/is-push
+        add:x:/../*/magic-menu.options.show
+          src:x:/../*(/is-push|/is-pop|/is-clear)
         magic-menu.options.show
 
 
