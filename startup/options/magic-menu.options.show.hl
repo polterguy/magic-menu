@@ -113,7 +113,8 @@ create-event:magic-menu.options.show
      * No options, returning "failure" to caller, making sure we enable
      * our "create new command" button.
      */
-    magic-menu.display-create-command-button
+    magic-menu.options.get-filter
+    magic-menu.display-create-command-button:x:/@magic-menu.options.get-filter?value
     return:bool:false
 
   else
