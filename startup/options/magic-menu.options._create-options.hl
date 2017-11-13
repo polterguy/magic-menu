@@ -9,6 +9,9 @@
  * Optionally pass in boolean [onclick] to have a custom onclick event occur 
  * when item is clicked, instead of the default, which will raise the command
  * associated with the phrases' ID.
+ *
+ * Notice, this event is used internally to create both "default options", in
+ * addition to "custom options".
  */
 create-event:magic-menu.options._create-options
 

@@ -132,6 +132,38 @@ create-event:magic-menu.options._ensure-window
                 magic-menu.options.show
 
 
+              /*
+               * Returns the current "offset" to caller, if any.
+               */
+              magic-menu.options.get-offset
+
+                /*
+                 * Returning offset, as set in ViewState.
+                 */
+                p5.web.viewstate.get:magic-menu.options.offset
+                if:x:/@p5.web.viewstate.get/*?value
+                  not
+
+                  /*
+                   * No current offset, returning integer "0" to caller.
+                   */
+                  return:int:0
+
+                return:x:/@p5.web.viewstate.get/*?value
+
+
+              /*
+               * Sets the current "offset".
+               */
+              magic-menu.options.set-offset
+
+                /*
+                 * Sets offset in ViewState.
+                 */
+                p5.web.viewstate.set:magic-menu.options.offset
+                  src:x:/../*/_arg?value.long
+
+
             onkeydown:@"if (event.keyCode == 13) {p5.$('magic-menu-options-search-textbox').raise('.onsearch');return false;}"
             .onsearch
 

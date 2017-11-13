@@ -12,11 +12,11 @@ create-event:magic-menu.options.show
   /*
    * Clearing out "current page" viewstate value.
    */
-  p5.web.viewstate.set:magic-menu.options.offset
-    src:0
+  magic-menu.options.set-offset
 
   /*
-   * Checking if we have a filter condition.
+   * Checking if we have a filter condition, and if so, parametrising our
+   * "list options" invocation with our filter condition.
    */
   magic-menu.options.get-filter
   if:x:/@magic-menu.options.get-filter?value
@@ -25,7 +25,8 @@ create-event:magic-menu.options.show
         filter:x:/@magic-menu.options.get-filter?value
 
   /*
-   * Retrieves the first "n" options.
+   * Retrieves the first "n" options, according to how many options user wants
+   * to display at the same time.
    */
   magic-menu.settings.get:no-options
     default:5

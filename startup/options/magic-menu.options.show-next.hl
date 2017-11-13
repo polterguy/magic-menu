@@ -16,7 +16,8 @@ create-event:magic-menu.options.show-next
   magic-menu.options._ensure-window
 
   /*
-   * Checking if we have a filter condition.
+   * Checking if we have a filter condition, and if we do, we parametrise our
+   * "list options" invocation with it.
    */
   magic-menu.options.get-filter
   if:x:/@magic-menu.options.get-filter?value
@@ -29,8 +30,8 @@ create-event:magic-menu.options.show-next
    */
   magic-menu.settings.get:no-options
     default:5
-  p5.web.viewstate.get:magic-menu.options.offset
-  +:x:(/@p5.web.viewstate.get/*/magic-menu.options.offset|/@.defaults/*/magic-menu.options.offset)/$?value.long
+  magic-menu.options.get-offset
+  +:x:/@magic-menu.options.get-offset?value.int
     _:x:/@magic-menu.settings.get?value
 
   /*
@@ -42,21 +43,14 @@ create-event:magic-menu.options.show-next
     offset:x:/@+?value.long
 
   /*
-   * Checking if we should disable or enable the next button.
+   * Making sure we initialize options.
    */
-  delete-widget-property:magic-menu-options-page-previous
-    disabled
-  if:x:/@magic-menu.grammar-position.list-options/*?count
-    <:x:/@magic-menu.settings.get?value.int
-
-    /*
-     * No more next items.
-     */
-    set-widget-property:magic-menu-options-page-next
-      disabled
+  eval-x:x:/+/*
+  magic-menu.options._initialize:x:/@magic-menu.grammar-position.list-options/*?count
+    offset:x:/@+?value.int
 
   /*
-   *
+   * Checking if we have anymore options, and if not, simply returning early.
    */
   if:x:/@magic-menu.grammar-position.list-options/*?count
     =:int:0
@@ -69,8 +63,7 @@ create-event:magic-menu.options.show-next
   /*
    * We have more options, first updating "current page" value.
    */
-  p5.web.viewstate.set:magic-menu.options.offset
-    src:x:/@+?value
+  magic-menu.options.set-offset:x:/@+?value
 
   /*
    * Parametrising and invoking event responsible for "data binding" options window.
@@ -80,13 +73,6 @@ create-event:magic-menu.options.show-next
   magic-menu.options._create-options
     parent:magic-menu-help-list
     options
-
-  /*
-   * Making sure we initialize options.
-   */
-  eval-x:x:/+/*
-  magic-menu.options._initialize:x:/@magic-menu.grammar-position.list-options/*?count
-    offset:x:/@+?value.int
 
   /*
    * Returning success to caller.
