@@ -93,6 +93,9 @@ label.magic-menu-tip {
 .magic-menu-tip:after {
     content:'\00bb';
 }
+.magic-menu-options {
+    min-height:128px;
+}
 .magic-menu-help .magic-menu-options-pager-toolbar button {
     height:30px;
     width:35px;
