@@ -116,12 +116,19 @@ create-widget:magic-menu-main-container
                           innerValue:Select voice ...
                           value:_default
                         for-each:x:/../*/voices/*
+                          p5.globalization.get-language-name:x:/@_dp/#?value
+                          _local
+                          if:x:/@_dp/#/*/local?value.bool
+                            not
+                            set:x:/@_local?value
+                              src:", External service"
                           create-widget
                             parent:magic-menu-select-language
                             element:option
-                            innerValue:{0},{1}
+                            innerValue:{1}, {0}{2}
                               :x:/@_dp/#?name
-                              :x:/@_dp/#?value
+                              :x:/@p5.globalization.get-language-name?value
+                              :x:/@_local?value
                             value:{0},{1}
                               :x:/@_dp/#?name
                               :x:/@_dp/#?value
