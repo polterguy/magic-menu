@@ -45,7 +45,7 @@ p5.mysql.connect:[magic-menu]
     @id:x:/../*/id?value
   p5.mysql.select:@"select * from phrases where commandid = @commandid"
     @commandid:x:/./-/*/*/commandid?value
-  p5.mysql.select:@"select hyperlambda, parent, global, username from commands where id = @commandid"
+  p5.mysql.select:@"select hyperlambda, parent, global, username, global_id from commands where id = @commandid"
     @commandid:x:/./-2/*/*/commandid?value
 
 
@@ -148,7 +148,7 @@ create-widget
           widgets
             micro.widgets.wizard-form
               label
-                innerValue:Phrase(s)
+                innerValue:Command(s)
                 style:"margin-bottom:0;"
               br
               textarea
@@ -175,342 +175,369 @@ create-widget
                 title:If checked, this phrase and it associated lambda is private for your user, otherwise all users can use it
 
             div
-              class:right
+              class:strip fill
               widgets
-                div
-                  class:strip
-                  style:"display:inline-block;"
-                  widgets
-                    button
-                      innerValue:@"<span class=""icon-floppy-disk""></span>"
-                      title:Saves command object, and all associated synonyms
-                      style:"margin-bottom:0;"
-                      events
+                label
+                  innerValue:Global ID
+                input
+                  type:text
+                  .data-field:global_id
+                  placeholder:Global ID ...
+                  value:x:/@p5.mysql.connect/*/p5.mysql.select/[2,3]/*/*/global_id?value
+                button
+                  innerValue:@"<span class=""icon-floppy-disk""></span>"
+                  title:Saves command object, and all associated synonyms
+                  style:"margin-bottom:0;"
+                  events
 
-                        /*
-                         * Throws an exception if the specified language doesn't exist.
-                         */
-                        magic-menu._assume-language-exists
+                    /*
+                     * Throws an exception if the specified language doesn't exist.
+                     */
+                    magic-menu._assume-language-exists
 
-                          /*
-                           * Checking to see if the specified [_arg] language exists.
-                           */
-                          p5.web.session.get:micro.speak.query.voices
-                          if:x:/@p5.web.session.get/*/*/*/={0}
-                            :x:/../*/_arg?value
-                            not
-                            and:x:/@p5.web.session.get/*/*/*/=~{0}-
-                              :x:/../*/_arg?value
-                              not
-                            throw:'{0}' is not a supported language
-                              :x:/../*/_arg?value
+                      /*
+                       * Checking to see if the specified [_arg] language exists.
+                       */
+                      p5.web.session.get:micro.speak.query.voices
+                      if:x:/@p5.web.session.get/*/*/*/={0}
+                        :x:/../*/_arg?value
+                        not
+                        and:x:/@p5.web.session.get/*/*/*/=~{0}-
+                          :x:/../*/_arg?value
+                          not
+                        throw:'{0}' is not a supported language
+                          :x:/../*/_arg?value
 
-                      onclick
+                  onclick
 
-                        /*
-                         * Serializing form, and storing values into database.
-                         */
-                        p5.web.widgets.find-first-ancestor:x:/../*/_event?value
-                          .edit
-                        get-widget-property:x:/@p5.web.widgets.find-first-ancestor/*/*?value
-                          .edit
-                        micro.form.serialize:x:/@p5.web.widgets.find-first-ancestor/*/*?value
+                    /*
+                     * Serializing form, and storing values into database.
+                     */
+                    p5.web.widgets.find-first-ancestor:x:/../*/_event?value
+                      .edit
+                    get-widget-property:x:/@p5.web.widgets.find-first-ancestor/*/*?value
+                      .edit
+                    micro.form.serialize:x:/@p5.web.widgets.find-first-ancestor/*/*?value
 
-                        /*
-                         * Connecting to database, and doing updates.
-                         */
-                        try
-                          p5.mysql.connect:[magic-menu]
-                            p5.mysql.transaction.begin
+                    /*
+                     * Connecting to database, and doing updates.
+                     */
+                    try
 
-                              /*
-                               * Figuring out commandid.
-                               */
-                              p5.mysql.scalar:@"select commandid from phrases where id = @id"
-                                @id:x:/@get-widget-property/*/*?value
+                      /*
+                       * Sanity checking Global ID, defaulting its value to a random GUID.
+                       */
+                      if:x:/@micro.form.serialize/*/global_id?value
+                        =:
+                        set:x:/@micro.form.serialize/*/global_id?value
+                          p5.types.guid.new
+                      match:x:/@micro.form.serialize/*/global_id?value
+                        src:regex:/^[-a-z0-9_\.]{10,}$/i
+                      if:x:/@match/*
+                        not
+                        throw:Not a valid global ID, use only a-z, 0-9, -, _ or ., and use at least 10 characters
 
-                              /*
-                               * Deleting all "old" phrases.
-                               */
-                              p5.mysql.delete:@"delete from phrases where commandid = @commandid"
-                                @commandid:x:/@p5.mysql.scalar?value
-
-                              /*
-                               * Retrieving language for current user, which is necessary to filter our results.
-                               */
-                              magic-menu.settings.get-language
-
-                              /*
-                               * Inserting new phrases.
-                               */
-                              split:x:/@micro.form.serialize/*/synonyms?value
-                                =:"\r\n"
-                              _new-phrase-id
-                              p5.types.date.now
-                              for-each:x:/@split/*?name
-
-                                /*
-                                 * Checking if there's an explicit language for current entry, and if not, using default.
-                                 */
-                                split:x:/@_dp?value
-                                  =:":"
-                                if:x:/@split/*?count
-                                  =:int:2
-
-                                  /*
-                                   * Explicit language definition.
-                                   */
-                                  magic-menu._assume-language-exists:x:/@split/0?name
-                                  eval-x:x:/+/*/*
-                                  add:x:/..for-each/*/p5.mysql.insert
-                                    src
-                                      @command:x:/@split/0/-?name
-                                      @lang:x:/@split/0?name
-
-                                else-if:x:/@split/*?count
-                                  =:int:1
-
-                                  /*
-                                   * No explicit language definition, relying on default.
-                                   */
-                                  eval-x:x:/+/*/*
-                                  add:x:/..for-each/*/p5.mysql.insert
-                                    src
-                                      @command:x:/@_dp?value
-                                      @lang:x:/@magic-menu.settings.get-language/*/lang?value
-
-                                else
-
-                                  /*
-                                   * We found at least two ":" in phrase, which is not legal.
-                                   */
-                                  throw:@"You can only use ':' to separate between language and phrase"
-                                    :x:/@_dp?value
-
-                                /*
-                                 * Inserting into phrases, making sure we store database id for the
-                                 * first insertion, such that we can update our row's database reference.
-                                 */
-                                p5.mysql.insert:@"insert into phrases (command, lang, commandid, lastused) values (@command, @lang, @commandid, @lastused)"
-                                  @commandid:x:/@p5.mysql.scalar?value
-                                  @lastused:x:/@p5.types.date.now?value
-                                if:x:/@_new-phrase-id?value
-                                  not
-                                  set:x:/@_new-phrase-id?value
-                                    src:x:/@p5.mysql.insert/*/id?value
-
-                              /*
-                               * Saving actual command.
-                               */
-                              _username
-                              if:x:/@micro.form.serialize/*/private?value
-
-                                /*
-                                 * Command is private for currently logged in user.
-                                 */
-                                whoami
-                                set:x:/@_username?value
-                                  src:x:/@whoami/*/username?value
-                                
-
-                              p5.mysql.update:@"update commands set hyperlambda = @hyperlambda, global = @global, username = @username where id = @id"
-                                @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
-                                @global:x:/@micro.form.serialize/*/global?value
-                                @username:x:/@_username?value
-                                @id:x:/@p5.mysql.scalar?value
-
-                              /*
-                               * Committing transaction.
-                               */
-                              p5.mysql.transaction.commit
-
-                              /*
-                               * Giving user feedback.
-                               */
-                              micro.windows.info:Command successfully saved
-                                class:micro-windows-info success
-
-                              /*
-                               * Making sure we update database id for currently updated row.
-                               *
-                               * Both in the grid, and our editor.
-                               */
-                              p5.web.widgets.find
-                                .id:x:/../*/get-widget-property/*/*?value
-                              set-widget-property:x:/@p5.web.widgets.find/*/*?value
-                                .id:x:/@_new-phrase-id?value
-                              p5.web.widgets.find
-                                .edit:x:/../*/get-widget-property/*/*?value
-                              set-widget-property:x:/@p5.web.widgets.find/*/*?value
-                                .edit:x:/@_new-phrase-id?value
-
-                        catch
+                      /*
+                       * Connecting to database and updating command.
+                       */
+                      p5.mysql.connect:[magic-menu]
+                        p5.mysql.transaction.begin
 
                           /*
-                           * Oops ...!!
+                           * Figuring out commandid.
                            */
-                          micro.windows.info:x:/@message?value
-                            class:micro-windows-info warning
-
-                    button
-                      innerValue:@"<span class=""icon-plus""></span>"
-                      title:Creates a new child command
-                      style:"margin-bottom:0;"
-                      onclick
-
-                        /*
-                         * Invokes event responsible for creating a new phrase to command
-                         * association, passing in [pos] being currently edited command.
-                         *
-                         * First retrieving "phrase" id.
-                         */
-                        p5.web.widgets.find-first-ancestor:x:/../*/_event?value
-                          .edit
-                        get-widget-property:x:/@p5.web.widgets.find-first-ancestor/*/*?value
-                          .edit
-
-                        /*
-                         * Then we need to retrieve "command" id.
-                         */
-                        p5.mysql.connect:[magic-menu]
                           p5.mysql.scalar:@"select commandid from phrases where id = @id"
                             @id:x:/@get-widget-property/*/*?value
 
-                        /*
-                         * Then we invoke event that is responsible for creating a new phrase/command association,
-                         * making sure we pass in [pos] to explicitly override the default positioning logic.
-                         */
-                        eval-x:x:/+/*
-                        magic-menu.command.create:New child command
-                          pos:x:/@p5.mysql.connect/*/p5.mysql.scalar?value
-                          force-parent:bool:true
+                          /*
+                           * Updating Global ID.
+                           */
+                          p5.mysql.update:@"update commands set global_id = @global_id where id = @id"
+                            @global_id:x:/@micro.form.serialize/*/global_id?value
+                            @id:x:/@p5.mysql.scalar?value
 
-                    button
-                      innerValue:@"<span class=""icon-spinner11""></span>"
-                      title:Clones the given command
-                      style:"margin-bottom:0;"
-                      onclick
+                          /*
+                           * Deleting all "old" phrases.
+                           */
+                          p5.mysql.delete:@"delete from phrases where commandid = @commandid"
+                            @commandid:x:/@p5.mysql.scalar?value
 
-                        /*
-                         * Invokes event responsible for creating a new phrase to command
-                         * association, passing in [pos] being currently edited command.
-                         *
-                         * First retrieving "phrase" id.
-                         */
-                        p5.web.widgets.find-first-ancestor:x:/../*/_event?value
-                          .edit
-                        get-widget-property:x:/@p5.web.widgets.find-first-ancestor/*/*?value
-                          .edit
+                          /*
+                           * Retrieving language for current user, which is necessary to filter our results.
+                           */
+                          magic-menu.settings.get-language
 
-                        /*
-                         * Then we need to retrieve "command" id.
-                         */
-                        p5.mysql.connect:[magic-menu]
-                          p5.mysql.select:@"select parent, hyperlambda, global, username from commands where id in (select commandid from phrases where id = @id)"
-                            @id:x:/@get-widget-property/*/*?value
+                          /*
+                           * Inserting new phrases.
+                           */
+                          split:x:/@micro.form.serialize/*/synonyms?value
+                            =:"\r\n"
+                          _new-phrase-id
+                          p5.types.date.now
+                          for-each:x:/@split/*?name
 
-                        /*
-                         * Then we invoke event that is responsible for creating a new phrase/command association,
-                         * making sure we pass in [pos] to explicitly override the default positioning logic, but only
-                         * if current command actually has a parent.
-                         */
-                        if:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/parent?value
-                          add:x:/../*/magic-menu.command.create
-                            src
-                              pos:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/parent?value
-                        if:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/global?value.int
-                          =:int:1
-                          add:x:/../*/magic-menu.command.create
-                            src
-                              global:bool:true
-                        if:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/username?value
-                          not
-                          add:x:/../*/magic-menu.command.create
-                            src
-                              private:bool:false
-                        eval-x:x:/+/*
-                        magic-menu.command.create:New cloned command
-                          hyperlambda:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/hyperlambda?value
-                          force-parent:bool:true
+                            /*
+                             * Checking if there's an explicit language for current entry, and if not, using default.
+                             */
+                            split:x:/@_dp?value
+                              =:":"
+                            if:x:/@split/*?count
+                              =:int:2
 
-                    button
-                      innerValue:@"<span class=""icon-bin""></span>"
-                      title:Deletes command object, and all associated synonyms
-                      style:"margin-bottom:0;"
-                      onclick
+                              /*
+                               * Explicit language definition.
+                               */
+                              magic-menu._assume-language-exists:x:/@split/0?name
+                              eval-x:x:/+/*/*
+                              add:x:/..for-each/*/p5.mysql.insert
+                                src
+                                  @command:x:/@split/0/-?name
+                                  @lang:x:/@split/0?name
 
-                        /*
-                         * Asks user to confirm deletion using a modal widget.
-                         */
-                        p5.web.widgets.find-first-ancestor:x:/../*/_event?value
-                          .edit
-                        get-widget-property:x:/-/*/*?value
-                          .edit
-                        eval-x:x:/+/**/.id
-                        create-widgets
-                          micro.widgets.modal:magic-menu-confirm-deletion-modal
+                            else-if:x:/@split/*?count
+                              =:int:1
+
+                              /*
+                               * No explicit language definition, relying on default.
+                               */
+                              eval-x:x:/+/*/*
+                              add:x:/..for-each/*/p5.mysql.insert
+                                src
+                                  @command:x:/@_dp?value
+                                  @lang:x:/@magic-menu.settings.get-language/*/lang?value
+
+                            else
+
+                              /*
+                               * We found at least two ":" in phrase, which is not legal.
+                               */
+                              throw:@"You can only use ':' to separate between language and phrase"
+                                :x:/@_dp?value
+
+                            /*
+                             * Inserting into phrases, making sure we store database id for the
+                             * first insertion, such that we can update our row's database reference.
+                             */
+                            p5.mysql.insert:@"insert into phrases (command, lang, commandid, lastused) values (@command, @lang, @commandid, @lastused)"
+                              @commandid:x:/@p5.mysql.scalar?value
+                              @lastused:x:/@p5.types.date.now?value
+                            if:x:/@_new-phrase-id?value
+                              not
+                              set:x:/@_new-phrase-id?value
+                                src:x:/@p5.mysql.insert/*/id?value
+
+                          /*
+                           * Saving actual command.
+                           */
+                          _username
+                          if:x:/@micro.form.serialize/*/private?value
+
+                            /*
+                             * Command is private for currently logged in user.
+                             */
+                            whoami
+                            set:x:/@_username?value
+                              src:x:/@whoami/*/username?value
+                            
+
+                          p5.mysql.update:@"update commands set hyperlambda = @hyperlambda, global = @global, username = @username where id = @id"
+                            @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
+                            @global:x:/@micro.form.serialize/*/global?value
+                            @username:x:/@_username?value
+                            @id:x:/@p5.mysql.scalar?value
+
+                          /*
+                           * Committing transaction.
+                           */
+                          p5.mysql.transaction.commit
+
+                          /*
+                           * Giving user feedback.
+                           */
+                          micro.windows.info:Command successfully saved
+                            class:micro-windows-info success
+
+                          /*
+                           * Making sure we update database id for currently updated row.
+                           *
+                           * Both in the grid, and our editor.
+                           */
+                          p5.web.widgets.find
+                            .id:x:/../*/get-widget-property/*/*?value
+                          set-widget-property:x:/@p5.web.widgets.find/*/*?value
+                            .id:x:/@_new-phrase-id?value
+                          p5.web.widgets.find
+                            .edit:x:/../*/get-widget-property/*/*?value
+                          set-widget-property:x:/@p5.web.widgets.find/*/*?value
+                            .edit:x:/@_new-phrase-id?value
+
+                    catch
+
+                      /*
+                       * Oops ...!!
+                       */
+                      micro.windows.info:x:/@message?value
+                        class:micro-windows-info warning
+
+                button
+                  innerValue:@"<span class=""icon-plus""></span>"
+                  title:Creates a new child command
+                  style:"margin-bottom:0;"
+                  onclick
+
+                    /*
+                     * Invokes event responsible for creating a new phrase to command
+                     * association, passing in [pos] being currently edited command.
+                     *
+                     * First retrieving "phrase" id.
+                     */
+                    p5.web.widgets.find-first-ancestor:x:/../*/_event?value
+                      .edit
+                    get-widget-property:x:/@p5.web.widgets.find-first-ancestor/*/*?value
+                      .edit
+
+                    /*
+                     * Then we need to retrieve "command" id.
+                     */
+                    p5.mysql.connect:[magic-menu]
+                      p5.mysql.scalar:@"select commandid from phrases where id = @id"
+                        @id:x:/@get-widget-property/*/*?value
+
+                    /*
+                     * Then we invoke event that is responsible for creating a new phrase/command association,
+                     * making sure we pass in [pos] to explicitly override the default positioning logic.
+                     */
+                    eval-x:x:/+/*
+                    magic-menu.command.create:New child command
+                      pos:x:/@p5.mysql.connect/*/p5.mysql.scalar?value
+                      force-parent:bool:true
+
+                button
+                  innerValue:@"<span class=""icon-spinner11""></span>"
+                  title:Clones the given command
+                  style:"margin-bottom:0;"
+                  onclick
+
+                    /*
+                     * Invokes event responsible for creating a new phrase to command
+                     * association, passing in [pos] being currently edited command.
+                     *
+                     * First retrieving "phrase" id.
+                     */
+                    p5.web.widgets.find-first-ancestor:x:/../*/_event?value
+                      .edit
+                    get-widget-property:x:/@p5.web.widgets.find-first-ancestor/*/*?value
+                      .edit
+
+                    /*
+                     * Then we need to retrieve "command" id.
+                     */
+                    p5.mysql.connect:[magic-menu]
+                      p5.mysql.select:@"select parent, hyperlambda, global, username from commands where id in (select commandid from phrases where id = @id)"
+                        @id:x:/@get-widget-property/*/*?value
+
+                    /*
+                     * Then we invoke event that is responsible for creating a new phrase/command association,
+                     * making sure we pass in [pos] to explicitly override the default positioning logic, but only
+                     * if current command actually has a parent.
+                     */
+                    if:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/parent?value
+                      add:x:/../*/magic-menu.command.create
+                        src
+                          pos:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/parent?value
+                    if:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/global?value.int
+                      =:int:1
+                      add:x:/../*/magic-menu.command.create
+                        src
+                          global:bool:true
+                    if:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/username?value
+                      not
+                      add:x:/../*/magic-menu.command.create
+                        src
+                          private:bool:false
+                    eval-x:x:/+/*
+                    magic-menu.command.create:New cloned command
+                      hyperlambda:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/hyperlambda?value
+                      force-parent:bool:true
+
+                button
+                  innerValue:@"<span class=""icon-bin""></span>"
+                  title:Deletes command object, and all associated synonyms
+                  style:"margin-bottom:0;"
+                  onclick
+
+                    /*
+                     * Asks user to confirm deletion using a modal widget.
+                     */
+                    p5.web.widgets.find-first-ancestor:x:/../*/_event?value
+                      .edit
+                    get-widget-property:x:/-/*/*?value
+                      .edit
+                    eval-x:x:/+/**/.id
+                    create-widgets
+                      micro.widgets.modal:magic-menu-confirm-deletion-modal
+                        widgets
+                          h3
+                            innerValue:Please confirm
+                          p
+                            innerValue:Are you sure you want to delete this command, and all its associated synonyms? This action is permanent.
+                          div
+                            class:right
                             widgets
-                              h3
-                                innerValue:Please confirm
-                              p
-                                innerValue:Are you sure you want to delete this command, and all its associated synonyms? This action is permanent.
                               div
-                                class:right
+                                class:strip
+                                style:"display:inline-block;"
                                 widgets
-                                  div
-                                    class:strip
-                                    style:"display:inline-block;"
-                                    widgets
-                                      button
-                                        innerValue:Yes
-                                        style:"margin-bottom:0;"
-                                        oninit
+                                  button
+                                    innerValue:Yes
+                                    style:"margin-bottom:0;"
+                                    oninit
 
-                                          /*
-                                           * Setting initial focus to "Yes" button.
-                                           */
-                                          micro.page.set-focus:x:/../*/_event?value
+                                      /*
+                                       * Setting initial focus to "Yes" button.
+                                       */
+                                      micro.page.set-focus:x:/../*/_event?value
 
-                                        onclick
+                                    onclick
 
-                                          /*
-                                           * Deleting command, and deleting row from grid.
-                                           */
-                                          .id:x:/../*/get-widget-property/*/*?value
-                                          p5.mysql.connect:[magic-menu]
-                                            p5.mysql.delete:@"delete from commands where id in (select commandid from phrases where id = @id)"
-                                              @id:x:/@.id?value
-                                          p5.web.widgets.find
-                                            .id:x:/@.id?value
-                                          delete-widget:x:/-/*/*?value
-                                          p5.web.widgets.find
-                                            .edit:x:/@.id?value
-                                          delete-widget:x:/-/*/*?value
+                                      /*
+                                       * Deleting command, and deleting row from grid.
+                                       */
+                                      .id:x:/../*/get-widget-property/*/*?value
+                                      p5.mysql.connect:[magic-menu]
+                                        p5.mysql.delete:@"delete from commands where id in (select commandid from phrases where id = @id)"
+                                          @id:x:/@.id?value
+                                      p5.web.widgets.find
+                                        .id:x:/@.id?value
+                                      delete-widget:x:/-/*/*?value
+                                      p5.web.widgets.find
+                                        .edit:x:/@.id?value
+                                      delete-widget:x:/-/*/*?value
 
-                                          /*
-                                           * Deletes modal widget.
-                                           */
-                                          delete-widget:magic-menu-confirm-deletion-modal
+                                      /*
+                                       * Deletes modal widget.
+                                       */
+                                      delete-widget:magic-menu-confirm-deletion-modal
 
-                                      button
-                                        innerValue:No
-                                        style:"margin-bottom:0;"
-                                        onclick
+                                  button
+                                    innerValue:No
+                                    style:"margin-bottom:0;"
+                                    onclick
 
-                                          /*
-                                           * Simply deletes modal widget.
-                                           */
-                                          delete-widget:magic-menu-confirm-deletion-modal
+                                      /*
+                                       * Simply deletes modal widget.
+                                       */
+                                      delete-widget:magic-menu-confirm-deletion-modal
 
-                    button
-                      innerValue:@"<span class=""icon-cross""></span>"
-                      title:Close editor for command object without saving
-                      style:"margin-bottom:0;"
-                      onclick
+                button
+                  innerValue:@"<span class=""icon-cross""></span>"
+                  title:Close editor for command object without saving
+                  style:"margin-bottom:0;"
+                  onclick
 
-                        /*
-                         * Simply deleting editor widget and row entirely.
-                         */
-                        p5.web.widgets.find-first-ancestor:x:/../*/_event?value
-                          .edit
-                        delete-widget:x:/@p5.web.widgets.find-first-ancestor/*/*?value
+                    /*
+                     * Simply deleting editor widget and row entirely.
+                     */
+                    p5.web.widgets.find-first-ancestor:x:/../*/_event?value
+                      .edit
+                    delete-widget:x:/@p5.web.widgets.find-first-ancestor/*/*?value

@@ -422,11 +422,12 @@ create-event:magic-menu.options._ensure-window
             onclick
 
               /*
-               * Popping off option.
+               * Popping off option, making sure we delete our filter in the process.
                *
                * Notice, this will indirectly refresh our options, so there's
                * no point in doing anything else here.
                */
+              magic-menu.options.set-filter
               magic-menu.grammar-position.pop
 
           button:magic-menu-options-search-clear

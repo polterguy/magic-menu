@@ -99,9 +99,9 @@ label.magic-menu-tip {
     100% {margin-left:0;}
 }
 .magic-menu-options {
-    min-height:128px;
+    min-height:144px;
     animation-name: magic-menu-options;
-    animation-duration: .3s;
+    animation-duration: .2s;
     animation-iteration-count: 1;
     animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
@@ -111,9 +111,9 @@ label.magic-menu-tip {
     100% {margin-left:-1000px;}
 }
 .magic-menu-options-push {
-    min-height: 128px;
+    min-height: 144px;
     animation-name: magic-menu-options-push;
-    animation-duration: .5s;
+    animation-duration: .2s;
     animation-iteration-count: 1;
     animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
@@ -145,7 +145,10 @@ label.magic-menu-tip {
     border:solid var(--border-width) var(--wid-border-col);
     border-top-color:rgba(0,0,0,.02);
     border-bottom:none;
-    padding:.2rem;
+}
+.magic-menu-help ul li a {
+    padding:.3rem;
+    padding-left:1rem;
 }
 .magic-menu-help ul li:first-child {
     border-top-left-radius:var(--border-radius);
