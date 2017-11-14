@@ -162,7 +162,7 @@ where id in (select min(id) from phrases where (lang = @lang or lang = @sublang)
           widgets
             literal
               element:span
-              class:icon-check
+              class:icon-checkmark
 
     /*
      * Adding row to databind operation below.

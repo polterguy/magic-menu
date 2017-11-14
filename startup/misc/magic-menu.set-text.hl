@@ -33,6 +33,23 @@ create-event:magic-menu.set-text
       magic-menu.unwrap-phrase:x:/../*/_arg?value
 
       /*
+       * Checking if text is too long to display, at which point we cut it.
+       */
+      if
+        length:x:/@magic-menu.unwrap-phrase?value
+        >:int:57
+        split:x:/@magic-menu.unwrap-phrase?value
+          =:int:57
+        set-widget-property:magic-menu-current-text
+          title:x:/@magic-menu.unwrap-phrase?value
+        set:x:/@magic-menu.unwrap-phrase?value
+          src:{0} ...
+            :x:/@split/0?name
+      else
+        delete-widget-property:magic-menu-current-text
+          title
+
+      /*
        * Text was given.
        */
       set-widget-property:magic-menu-current-text
