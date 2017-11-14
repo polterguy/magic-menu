@@ -69,7 +69,7 @@ create-widget:magic-menu-main-container
       class:row
       widgets
         div
-          class:col-60 right
+          class:col-50 right
           widgets
             div
               class:strip fill
@@ -78,6 +78,42 @@ create-widget:magic-menu-main-container
                   type:text
                   placeholder:Filter ...
                   onkeydown:@"if (event.keyCode == 13) {p5.$('magic-menu-search-button').raise('onclick');return false;}"
+
+                button:magic-menu-search-button
+                  innerValue:@"<span class=""icon-search""></span>"
+                  title:Search
+                  onclick
+
+                    /*
+                     * Retrieving filter, and re-databinding grid, now with the specified filter condition.
+                     */
+                    get-widget-property:magic-menu-search-textbox
+                      value
+                    eval-x:x:/+/*
+                    micro.evaluate.file:@MAGIC/helpers/databind-grid.hl
+                      filter:x:/@get-widget-property/*/*?value
+
+                    /*
+                     * For simplicity, we set focus to search textbox again.
+                     */
+                    micro.page.set-focus:magic-menu-search-textbox
+
+                    /*
+                     * Making sure we store filter.
+                     */
+                    p5.web.viewstate.set:magic-menu.grid-filter
+                      src:x:/@get-widget-property/*/*?value
+
+                    /*
+                     * Enabling clear button, if we have a filter, otherwise disabling it.
+                     */
+                    if:x:/@get-widget-property/*/*?value
+                      !=:
+                      delete-widget-property:magic-menu-clear-search-button
+                        disabled
+                    else
+                      set-widget-property:magic-menu-clear-search-button
+                        disabled
 
                 button:magic-menu-clear-search-button
                   innerValue:@"<span class=""icon-cross""></span>"
@@ -156,42 +192,6 @@ create-widget:magic-menu-main-container
                      */
                     micro.evaluate.file:@MAGIC/helpers/databind-grid.hl
 
-                button:magic-menu-search-button
-                  innerValue:@"<span class=""icon-search""></span>"
-                  title:Search
-                  onclick
-
-                    /*
-                     * Retrieving filter, and re-databinding grid, now with the specified filter condition.
-                     */
-                    get-widget-property:magic-menu-search-textbox
-                      value
-                    eval-x:x:/+/*
-                    micro.evaluate.file:@MAGIC/helpers/databind-grid.hl
-                      filter:x:/@get-widget-property/*/*?value
-
-                    /*
-                     * For simplicity, we set focus to search textbox again.
-                     */
-                    micro.page.set-focus:magic-menu-search-textbox
-
-                    /*
-                     * Making sure we store filter.
-                     */
-                    p5.web.viewstate.set:magic-menu.grid-filter
-                      src:x:/@get-widget-property/*/*?value
-
-                    /*
-                     * Enabling clear button, if we have a filter, otherwise disabling it.
-                     */
-                    if:x:/@get-widget-property/*/*?value
-                      !=:
-                      delete-widget-property:magic-menu-clear-search-button
-                        disabled
-                    else
-                      set-widget-property:magic-menu-clear-search-button
-                        disabled
-
         div
           class:col right
           widgets
@@ -226,6 +226,72 @@ create-widget:magic-menu-main-container
                   innerValue:@"<span class=""icon-upload2""></span>"
                   title:Upload dictionary file
                   onclick:@"p5.dropzone.browse();event.stopPropagation(true);return false;"
+
+                button:magic-menu-delete-all-commands
+                  innerValue:@"<span class=""icon-bin""></span>"
+                  title:Deletes all commands
+                  onclick
+
+                    /*
+                     * Asking user to confirm action.
+                     */
+                    create-widgets
+                      micro.widgets.modal:magic-menu-delete-all-commands-modal
+                        widgets
+                          h3
+                            innerValue:Please confirm action
+                          p
+                            innerValue:Are you sure you want to do this? This action is permanent.
+                          div
+                            class:right
+                            widgets
+                              div
+                                class:strip
+                                style:"display:inline-block;"
+                                widgets
+                                  button
+                                    innerValue:No
+                                    style:"margin-bottom:0;"
+                                    oninit
+
+                                      /*
+                                       * Setting focus initially to "No" button.
+                                       */
+                                      micro.page.set-focus:x:/../*/_event?value
+
+                                    onclick
+
+                                      /*
+                                       * Simply closing modal widget.
+                                       */
+                                      delete-widget:magic-menu-delete-all-commands-modal
+
+                                  button
+                                    innerValue:Yes
+                                    style:"margin-bottom:0;"
+                                    onclick
+
+                                      /*
+                                       * Deleting all commands, and re-databinding grid.
+                                       */
+                                      p5.mysql.connect:[magic-menu]
+                                        p5.mysql.delete:@"delete from commands"
+
+                                      /*
+                                       * Re-databinding datagrid, and closing modal widget.
+                                       */
+                                      set-widget-property:magic-menu-search-textbox
+                                        value:
+                                      p5.web.widgets.ajax-events.raise:magic-menu-search-button
+                                        onclick
+                                      delete-widget:magic-menu-delete-all-commands-modal
+
+                                      /*
+                                       * Giving user some feedback.
+                                       */
+                                      micro.windows.info:All your commands was successfully deleted
+                                        class:micro-windows-info success
+
                 button
                   innerValue:@"<span class=""icon-home3""></span>"
                   title:Close Magic menu
