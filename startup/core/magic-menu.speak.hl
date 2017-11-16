@@ -8,7 +8,7 @@
  * Optionally, pass in [voice] to override the default voice to use, which is 
  * fetched from the user's settings.
  *
- * Notice, this event will apply all arguments, except [_arg], into [micro.speak].
+ * Notice, this event will apply all arguments, except [_arg], into [micro.speech.speak].
  */
 create-event:magic-menu.speak
 
@@ -66,7 +66,7 @@ create-event:magic-menu.speak
      */
     magic-menu.settings.get-language
     eval-x:x:/+/*/*
-    add:x:/../*/micro.speak
+    add:x:/../*/micro.speech.speak
       src
         voice:{0},{1}-{2}
           :x:/@magic-menu.settings.get-language/*/voice?value
@@ -74,14 +74,14 @@ create-event:magic-menu.speak
           :x:/@magic-menu.settings.get-language/*/sublang?value
 
   /*
-   * Applying all arguments given to [micro.speak] except [_arg], which among 
+   * Applying all arguments given to [micro.speech.speak] except [_arg], which among 
    * other things, also will apply [onfinish].
    */
-  add:x:/../*/micro.speak
+  add:x:/../*/micro.speech.speak
     src:x:/@.signal/--(!/_arg)
 
   /*
    * Speaks given [_arg], now "unwrapped" with any references, with the 
    * requested voice.
    */
-  micro.speak:x:/@magic-menu.unwrap-phrase?value
+  micro.speech.speak:x:/@magic-menu.unwrap-phrase?value

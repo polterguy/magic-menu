@@ -64,7 +64,7 @@ create-event:magic-menu.options._create-options
    * invocation.
    */
   add:x:/../*/for-each/*/create-widget/*/widgets/*/a
-    src:x:(/../*/onclick|/@.defaults/*/onclick)
+    src:x:(/../*/onclick|/@.defaults/*/onclick)/$
   for-each:x:/../*/options/*
 
     /*

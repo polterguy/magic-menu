@@ -138,7 +138,7 @@ create-widget:magic-menu-main-container
                      * Selecting all supported languages, which depends upon
                      * your browser's supported speech languages.
                      */
-                    micro.speak.query-voices
+                    micro.speech.speak.query-voices
                       onfinish
 
                         /*

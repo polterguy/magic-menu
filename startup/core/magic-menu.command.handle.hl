@@ -29,8 +29,7 @@ create-event:magic-menu.command.handle
   /*
    * Stopping speech engine.
    */
-  micro.speak.stop
-  micro.listen.stop
+  micro.speech.stop
 
   /*
    * Checking if anything was given, and if not, restarting listening loop.
@@ -49,6 +48,12 @@ create-event:magic-menu.command.handle
     magic-menu.set-text:[Waiting]
     magic-menu.listen
     return
+
+  /*
+   * Deletes the visual clue, indicating we're listening for input.
+   */
+  micro.css.delete:magic-menu-listener
+    class:magic-menu-listening
 
   /*
    * Necessary to parametrise SQL.

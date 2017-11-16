@@ -56,6 +56,7 @@ create-event:magic-menu.start
         /*
          * Speaks "Goodbye" and deletes widget.
          */
+        micro.speech.stop
         magic-menu.speak:[Goodbye]
         delete-widget:x:/../*/_event?value
 
@@ -165,8 +166,7 @@ create-event:magic-menu.start
                     /*
                      * Stopping all speech, both input and output.
                      */
-                    micro.listen.stop
-                    micro.speak.stop
+                    micro.speech.stop
 
                     /*
                      * Notice, when speech is disabled, we make sure we show options
@@ -353,8 +353,7 @@ create-event:magic-menu.start
                */
               micro.css.delete:magic-menu-listener
                 class:magic-menu-listening
-              micro.listen.stop
-              micro.speak.stop
+              micro.speech.stop
 
           button
             style:"margin-bottom:0;"

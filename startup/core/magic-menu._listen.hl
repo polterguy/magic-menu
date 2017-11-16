@@ -54,7 +54,7 @@ create-event:magic-menu._listen
   /*
    * Applying [onfinish], or default implementation if none was given.
    */
-  add:x:/../*/micro.listen/*/onfinish/*/.lambda
+  add:x:/../*/micro.speech.listen/*/onfinish/*/.lambda
     src:x:(/../*/onfinish|/@.defaults/*/onfinish)/$/*
 
   /*
@@ -63,7 +63,7 @@ create-event:magic-menu._listen
    * Making sure we evaluate [onfinish] inside a try/catch block.
    */
   eval-x:x:/+/*/lang
-  micro.listen
+  micro.speech.listen
     lang:x:/@magic-menu.settings.get-language/*/lang?value
     onfinish
 
