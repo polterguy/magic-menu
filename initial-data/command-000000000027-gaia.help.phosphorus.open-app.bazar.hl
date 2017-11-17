@@ -9,7 +9,7 @@ else
   p5.web.set-location:/bazar
   return:bool:false"
   global:uint:0
-  global-id:gaia.help.phosphorus.open-app.camphora
+  global-id:gaia.help.phosphorus.open-app.bazar
   parent:gaia.help.phosphorus.open-app
   phrase
     command:The Bazar

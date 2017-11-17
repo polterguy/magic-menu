@@ -1,0 +1,18 @@
+command
+  hyperlambda:@"magic-menu.options.show
+magic-menu.listen:OK
+return:bool:false"
+  global:uint:1
+  global-id:gaia.misc.show-options
+  phrase
+    command:Show options
+    lang:en
+  phrase
+    command:Show help
+    lang:en
+  phrase
+    command:Help
+    lang:en
+  phrase
+    command:Options
+    lang:en

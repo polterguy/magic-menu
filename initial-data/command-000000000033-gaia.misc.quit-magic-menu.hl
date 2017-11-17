@@ -1,0 +1,10 @@
+command
+  hyperlambda:magic-menu.quit
+  global:uint:1
+  global-id:gaia.misc.quit-magic-menu
+  phrase
+    command:Goodbye
+    lang:en
+  phrase
+    command:Quit
+    lang:en

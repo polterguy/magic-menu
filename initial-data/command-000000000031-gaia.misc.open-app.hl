@@ -1,0 +1,15 @@
+command
+  hyperlambda:@"magic-menu.command.evaluate:gaia.help.phosphorus.open-app
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.misc.open-app
+  phrase
+    command:Open application
+    lang:en
+  phrase
+    command:Open app
+    lang:en
+  phrase
+    command:Open an app
+    lang:en

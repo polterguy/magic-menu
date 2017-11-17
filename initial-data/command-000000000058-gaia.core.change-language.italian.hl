@@ -1,0 +1,12 @@
+command
+  hyperlambda:@"magic-menu.settings.set-language:Alice,it-IT
+magic-menu.listen:[OK]
+magic-menu.grammar-position.pop
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.core.change-language.italian
+  parent:gaia.core.change-language
+  phrase
+    command:Italian
+    lang:en

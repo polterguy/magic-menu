@@ -1,0 +1,11 @@
+command
+  hyperlambda:@"magic-menu.listen:What language do you want to switch to?
+"
+  global:uint:0
+  global-id:gaia.core.change-language
+  phrase
+    command:Change language
+    lang:en
+  phrase
+    command:Switch language
+    lang:en

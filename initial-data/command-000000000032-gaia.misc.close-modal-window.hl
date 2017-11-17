@@ -1,0 +1,25 @@
+command
+  hyperlambda:@"p5.web.widgets.find
+  data-window:modal
+if:x:/@p5.web.widgets.find/*/*?count
+  =:int:0
+  magic-menu.listen:There are no open windows.
+else
+  delete-widget:x:/@p5.web.widgets.find/*/*?value
+  magic-menu.listen
+return:bool:false
+"
+  global:uint:1
+  global-id:gaia.misc.close-modal-window
+  phrase
+    command:Close window
+    lang:en
+  phrase
+    command:Close windows
+    lang:en
+  phrase
+    command:Close modal windows
+    lang:en
+  phrase
+    command:Close modal window
+    lang:en

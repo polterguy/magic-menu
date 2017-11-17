@@ -1,0 +1,14 @@
+command
+  hyperlambda:@"magic-menu.listen:What language do you wish to translate to?
+"
+  global:uint:0
+  global-id:gaia.misc.translate
+  phrase
+    command:Translate something
+    lang:en
+  phrase
+    command:Translate text
+    lang:en
+  phrase
+    command:Translate sentence
+    lang:en

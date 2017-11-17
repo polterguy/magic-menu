@@ -1,0 +1,12 @@
+command
+  hyperlambda:@"magic-menu.settings.set-language:Kyoko,ja-JP
+magic-menu.listen:[OK]
+magic-menu.grammar-position.pop
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.core.change-language.japanese
+  parent:gaia.core.change-language
+  phrase
+    command:Japanese
+    lang:en

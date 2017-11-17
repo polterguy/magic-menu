@@ -1,0 +1,17 @@
+command
+  hyperlambda:@"p5.types.date.now
+  local:true
+p5.types.date.format:x:/-?value
+  format:D
+magic-menu.listen:It is {0}
+  :x:/@p5.types.date.format?value
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.misc.date
+  phrase
+    command:What date is it
+    lang:en
+  phrase
+    command:What's the date
+    lang:en

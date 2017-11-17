@@ -1,0 +1,15 @@
+command
+  hyperlambda:@"if
+  magic-menu.options.show-previous
+  magic-menu.listen:OK
+else
+  magic-menu.listen:There are no more previous options.
+return:bool:false"
+  global:uint:1
+  global-id:gaia.misc.show-previous-options
+  phrase
+    command:Show previous options
+    lang:en
+  phrase
+    command:Previous options
+    lang:en
