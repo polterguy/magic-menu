@@ -295,23 +295,21 @@ return:bool:false
                               /*
                                * Global command, implying no "parent" relationship.
                                */
-                              p5.types.guid.new
                               p5.mysql.insert:@"insert into commands (hyperlambda, username, global, global_id) values (@hyperlambda, @username, 1, @globalid)"
                                 @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
                                 @username:x:/@whoami/*/username?value
-                                @globalid:x:/@p5.types.guid.new?value.string
+                                @globalid:x:/@micro.form.serialize/*/global_id?value
 
                             else
 
                               /*
                                * Not a global command, inserting also "parent"
                                */
-                              p5.types.guid.new
                               p5.mysql.insert:@"insert into commands (hyperlambda, username, parent, global_id) values (@hyperlambda, @username, @parent, @globalid)"
                                 @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
                                 @username:x:/@whoami/*/username?value
                                 @parent:x:/@_pos?value
-                                @globalid:x:/@p5.types.guid.new?value.string
+                                @globalid:x:/@micro.form.serialize/*/global_id?value
 
                           else
 
@@ -323,10 +321,9 @@ return:bool:false
                               /*
                                * Global command, implying no "parent" relationship.
                                */
-                              p5.types.guid.new
                               p5.mysql.insert:@"insert into commands (hyperlambda, global, global_id) values (@hyperlambda, 1, @globalid)"
                                 @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
-                                @globalid:x:/@p5.types.guid.new?value.string
+                                @globalid:x:/@micro.form.serialize/*/global_id?value
 
                             else
 
