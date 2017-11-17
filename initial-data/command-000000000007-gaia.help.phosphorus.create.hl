@@ -1,0 +1,18 @@
+command
+  hyperlambda:@"magic-menu.listen:@""Although you could create any apps you want to in Phosphorus Five,
+it is optimised towards creating highly modularised web applications, where you have forms and data, 
+and rich interactions across your apps.""
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.phosphorus.create
+  parent:gaia.help.phosphorus
+  phrase
+    command:Which apps can I create with Phosphorus Five
+    lang:en
+  phrase
+    command:What apps can I create with Phosphorus Five
+    lang:en
+  phrase
+    command:What apps can I create
+    lang:en

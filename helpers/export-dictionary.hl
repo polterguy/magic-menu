@@ -119,8 +119,9 @@ p5.mysql.connect:[magic-menu]
      * the "child" command, which obviously would have created an exception.
      */
     lambda2hyper:x:/@.command/*
-    save-file:"~/temp/magic-menu/command-{0:000000000000}.hl"
+    save-file:"~/temp/magic-menu/command-{0:000000000000}-{1}.hl"
       :x:/@_dp/#/*/id?value
+      :x:/@_dp/#/*/global_id?value
       src:x:/@lambda2hyper?value
 
 

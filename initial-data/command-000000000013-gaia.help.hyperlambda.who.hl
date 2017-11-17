@@ -1,0 +1,16 @@
+command
+  hyperlambda:@"magic-menu.listen:@""Hyperlambda was invented and implemented by Thomas Hansen.""
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.hyperlambda.who
+  parent:gaia.help.hyperlambda
+  phrase
+    command:Who created Hyperlambda
+    lang:en
+  phrase
+    command:Who created Hyper lambda
+    lang:en
+  phrase
+    command:Who maintains Hyperlambda
+    lang:en

@@ -1,0 +1,18 @@
+command
+  hyperlambda:@"magic-menu.listen:@""What app do you want to open?""
+"
+  global:uint:0
+  global-id:gaia.help.phosphorus.open-app
+  parent:gaia.help.phosphorus
+  phrase
+    command:Can you open an app for me
+    lang:en
+  phrase
+    command:Can you open an application for me
+    lang:en
+  phrase
+    command:Open app
+    lang:en
+  phrase
+    command:Open application
+    lang:en

@@ -1,0 +1,44 @@
+command
+  hyperlambda:@"magic-menu.listen
+create-widgets
+  micro.widgets.modal:hyperlambda-example-modal-window
+    widgets
+      h3
+        innerValue:Hyperlambda Hello World
+      pre
+        innerValue:@""create-widget:my-button
+  element:button
+  innerValue:Click me
+  onclick
+    set-widget-property:my-button
+      innerValue:Hello World!""
+      button:my-button
+        innerValue:Click me
+        onclick
+          set-widget-property:my-button
+            innerValue:Hello World
+      div
+        class:right
+        widgets
+          button
+            innerValue:Close window
+            style:""margin-bottom:0;""
+            oninit
+              micro.page.set-focus:x:/../*/_event?value
+            onclick
+              delete-widget:hyperlambda-example-modal-window
+        
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.hyperlambda.example
+  parent:gaia.help.hyperlambda
+  phrase
+    command:Show me some Hyperlambda
+    lang:en
+  phrase
+    command:Can you show me some Hyperlambda
+    lang:en
+  phrase
+    command:Could you show me some Hyperlambda
+    lang:en

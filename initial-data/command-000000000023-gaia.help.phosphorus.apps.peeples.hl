@@ -1,0 +1,12 @@
+command
+  hyperlambda:@"magic-menu.listen:@""Peeples is the user management module for Phosphorus Five, and allows
+you to administrate your users in your server. It allows you to create new users, edit
+existing users, and delete users as you see fit.""
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.phosphorus.apps.peeples
+  parent:gaia.help.phosphorus.apps
+  phrase
+    command:What is Peeples
+    lang:en

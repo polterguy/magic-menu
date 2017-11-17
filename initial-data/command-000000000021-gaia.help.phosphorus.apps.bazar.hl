@@ -1,0 +1,14 @@
+command
+  hyperlambda:@"magic-menu.listen:@""The Bazar is the integrated AppStore in Phosphorus Five, and allows you
+to install new applications. It is created as an Open Source module for Phosphorus Five,
+and such allows you to create and host your own Bazar, from where you can share your apps,
+either for gratis, or for a fee. It features integrated PayPal support, and makes it very
+easy to charge for your apps, if you wish.""
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.phosphorus.apps.bazar
+  parent:gaia.help.phosphorus.apps
+  phrase
+    command:What is the Bazar
+    lang:en

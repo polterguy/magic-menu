@@ -1,0 +1,11 @@
+command
+  hyperlambda:@"magic-menu.listen:@""Hyperlambda was created to facilitate for rapid application development, 
+particularly for creating web applications.""
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.hyperlambda.intentions
+  parent:gaia.help.hyperlambda
+  phrase
+    command:Why was Hyperlambda created
+    lang:en

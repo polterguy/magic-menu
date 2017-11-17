@@ -1,0 +1,9 @@
+command
+  hyperlambda:@"magic-menu.keep-alive.next-pageload
+p5.web.set-location:/sulphur-five"
+  global:uint:0
+  global-id:gaia.help.phosphorus.open-app.sulphur
+  parent:gaia.help.phosphorus.open-app
+  phrase
+    command:Sulphur Five
+    lang:en

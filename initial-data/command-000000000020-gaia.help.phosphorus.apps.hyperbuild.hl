@@ -1,0 +1,11 @@
+command
+  hyperlambda:@"magic-menu.listen:@""Hyperbuild is a build system for Phosphorus Five, that allows you to
+rapidly replicate your system, and create your own distributions.""
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.phosphorus.apps.hyperbuild
+  parent:gaia.help.phosphorus.apps
+  phrase
+    command:What is Hyperbuild
+    lang:en

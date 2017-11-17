@@ -1,0 +1,12 @@
+command
+  hyperlambda:@"magic-menu.listen:@""Managed Ajax is a web application development technology, which creates a full stack environment for 
+creating rich web apps. It allows you to create server side code, and let the Managed Ajax framework automatically take care of all
+mapping between the server and your clients.""
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.phosphorus.what-managed-ajax
+  parent:gaia.help.phosphorus
+  phrase
+    command:What is Managed Ajax
+    lang:en

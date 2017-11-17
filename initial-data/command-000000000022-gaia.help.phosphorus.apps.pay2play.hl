@@ -1,0 +1,16 @@
+command
+  hyperlambda:@"magic-menu.listen:@""Pay2Play is a publishing system for writing and publishing books and
+other types of online material, such as learning material for instance. It features integrated
+PayPal support, and makes it very easy for you to create your own content, and charge
+for access to it.""
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.phosphorus.apps.pay2play
+  parent:gaia.help.phosphorus.apps
+  phrase
+    command:What is Pay2Play
+    lang:en
+  phrase
+    command:What is pay to play
+    lang:en

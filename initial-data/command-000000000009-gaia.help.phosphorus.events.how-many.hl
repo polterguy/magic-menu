@@ -1,0 +1,11 @@
+command
+  hyperlambda:@"vocabulary
+magic-menu.listen:@""In your current installation, I found {0} Active Events. Do you want me to list some of them?""
+  :x:/@vocabulary/*?count
+"
+  global:uint:0
+  global-id:gaia.help.phosphorus.events.how-many
+  parent:gaia.help.phosphorus.events
+  phrase
+    command:How many Active Events are there in Phosphorus Five
+    lang:en

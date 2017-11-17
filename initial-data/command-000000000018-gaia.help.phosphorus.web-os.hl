@@ -1,0 +1,14 @@
+command
+  hyperlambda:@"magic-menu.listen:@""A web operating system is an operating system that allows you to 
+control your online life, by giving you all the applications you would normally need to 
+use online services to access, having full control over your own data, and how it is used.
+It becomes an extension to your normal desktop operating system, and provides a virtual
+desktop environment for you.""
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.phosphorus.web-os
+  parent:gaia.help.phosphorus
+  phrase
+    command:What is a web operating system
+    lang:en

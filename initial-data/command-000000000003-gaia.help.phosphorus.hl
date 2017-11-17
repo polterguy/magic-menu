@@ -1,0 +1,8 @@
+command
+  hyperlambda:@"magic-menu.listen:@""Phosphorus Five is a web operating system, that allows for rapid web application development.
+It is based upon Hyperlambda, Managed Ajax, and Active Events."""
+  global:uint:0
+  global-id:gaia.help.phosphorus
+  phrase
+    command:What is Phosphorus Five
+    lang:en

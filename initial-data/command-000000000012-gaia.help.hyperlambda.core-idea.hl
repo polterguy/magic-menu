@@ -1,0 +1,15 @@
+command
+  hyperlambda:@"magic-menu.listen:@""Hyperlambda is built upon the assumption that you don't need O O P,
+and that dynamic and functional programming languages, based upon passing around functionality as objects,
+is superior for creating rich functionality.""
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.hyperlambda.core-idea
+  parent:gaia.help.hyperlambda
+  phrase
+    command:What is the core idea of Hyperlambda
+    lang:en
+  phrase
+    command:What is the core idea of Hyper lambda
+    lang:en

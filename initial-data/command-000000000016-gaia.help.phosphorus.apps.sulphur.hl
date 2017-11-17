@@ -1,0 +1,12 @@
+command
+  hyperlambda:@"magic-menu.listen:@""Sulphur Five is a web based file sharing system, allowing you to securely share your files, with your friends and 
+colleagues. It was built as an alternative to DropBox and Google Disc, to facilitate for sharing your files, without anybody
+else being able to interfere with what you share, and with whom you share it with.""
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.phosphorus.apps.sulphur
+  parent:gaia.help.phosphorus.apps
+  phrase
+    command:What is Sulphur Five
+    lang:en

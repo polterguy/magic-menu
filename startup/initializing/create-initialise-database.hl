@@ -36,6 +36,23 @@ create table if not exists `phrases` (
 
 "
 
+    /*
+     * Checking if database is empty, and if so, doing the initial import of all items from
+     * our "/initial-data/" folder.
+     */
+    p5.mysql.scalar:@"select count(*) from commands"
+    if:x:/-?value.long
+      =:long:0
+
+      /*
+       * Iterating through each file in our "/initial-data/" folder, and importing it.
+       */
+      list-files:@MAGIC/initial-data/
+      for-each:x:/@list-files/*?name
+        eval-x:x:/+/*
+        micro.evaluate.file:@MAGIC/helpers/import-hyperlambda-file.hl
+          filename:x:/@_dp?value
+
 catch
 
   /*

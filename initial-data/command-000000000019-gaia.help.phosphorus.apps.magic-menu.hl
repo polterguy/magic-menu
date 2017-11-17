@@ -1,0 +1,13 @@
+command
+  hyperlambda:@"magic-menu.listen:@""The Magic menu is a plugin module, that works in all your Phosphorus Five
+applications, giving you a uniform experience across all your apps. I am a part of the Magic
+menu in fact, and you can optionally choose to interact with me, solely using
+your voice if you wish.""
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.phosphorus.apps.magic-menu
+  parent:gaia.help.phosphorus.apps
+  phrase
+    command:What is the Magic Menu
+    lang:en

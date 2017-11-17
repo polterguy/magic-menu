@@ -1,0 +1,11 @@
+command
+  hyperlambda:@"magic-menu.listen:@""Active Events is a design pattern, that allows you to invoke events
+across all traditional borders in system development.""
+
+"
+  global:uint:0
+  global-id:gaia.help.phosphorus.events
+  parent:gaia.help.phosphorus
+  phrase
+    command:What are Active Events
+    lang:en

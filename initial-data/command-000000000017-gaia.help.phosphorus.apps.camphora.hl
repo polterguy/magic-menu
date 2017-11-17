@@ -1,0 +1,13 @@
+command
+  hyperlambda:@"magic-menu.listen:@""Camphora Five is a web based CRUD application generator, that allows you
+to create CRUD apps, collecting end editing data, without having any previous coding experience.
+It was created to allow for anyone to create their own apps, to collect and organise their data,
+as they see fit themselves, without having to hire a system developer to do the job.""
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.phosphorus.apps.camphora
+  parent:gaia.help.phosphorus.apps
+  phrase
+    command:What is Camphora Five
+    lang:en

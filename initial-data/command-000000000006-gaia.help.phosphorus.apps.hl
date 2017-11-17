@@ -1,0 +1,13 @@
+command
+  hyperlambda:@"magic-menu.listen:@""The GaiaSoul suite contains a whole range of apps, solving all sorts
+of needs you might have. For instance, Sephia Five is a webmail system, with PGP cryptography.
+In addition to Sulphur Five, which allows you to securely share files, and Camphora Five, 
+which allows you to create your own CRUD apps.""
+return:bool:true
+"
+  global:uint:0
+  global-id:gaia.help.phosphorus.apps
+  parent:gaia.help.phosphorus
+  phrase
+    command:Which apps are there for Phosphorus Five
+    lang:en

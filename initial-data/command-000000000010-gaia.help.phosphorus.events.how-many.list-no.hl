@@ -1,0 +1,11 @@
+command
+  hyperlambda:@"magic-menu.listen
+magic-menu.grammar-position.pop
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.phosphorus.events.how-many.list-no
+  parent:gaia.help.phosphorus.events.how-many
+  phrase
+    command:No
+    lang:en

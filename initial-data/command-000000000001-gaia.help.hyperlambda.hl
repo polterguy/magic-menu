@@ -1,0 +1,10 @@
+command
+  hyperlambda:@"magic-menu.listen:@""Hyperlambda is a dynamic programming language implemented in C sharp.
+It has no syntax, but is based upon Active Events, invoking hooks in C sharp, passing in graph objects as arguments.""
+
+"
+  global:uint:0
+  global-id:gaia.help.hyperlambda
+  phrase
+    command:What is Hyperlambda
+    lang:en

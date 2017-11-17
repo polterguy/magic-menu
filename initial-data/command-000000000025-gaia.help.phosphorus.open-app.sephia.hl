@@ -1,0 +1,9 @@
+command
+  hyperlambda:@"magic-menu.keep-alive.next-pageload
+p5.web.set-location:/sephia-five"
+  global:uint:0
+  global-id:gaia.help.phosphorus.open-app.sephia
+  parent:gaia.help.phosphorus.open-app
+  phrase
+    command:Sephia Five
+    lang:en

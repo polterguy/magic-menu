@@ -1,0 +1,49 @@
+command
+  hyperlambda:@"magic-menu.grammar-position.pop
+vocabulary
+for-each:x:/@vocabulary/*
+  split:x:/@_dp/#?value
+    =:.
+  if:x:/@split/*?count
+    >:int:1
+    or
+      length:x:/@_dp/#?value
+      <=:int:2
+    continue
+  if:x:/../*/create-widgets/**/micro.widgets.grid/*/rows/*?count
+    >=:int:20
+    break
+  eval-x:x:/+/*/*/*
+  add:x:/../*/create-widgets/**/micro.widgets.grid/*/rows
+    src
+      item
+        name:x:/@_dp/#?value
+create-widgets
+  micro.widgets.modal:list-active-events-modal
+    widgets
+      h3
+        innerValue:Active Events
+      micro.widgets.grid
+        rows
+      div
+        class:right
+        widgets
+          button
+            innerValue:Close
+            style:""margin-bottom:0;""
+            oninit
+              micro.page.set-focus:x:/../*/_event?value
+            onclick
+              delete-widget:list-active-events-modal
+              magic-menu.listen
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.phosphorus.events.how-many.list-yes
+  parent:gaia.help.phosphorus.events.how-many
+  phrase
+    command:Yes
+    lang:en
+  phrase
+    command:Yes please
+    lang:en

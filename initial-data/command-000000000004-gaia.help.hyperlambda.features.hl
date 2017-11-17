@@ -1,0 +1,15 @@
+command
+  hyperlambda:@"magic-menu.listen:@""You can do everything in Hyperlambda that you can do in all other programming languages.
+Hyperlambda is Turing complete, and hence a complete programming language. However, it is an extremely high 
+level programming language, and not fit for resource intensive tasks.""
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.hyperlambda.features
+  parent:gaia.help.hyperlambda
+  phrase
+    command:What can I do with Hyperlambda
+    lang:en
+  phrase
+    command:What could I do with Hyperlambda
+    lang:en
