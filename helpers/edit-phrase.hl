@@ -402,6 +402,8 @@ create-widget
                     p5.mysql.connect:[magic-menu]
                       p5.mysql.scalar:@"select commandid from phrases where id = @id"
                         @id:x:/@get-widget-property/*/*?value
+                      p5.mysql.scalar:@"select global_id from commands where id in (select commandid from phrases where id = @id)"
+                        @id:x:/@get-widget-property/*/*?value
 
                     /*
                      * Then we invoke event that is responsible for creating a new phrase/command association,
@@ -409,7 +411,9 @@ create-widget
                      */
                     eval-x:x:/+/*
                     magic-menu.command.create:New child command
-                      pos:x:/@p5.mysql.connect/*/p5.mysql.scalar?value
+                      pos:x:/@p5.mysql.connect/*/p5.mysql.scalar/[0,1]?value
+                      global-id:{0}.child
+                        :x:/@p5.mysql.connect/*/p5.mysql.scalar/[1,2]?value
                       force-parent:bool:true
 
                 button
@@ -430,10 +434,12 @@ create-widget
                       .edit
 
                     /*
-                     * Then we need to retrieve "command" id.
+                     * Then we need to retrieve the command and phrase to parametrise our create new command invocation.
                      */
                     p5.mysql.connect:[magic-menu]
-                      p5.mysql.select:@"select parent, hyperlambda, global, username from commands where id in (select commandid from phrases where id = @id)"
+                      p5.mysql.select:@"select parent, hyperlambda, global, username, global_id from commands where id in (select commandid from phrases where id = @id)"
+                        @id:x:/@get-widget-property/*/*?value
+                      p5.mysql.select:@"select command from phrases where id = @id"
                         @id:x:/@get-widget-property/*/*?value
 
                     /*
@@ -441,24 +447,26 @@ create-widget
                      * making sure we pass in [pos] to explicitly override the default positioning logic, but only
                      * if current command actually has a parent.
                      */
-                    if:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/parent?value
+                    if:x:/@p5.mysql.connect/*/p5.mysql.select/[0,1]/*/*/parent?value
                       add:x:/../*/magic-menu.command.create
                         src
-                          pos:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/parent?value
-                    if:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/global?value.int
+                          pos:x:/@p5.mysql.connect/*/p5.mysql.select/[0,1]/*/*/parent?value
+                    if:x:/@p5.mysql.connect/*/p5.mysql.select/[0,1]/*/*/global?value.int
                       =:int:1
                       add:x:/../*/magic-menu.command.create
                         src
                           global:bool:true
-                    if:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/username?value
+                    if:x:/@p5.mysql.connect/*/p5.mysql.select/[0,1]/*/*/username?value
                       not
                       add:x:/../*/magic-menu.command.create
                         src
                           private:bool:false
                     eval-x:x:/+/*
-                    magic-menu.command.create:New cloned command
-                      hyperlambda:x:/@p5.mysql.connect/*/p5.mysql.select/*/*/hyperlambda?value
+                    magic-menu.command.create:x:/@p5.mysql.connect/*/p5.mysql.select/[1,2]/*/*/command?value
+                      hyperlambda:x:/@p5.mysql.connect/*/p5.mysql.select/[0,1]/*/*/hyperlambda?value
                       force-parent:bool:true
+                      global-id:{0}-clone
+                        :x:/@p5.mysql.connect/*/p5.mysql.select/[0,1]/*/*/global_id?value
 
                 button
                   innerValue:@"<span class=""icon-bin""></span>"

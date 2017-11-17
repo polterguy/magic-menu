@@ -16,6 +16,8 @@
  *
  * You can also optionally pass in [global] and [private] to set the initial values for both of these
  * values. However, the user can still change both of these if he wants to.
+ * In addition, you can also pass in an initial [global-id], which is a suggestion to which
+ * global ID to use initially for the command.
  */
 create-event:magic-menu.command.create
 
@@ -53,6 +55,7 @@ return:bool:false
     force-parent:bool
     global:bool
     private:bool
+    global-id:string
 
   /*
    * Verifying user is root, and if not, we don't allow him to evaluate event.
@@ -124,7 +127,7 @@ return:bool:false
    * a piece of Hyperlambda, which will result in associating the specified Hyperlambda
    * with the given [_arg] phrase.
    */
-  eval-x:x:/+/**(/_pos|/hypereval.widgets.hyperlambda-textarea/*/value)
+  eval-x:x:/+/**(/_pos|/hypereval.widgets.hyperlambda-textarea/*/value|/.data-field/=global_id/./*/value)
   create-widgets
     micro.widgets.modal:magic-menu-create-phrase2hyper-association
       widgets
@@ -181,7 +184,6 @@ return:bool:false
               innerValue:Global
         label
           title:Should this phrase only apply for you?
-          style:"margin-bottom:0;"
           widgets
             input
               type:checkbox
@@ -189,6 +191,16 @@ return:bool:false
               checked
             span
               innerValue:Private phrase
+        div
+          class:strip fill
+          widgets
+            label
+              innerValue:Global ID
+            input
+              type:text
+              placeholder:Global ID ...
+              .data-field:global_id
+              value:x:/../*/global-id?value
         literal:magic-menu-create-phrase-parent-label
           element:span
           style:"position:absolute;top:1rem;right:1rem;font-style:italic;color:#a0a0a0;"
@@ -321,11 +333,10 @@ return:bool:false
                               /*
                                * Not a global command, inserting also "parent"
                                */
-                              p5.types.guid.new
                               p5.mysql.insert:@"insert into commands (hyperlambda, parent, global_id) values (@hyperlambda, @parent, @globalid)"
                                 @hyperlambda:x:/@micro.form.serialize/*/hyperlambda?value
                                 @parent:x:/@_pos?value
-                                @globalid:x:/@p5.types.guid.new?value.string
+                                @globalid:x:/@micro.form.serialize/*/global_id?value
 
                           /*
                            * Splitting synonyms, and inserting one 'phrase' for each.
@@ -372,6 +383,16 @@ return:bool:false
                                * "Syntax error" in phrase, more than one ":" was supplied.
                                */
                               throw:@"Oops, you can't use a "":"" in your phrase, except for declaring language to use"
+
+                            /*
+                             * Verifying that the same phrase does not exist for the same command.
+                             */
+                            p5.mysql.scalar:@"select count(*) from phrases where command = @command and commandid in (select id from commands where parent = @parent)"
+                              @parent:x:/@_pos?value
+                              @command:x:/@split/0/-?name
+                            if:x:/@p5.mysql.scalar?value.int
+                              >:int:0
+                              throw:That phrase already exists at the same level from before
 
                             /*
                              * Inserting currently iterated phrase.

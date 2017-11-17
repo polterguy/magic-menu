@@ -210,6 +210,7 @@ create-widget:magic-menu-main-container
                      * Creates a new command, by invoking file responsible for doing just that..
                      */
                     magic-menu.command.create
+                      global-id:your-namespace.your-concepts.some-unique-id
 
                 button
                   innerValue:@"<span class=""icon-download2""></span>"
