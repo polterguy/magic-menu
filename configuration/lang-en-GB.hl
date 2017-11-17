@@ -2,13 +2,4 @@
 /*
  * English language file for Magic menu.
  */
-[Hello]:I'm listening
-[OK]:OK
-[Talk to me]:Talk to me
-[I don't understand]:I don't understand
-[Goodbye]:Cheerio
-[Say 'teach' to teach the computer]:@"Say ""I will teach you'"" to teach me"
-[Teach]:I will teach you
-[Name]:John Doe
-[Waiting]:I didn't get that
-[An exception occurred]:An exception occurred
+[I don't understand]:I do not understand

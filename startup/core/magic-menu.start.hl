@@ -57,7 +57,6 @@ create-event:magic-menu.start
          * Speaks "Goodbye" and deletes widget.
          */
         micro.speech.stop
-        magic-menu.speak:[Goodbye]
         delete-widget:x:/../*/_event?value
 
 
@@ -135,13 +134,10 @@ create-event:magic-menu.start
                     set-widget-property:x:/../*/_event?value
                       class:icon-mic
 
-                    /*
-                     * When speech is by default disabled for user, we automatically
-                     * show our options by default, since no other UI exists, and 
-                     * not showing the options for such scenarios, would highly likely
-                     * not make much sense.
-                     */
-                    magic-menu.options.show
+                  /*
+                   * Displaying options by default.
+                   */
+                  magic-menu.options.show
 
                 events
 

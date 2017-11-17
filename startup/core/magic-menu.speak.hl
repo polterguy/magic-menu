@@ -68,9 +68,8 @@ create-event:magic-menu.speak
     eval-x:x:/+/*/*
     add:x:/../*/micro.speech.speak
       src
-        voice:{0},{1}-{2}
+        voice:{0},{1}
           :x:/@magic-menu.settings.get-language/*/voice?value
-          :x:/@magic-menu.settings.get-language/*/lang?value
           :x:/@magic-menu.settings.get-language/*/sublang?value
 
   /*

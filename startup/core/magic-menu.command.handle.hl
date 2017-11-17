@@ -243,7 +243,7 @@ create-event:magic-menu.command.handle
        * First updating text widget to show that the user has the option to 
        * teach a new command.
        */
-      magic-menu.language.get-localized-phrase:[Say 'teach' to teach the computer]
+      magic-menu.language.get-localized-phrase:[I don't understand]
       magic-menu.set-text:{0} '{1}'
         :x:/@magic-menu.language.get-localized-phrase?value
         :x:/../*/_arg?value
