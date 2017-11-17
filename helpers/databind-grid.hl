@@ -39,7 +39,7 @@ micro.lambda.contract.optional:x:/..
 /*
  * Dynamically building our SQL, according to filter conditionins.
  */
-_sql:@"select p.id, p.command, p.lang, p.commandid, p.lastused, c.id as cid, c.parent, c.username, c.global from 
+_sql:@"select p.id, p.command, p.lang, p.commandid, p.lastused, c.id as cid, c.parent, c.username, c.global, c.global_id as global_id from 
   phrases p join commands c on c.id = p.commandid
   where (p.id in (select min(id) from phrases p2 where (p2.lang = @lang or p2.lang = @sublang) {{filter}} group by p2.commandid)
   {{filter2}}) "
@@ -72,7 +72,7 @@ if:x:/../*/filter?value
   set:x:/@_sql?value
     replace:x:/@_sql?value
       src:{{filter2}}
-      dest:"or (c.hyperlambda like @filter and p.id in (select min(id) from phrases p3 where (p3.lang = @lang or p3.lang = @sublang) group by p3.commandid))"
+      dest:"or ((c.hyperlambda like @filter or c.global_id like @filter) and p.id in (select min(id) from phrases p3 where (p3.lang = @lang or p3.lang = @sublang) group by p3.commandid))"
 
 else
 
@@ -96,7 +96,7 @@ else
  * Notice, we show "Global" commands first.
  */
 set:x:/@_sql?value
-  src:"{0} order by global desc, lastused desc, id desc limit 25 offset @offset"
+  src:"{0} order by global desc, global_id, id limit 50 offset @offset"
     :x:/@_sql?value
 
 
@@ -124,11 +124,11 @@ p5.mysql.connect:[magic-menu]
     @offset:x:(/../*/offset|/../*/.defaults/*/offset)/$?value
 
   /*
-   * Checking if above SQL yields less than 25 results, and if so, making sure 
+   * Checking if above SQL yields less than 50 results, and if so, making sure 
    * we stop the scroller.
    */
   if:x:/@p5.mysql.select/*?count
-    <:int:25
+    <:int:50
     p5.web.send-javascript:"p5.hyperlang_end_of_dataset = true;"
   else
     p5.web.send-javascript:"delete p5.hyperlang_end_of_dataset;"
@@ -167,11 +167,12 @@ where id in (select min(id) from phrases where (lang = @lang or lang = @sublang)
     /*
      * Adding row to databind operation below.
      */
-    eval-x:x:/+/*/*/*(/Command|/Parent|/Username)|/+/*/*/*/*/.id
+    eval-x:x:/+/*/*/*(/Command|/Parent|/Global ID|/Username)|/+/*/*/*/*/.id
     add:x:/../*/micro.widgets.grid.databind
       src
         item
           .row
+            class:grid-row
             .id:x:/@_dp/#/*/id?value
             onclick
 
@@ -186,6 +187,7 @@ where id in (select min(id) from phrases where (lang = @lang or lang = @sublang)
 
           Command:x:/@_dp/#/*/command?value
           Parent:x:/@_parent?value
+          Global ID:x:/@_dp/#/*/global_id?value
           Username:x:/@_dp/#/*/username?value
           Global
 
@@ -209,6 +211,6 @@ micro.widgets.grid.databind:magic-menu-phrases-grid
  * Updating "offset".
  */
 +:x:(/../*/offset|/../*/.defaults/*/offset)/$?value
-  _:25
+  _:50
 p5.web.viewstate.set:magic-menu.grid-offset
   src:x:/@+?value

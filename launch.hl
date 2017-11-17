@@ -76,8 +76,18 @@ create-widget:magic-menu-main-container
               widgets
                 input:magic-menu-search-textbox
                   type:text
-                  placeholder:Filter ...
                   onkeydown:@"if (event.keyCode == 13) {p5.$('magic-menu-search-button').raise('onclick');return false;}"
+                  oninit
+
+                    /*
+                     * Figuring out how many commands we have, and setting the placeholder's value accordingly,
+                     * to give user a visual clue about how much data there actually is.
+                     */
+                    p5.mysql.connect:[magic-menu]
+                      p5.mysql.scalar:@"select count(*) from commands"
+                      set-widget-property:x:/../*/_event?value
+                        placeholder:Search among {0} commands ...
+                          :x:/@p5.mysql.scalar?value
 
                 button:magic-menu-search-button
                   innerValue:@"<span class=""icon-search""></span>"
@@ -319,6 +329,7 @@ create-widget:magic-menu-main-container
               columns
                 Command
                 Parent
+                Global ID
                 Username
                 Global
               oninit
