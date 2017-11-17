@@ -1,6 +1,12 @@
 command
-  hyperlambda:@"magic-menu.keep-alive.next-pageload
-p5.web.set-location:/camphora-five"
+  hyperlambda:@"if
+  camphora.version
+  not
+  magic-menu.listen:You don't seem to have Camphora Five installed.
+  return:bool:false
+else
+  magic-menu.keep-alive.next-pageload
+  p5.web.set-location:/camphora-five"
   global:uint:0
   global-id:gaia.help.phosphorus.open-app.camphora
   parent:gaia.help.phosphorus.open-app

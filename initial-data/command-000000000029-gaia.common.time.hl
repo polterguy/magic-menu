@@ -1,0 +1,20 @@
+command
+  hyperlambda:@"p5.types.date.now
+  local:true
+p5.types.date.format:x:/-?value
+  format:""HH:mm""
+magic-menu.listen:It is {0}
+  :x:/@p5.types.date.format?value
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.common.time
+  phrase
+    command:What's the time
+    lang:en
+  phrase
+    command:What time is it
+    lang:en
+  phrase
+    command:What is the time
+    lang:en
