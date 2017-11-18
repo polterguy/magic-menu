@@ -7,6 +7,8 @@
  *
  * The default [onfinish], if none is given, will simply try to "handle" the spoken
  * phrase as a command.
+ *
+ * You can also optionally pass in [lang], to override the language to listen for.
  */
 create-event:magic-menu.listen
 
@@ -16,12 +18,13 @@ create-event:magic-menu.listen
   micro.lambda.contract.optional:x:/..
     onfinish
     _arg:string
+    lang:string
 
   /*
    * Applying [onfinish], if any.
    */
   add:x:/../**/magic-menu._listen
-    src:x:/../*/onfinish
+    src:x:(/../*/onfinish|/../*/lang)
 
   /*
    * Checks to see if caller passed in [_arg], at which point we speak the given [_arg],

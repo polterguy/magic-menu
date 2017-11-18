@@ -2,7 +2,7 @@
 /*
  * Internal event being the actual implementation of [magic-menu.listen].
  *
- * Optionally pass in [onfinish].
+ * Optionally pass in [onfinish] and [lang].
  */
 create-event:magic-menu._listen
 
@@ -11,6 +11,7 @@ create-event:magic-menu._listen
    */
   micro.lambda.contract.optional:x:/..
     onfinish
+    lang:string
 
   /*
    * Our default [onfinish] implementation simply invokes [magic-menu.command.handle].
@@ -64,7 +65,7 @@ create-event:magic-menu._listen
    */
   eval-x:x:/+/*/lang
   micro.speech.listen
-    lang:x:/@magic-menu.settings.get-language/*/lang?value
+    lang:x:(/../*/lang|/@magic-menu.settings.get-language/*/lang)/$?value
     onfinish
 
       /*
