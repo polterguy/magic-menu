@@ -67,7 +67,7 @@ create-event:desktop.plugins.post.create-toolbar-button
     create-widget:magic-menu-start-button
       element:button
       class:magic-menu-start
-      title:Start Magic menu, keyboard shortcut M
+      title:Starts and stops the Magic menu, keyboard shortcut M
       innerValue:@"<span class=""icon-magic-wand""></span>"
       accesskey:M
       oninit
@@ -94,6 +94,25 @@ create-event:desktop.plugins.post.create-toolbar-button
       onclick
 
         /*
-         * Starts Magic menu.
+         * Checking if we should start or stop the Magic Menu.
          */
-        magic-menu.start
+        if
+          magic-menu.exists
+
+          /*
+           * Magic menu already exists, stopping it.
+           */
+          magic-menu.quit
+
+        else
+
+          /*
+           * Magic menu doesn't exist, hence we start it.
+           */
+          magic-menu.start
+
+        /*
+         * Toggling button.
+         */
+        micro.css.toggle:x:/../*/_event?value
+          class:toggled

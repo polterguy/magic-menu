@@ -60,6 +60,17 @@ create-event:magic-menu.start
         delete-widget:x:/../*/_event?value
 
 
+      /*
+       * Returns true if Magic Menu exists.
+       */
+      magic-menu.exists
+
+        /*
+         * Simply returns "true", since if it doesn't exist, this lambda event won't either.
+         */
+        return:bool:true
+
+
     widgets
 
       /*
@@ -350,18 +361,6 @@ create-event:magic-menu.start
               micro.css.delete:magic-menu-listener
                 class:magic-menu-listening
               micro.speech.stop
-
-          button
-            style:"margin-bottom:0;"
-            innerValue:@"<span class=""icon-cross""></span>"
-            title:Exit Magic menu, keyboard shortcut X
-            accesskey:X
-            onclick
-
-              /*
-               * Closing Magic menu.
-               */
-              magic-menu.quit
 
   /*
    * Greets user, and asks for input.
