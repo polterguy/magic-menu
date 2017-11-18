@@ -1,0 +1,19 @@
+command
+  hyperlambda:@"magic-menu.listen:OK
+hypereval.widgets.eval.get-code
+hyper2lambda:x:/-?value
+set:x:/@hyper2lambda/**/widgets/=main-content/0/-
+lambda2hyper:x:/@hyper2lambda/*
+hypereval.widgets.eval.set-code:x:/-?value
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.hyperlambda.create-app.remove
+  parent:gaia.help.hyperlambda.create-app
+  username:root
+  phrase
+    command:Remove last change
+    lang:en
+  phrase
+    command:Remove last widget
+    lang:en

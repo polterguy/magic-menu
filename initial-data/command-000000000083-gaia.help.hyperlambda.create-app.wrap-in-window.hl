@@ -1,0 +1,20 @@
+command
+  hyperlambda:@"magic-menu.listen:OK
+hypereval.widgets.eval.get-code
+hyper2lambda:x:/-?value
+set:x:/@hyper2lambda/**/widgets/=main-content/./*/class?value
+  src:col shaded rounded bg air-inner
+lambda2hyper:x:/@hyper2lambda/*
+hypereval.widgets.eval.set-code:x:/-?value
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.hyperlambda.create-app.wrap-in-window
+  parent:gaia.help.hyperlambda.create-app
+  username:root
+  phrase
+    command:Wrap app in a window
+    lang:en
+  phrase
+    command:Wrap application in a window
+    lang:en

@@ -4,15 +4,17 @@ hypereval.widgets.eval.get-code
 hyper2lambda:x:/-?value
 add:x:/@hyper2lambda/**/widgets/=main-content
   src
-    label
-      innerValue:Some textarea
-      style:""margin-bottom:0;""
-    textarea
-      placeholder:Textarea content ...
-      innerValue
-      class:fill
-      .data-field:textarea-value
-      rows:7
+    div
+      widgets
+        label
+          innerValue:Some textarea
+          style:""margin-bottom:0;""
+        textarea
+          placeholder:Textarea content ...
+          innerValue
+          class:fill
+          .data-field:textarea-value
+          rows:7
 lambda2hyper:x:/@hyper2lambda/*
 hypereval.widgets.eval.set-code:x:/-?value
 return:bool:false

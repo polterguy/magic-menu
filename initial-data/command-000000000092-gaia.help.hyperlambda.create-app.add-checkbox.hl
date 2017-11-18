@@ -8,9 +8,9 @@ add:x:/@hyper2lambda/**/widgets/=main-content
       widgets
         input
           type:checkbox
-          .data-field:checkbox-value
+          .data-field:some-checkbox
         span
-          innerValue:Checkbox
+          innerValue:Some checkbox
 lambda2hyper:x:/@hyper2lambda/*
 hypereval.widgets.eval.set-code:x:/-?value
 return:bool:false
@@ -24,7 +24,4 @@ return:bool:false
     lang:en
   phrase
     command:A checkbox
-    lang:en
-  phrase
-    command:A checked input element
     lang:en

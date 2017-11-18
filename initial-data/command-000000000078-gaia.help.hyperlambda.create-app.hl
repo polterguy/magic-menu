@@ -15,7 +15,6 @@ if
               hypereval.widgets.eval
 hypereval.widgets.eval.set-code:@""p5.web.include-css-file:@MICRO/media/main.css
 p5.web.include-css-file:@MICRO/media/skins/serious.css
-p5.web.include-css-file:@MICRO/media/fonts.css
 create-widget
   class:container
   widgets
