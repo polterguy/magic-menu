@@ -48,6 +48,7 @@ create table if not exists `phrases` (
        * Iterating through each file in our "/initial-data/" folder, and importing it.
        */
       list-files:@MAGIC/initial-data/
+        filter:.hl
       for-each:x:/@list-files/*?name
         eval-x:x:/+/*
         micro.evaluate.file:@MAGIC/helpers/import-hyperlambda-file.hl
