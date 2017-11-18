@@ -1,0 +1,39 @@
+command
+  hyperlambda:@"magic-menu.listen:OK
+hypereval.widgets.eval.get-code
+hyper2lambda:x:/-?value
+add:x:/@hyper2lambda/**/widgets/=main-content
+  src
+    div
+      .data-field:radio-value
+      widgets
+        label
+          widgets
+            input
+              type:radio
+              name:radio-buttons
+              .data-value:radio-button-1
+            span
+              innerValue:Radio 1
+        label
+          widgets
+            input
+              type:radio
+              name:radio-buttons
+              .data-value:radio-button-2
+            span
+              innerValue:Radio 2
+lambda2hyper:x:/@hyper2lambda/*
+hypereval.widgets.eval.set-code:x:/-?value
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.hyperlambda.create-app.add-radio
+  parent:gaia.help.hyperlambda.create-app
+  username:root
+  phrase
+    command:Add radiobuttons
+    lang:en
+  phrase
+    command:Radiobuttons
+    lang:en

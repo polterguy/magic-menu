@@ -3,7 +3,7 @@ command
 magic-menu.listen:OK
 return:bool:false"
   global:uint:1
-  global-id:gaia.misc.show-options
+  global-id:gaia.options.show
   phrase
     command:Show options
     lang:en

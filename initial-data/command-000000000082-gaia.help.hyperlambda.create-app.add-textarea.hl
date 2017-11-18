@@ -1,0 +1,32 @@
+command
+  hyperlambda:@"magic-menu.listen:OK
+hypereval.widgets.eval.get-code
+hyper2lambda:x:/-?value
+add:x:/@hyper2lambda/**/widgets/=main-content
+  src
+    label
+      innerValue:Some textarea
+      style:""margin-bottom:0;""
+    textarea
+      placeholder:Textarea content ...
+      innerValue
+      class:fill
+      .data-field:textarea-value
+      rows:7
+lambda2hyper:x:/@hyper2lambda/*
+hypereval.widgets.eval.set-code:x:/-?value
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.hyperlambda.create-app.add-textarea
+  parent:gaia.help.hyperlambda.create-app
+  username:root
+  phrase
+    command:Add a textarea
+    lang:en
+  phrase
+    command:A textarea
+    lang:en
+  phrase
+    command:A multi line text element
+    lang:en

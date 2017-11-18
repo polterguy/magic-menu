@@ -1,0 +1,25 @@
+command
+  hyperlambda:@"magic-menu.listen:OK
+hypereval.widgets.eval.get-code
+hyper2lambda:x:/-?value
+add:x:/@hyper2lambda/**/widgets/=main-content
+  src
+    h1
+      innerValue:Some header
+lambda2hyper:x:/@hyper2lambda/*
+hypereval.widgets.eval.set-code:x:/-?value
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.hyperlambda.create-app.add-h1
+  parent:gaia.help.hyperlambda.create-app
+  username:root
+  phrase
+    command:Add a header
+    lang:en
+  phrase
+    command:A header
+    lang:en
+  phrase
+    command:An H1 element
+    lang:en

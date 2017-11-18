@@ -1,0 +1,38 @@
+command
+  hyperlambda:@"magic-menu.listen:OK
+hypereval.widgets.eval.get-code
+hyper2lambda:x:/-?value
+select-data:x:/*/*/form-type-name/[0,1]
+add:x:/../**/micro.widgets.grid/*/columns
+  src:x:/@select-data/*/*?name
+add:x:/@hyper2lambda/**/widgets/=main-content
+  src
+    micro.widgets.grid:some-data-grid
+      columns
+      class:hover striped
+      oninit
+        select-data:x:/*/*/form-type-name
+        for-each:x:/@select-data/*
+          add:x:/../*/micro.widgets.grid.databind
+            src
+              item
+          for-each:x:/@_dp/#/*
+            add:x:/../*/micro.widgets.grid.databind/0/-
+              src:@""{0}:@""""{1}""""""
+                :x:/@_dp/#?name
+                :x:/@_dp/#?value
+        micro.widgets.grid.databind:some-data-grid
+lambda2hyper:x:/@hyper2lambda/*
+hypereval.widgets.eval.set-code:x:/-?value
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.hyperlambda.create-app.add-datagrid
+  parent:gaia.help.hyperlambda.create-app
+  username:root
+  phrase
+    command:Add a datagrid
+    lang:en
+  phrase
+    command:A datagrid
+    lang:en

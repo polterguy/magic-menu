@@ -1,0 +1,28 @@
+command
+  hyperlambda:@"magic-menu.listen:What do you want to name your app?
+  onfinish
+    p5.web.viewstate.set:magic-menu.current-app.name
+      src:x:/../*/text?value
+    hypereval.widgets.eval.get-code
+    eval-x:x:/+/*
+    hypereval.snippets.create:x:/../*/text?value
+      content:x:/@hypereval.widgets.eval.get-code?value
+      type:page
+    eval-x:x:/+/*
+    magic-menu.listen:OK, I saved your app as {0}. Do you want to preview your app?
+      :x:/../*/text?value
+return:bool:true
+"
+  global:uint:0
+  global-id:gaia.help.hyperlambda.create-app.save-app
+  parent:gaia.help.hyperlambda.create-app
+  username:root
+  phrase
+    command:Save application
+    lang:en
+  phrase
+    command:Save my app
+    lang:en
+  phrase
+    command:Save my application
+    lang:en

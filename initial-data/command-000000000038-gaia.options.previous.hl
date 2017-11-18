@@ -6,7 +6,7 @@ else
   magic-menu.listen:There are no more previous options.
 return:bool:false"
   global:uint:1
-  global-id:gaia.misc.show-previous-options
+  global-id:gaia.options.previous
   phrase
     command:Show previous options
     lang:en

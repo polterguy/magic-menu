@@ -1,0 +1,16 @@
+command
+  hyperlambda:@"magic-menu.dictate:Continuing
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.misc.dictate-text.continue
+  parent:gaia.misc.dictate-text
+  phrase
+    command:Yes
+    lang:en
+  phrase
+    command:Yes please
+    lang:en
+  phrase
+    command:Sure
+    lang:en

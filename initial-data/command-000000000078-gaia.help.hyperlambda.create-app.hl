@@ -1,0 +1,45 @@
+command
+  hyperlambda:@"magic-menu.listen:What do you want to put into your app?
+if
+  hypereval.widgets.eval.exists
+  not
+  create-widget
+    class:container your-apps-root-css-class
+    widgets
+      div
+        class:row
+        widgets
+          div
+            class:col
+            widgets
+              hypereval.widgets.eval
+hypereval.widgets.eval.set-code:@""p5.web.include-css-file:@MICRO/media/main.css
+p5.web.include-css-file:@MICRO/media/skins/serious.css
+p5.web.include-css-file:@MICRO/media/fonts.css
+create-widget
+  class:container
+  widgets
+    div
+      class:row
+      widgets
+        div
+          class:col
+          .form:form-type-name
+          widgets:main-content""
+"
+  global:uint:0
+  global-id:gaia.help.hyperlambda.create-app
+  parent:gaia.help.hyperlambda
+  username:root
+  phrase
+    command:Create application
+    lang:en
+  phrase
+    command:Create an application
+    lang:en
+  phrase
+    command:Create app
+    lang:en
+  phrase
+    command:Create an app
+    lang:en

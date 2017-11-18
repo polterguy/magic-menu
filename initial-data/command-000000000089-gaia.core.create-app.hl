@@ -1,0 +1,13 @@
+command
+  hyperlambda:@"magic-menu.command.evaluate:gaia.help.hyperlambda.create-app
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.core.create-app
+  username:root
+  phrase
+    command:Create an application
+    lang:en
+  phrase
+    command:Create application
+    lang:en

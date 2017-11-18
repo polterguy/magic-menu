@@ -1,0 +1,44 @@
+command
+  hyperlambda:@"create-widgets
+  micro.widgets.modal:magic-menu-dictated-text-modal
+    widgets
+      h3
+        innerValue:Dictation
+      literal:magic-menu-dictated-text
+        element:textarea
+        placeholder:Dictated text comes here ...
+        class:fill
+        rows:10
+        events
+          magic-menu.dictate
+            magic-menu.listen:x:/../*/_arg?value
+              onfinish
+                if
+                  fetch:x:/0/0?value
+                    widget-exists:magic-menu-dictated-text
+                  not
+                  magic-menu.grammar-position.pop
+                  magic-menu.listen:It seems you closed the window, hence continuing is meaningless.
+                  return
+                get-widget-property:magic-menu-dictated-text
+                  value
+                set-widget-property:magic-menu-dictated-text
+                  value:""{0}{1}.\r\n""
+                    :x:/@get-widget-property/*/*?value
+                    :x:/../*/text?value
+                magic-menu.listen:Do you want to continue dictation?
+      div
+        class:right
+        widgets
+          button
+            innerValue:Close
+            style:""margin-bottom:0;""
+            onclick
+              delete-widget:magic-menu-dictated-text-modal
+magic-menu.dictate:What do you want me to dictate for you?
+"
+  global:uint:0
+  global-id:gaia.misc.dictate-text
+  phrase
+    command:Dictate text
+    lang:en

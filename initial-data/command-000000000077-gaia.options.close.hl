@@ -1,0 +1,12 @@
+command
+  hyperlambda:@"magic-menu.options.close
+magic-menu.listen:OK
+return:bool:false"
+  global:uint:1
+  global-id:gaia.options.close
+  phrase
+    command:Close options
+    lang:en
+  phrase
+    command:Close help
+    lang:en

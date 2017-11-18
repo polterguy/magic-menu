@@ -1,0 +1,15 @@
+command
+  hyperlambda:@"magic-menu.listen:OK
+magic-menu.grammar-position.pop
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.hyperlambda.create-app.save-app.no-preview
+  parent:gaia.help.hyperlambda.create-app.save-app
+  username:root
+  phrase
+    command:No
+    lang:en
+  phrase
+    command:No thanks
+    lang:en

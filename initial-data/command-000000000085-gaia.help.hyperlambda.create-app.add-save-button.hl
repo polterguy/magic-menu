@@ -1,0 +1,38 @@
+command
+  hyperlambda:@"magic-menu.listen:OK
+hypereval.widgets.eval.get-code
+hyper2lambda:x:/-?value
+add:x:/@hyper2lambda/**/widgets/=main-content
+  src
+    div
+      class:right
+      widgets
+        button
+          innerValue:Save
+          onclick
+            p5.web.widgets.find-first-ancestor:x:/../*/_event?value
+              .form
+            get-widget-property:x:/@p5.web.widgets.find-first-ancestor/*/*?value
+              .form
+            micro.form.serialize:x:/@p5.web.widgets.find-first-ancestor/*/*?value
+            add:x:/../*/insert-data
+              src:x:/@micro.form.serialize
+            set:x:/../*/insert-data/0?name
+              src:x:/@get-widget-property/*/*?value
+            insert-data
+            micro.windows.info:Your form was saved to your p5.data database
+              class:micro-windows-info success
+lambda2hyper:x:/@hyper2lambda/*
+hypereval.widgets.eval.set-code:x:/-?value
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.hyperlambda.create-app.add-save-button
+  parent:gaia.help.hyperlambda.create-app
+  username:root
+  phrase
+    command:Add a save button
+    lang:en
+  phrase
+    command:A save button
+    lang:en

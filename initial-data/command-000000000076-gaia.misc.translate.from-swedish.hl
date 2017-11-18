@@ -1,0 +1,20 @@
+command
+  hyperlambda:@"magic-menu.listen:What do you want me to translate?
+  lang:sv-SE
+  onfinish
+    micro.google.translate:x:/../*/text?value
+      src-lang:sv-SE
+      dest-lang:en-GB
+    magic-menu.set-text:x:/@micro.google.translate?value
+    micro.speech.speak:x:/@micro.google.translate?value
+      onfinish
+        magic-menu.listen
+    magic-menu.grammar-position.pop:int:2
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.misc.translate.from-swedish
+  parent:gaia.misc.translate
+  phrase
+    command:From Swedish
+    lang:en

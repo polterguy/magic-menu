@@ -1,0 +1,15 @@
+command
+  hyperlambda:@"magic-menu.grammar-position.pop
+micro.page.set-focus:magic-menu-dictated-text
+magic-menu.listen:Feel free to copy this text
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.misc.dictate-text.stop
+  parent:gaia.misc.dictate-text
+  phrase
+    command:No
+    lang:en
+  phrase
+    command:No thanks
+    lang:en

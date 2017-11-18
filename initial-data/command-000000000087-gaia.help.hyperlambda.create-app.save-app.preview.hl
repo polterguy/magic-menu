@@ -1,0 +1,30 @@
+command
+  hyperlambda:@"p5.web.viewstate.get:magic-menu.current-app.name
+p5.html.url-encode:x:/-/*?value
+p5.web.get-root-location
+p5.web.send-javascript:@""window.open('{0}hypereval?name={1}');""
+  :x:/@p5.web.get-root-location?value
+  :x:/@p5.html.url-encode?value
+magic-menu.listen:OK
+magic-menu.grammar-position.pop
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.help.hyperlambda.create-app.save-app.preview
+  parent:gaia.help.hyperlambda.create-app.save-app
+  username:root
+  phrase
+    command:Preview app
+    lang:en
+  phrase
+    command:Preview application
+    lang:en
+  phrase
+    command:Preview my application
+    lang:en
+  phrase
+    command:Yes
+    lang:en
+  phrase
+    command:Yes please
+    lang:en

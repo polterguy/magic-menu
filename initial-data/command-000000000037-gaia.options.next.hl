@@ -6,7 +6,7 @@ else
   magic-menu.listen:There are no more options.
 return:bool:false"
   global:uint:1
-  global-id:gaia.misc.show-next-options
+  global-id:gaia.options.next
   phrase
     command:Show more options
     lang:en
