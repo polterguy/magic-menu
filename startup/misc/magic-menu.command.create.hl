@@ -413,7 +413,7 @@ return:bool:false
                         /*
                          * Restarting input loop.
                          */
-                        magic-menu.listen:[OK]
+                        magic-menu.listen:[Thank you for teaching me]
 
                         /*
                          * Making sure we refresh our options, and hide our "create
