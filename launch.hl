@@ -60,8 +60,9 @@ if:x:/@whoami/*/role?value
 
 
 /*
- * Creating our main wire frame.
+ * Creating our main wire frame, making sure we set the page's title at the same time.
  */
+p5.web.page.set-title:Magic Menu dashboard
 create-widget:magic-menu-main-container
   class:container magic-menu-editor
   widgets
