@@ -25,6 +25,7 @@ create-event:magic-menu.command.create
    * Default values.
    */
   .defaults
+    global-id:your-namespace.your-concepts.some-unique-id
     hyperlambda:@"/*
  * To simply speak something, and listen for input afterwards, you can use something
  * such as the following.
@@ -200,7 +201,7 @@ return:bool:false
               type:text
               placeholder:Global ID ...
               .data-field:global_id
-              value:x:/../*/global-id?value
+              value:x:(/../*/global-id|/@.defaults/*/global-id)/$?value
         literal:magic-menu-create-phrase-parent-label
           element:span
           style:"position:absolute;top:1rem;right:1rem;font-style:italic;color:#a0a0a0;"

@@ -343,10 +343,26 @@ create-event:magic-menu.start
                * Applying arguments to our [magic-menu.command.create] invocation.
                */
               if:x:/@magic-menu.grammar-position.get?value
+
+                /*
+                 * Making sure we pass in [pos] to our create invocation.
+                 */
                 eval-x:x:/+/*/*
                 add:x:/../*/magic-menu.command.create
                   src
                     pos:x:/@magic-menu.grammar-position.get?value
+
+                /*
+                 * Making sure the default [global-id] becomes a "materialised path".
+                 */
+                p5.mysql.connect:[magic-menu]
+                  p5.mysql.scalar:@"select global_id from commands where id = @id"
+                    @id:x:/@magic-menu.grammar-position.get?value
+                  eval-x:x:/+/*/*
+                  add:x:/../*/magic-menu.command.create
+                    src
+                      global-id:{0}-child
+                        :x:/@p5.mysql.scalar?value
 
               /*
                * Invoking event responsible for creating a new phrase to command 

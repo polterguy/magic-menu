@@ -283,16 +283,33 @@ create-event:magic-menu.command.handle
             case:teach
 
               /*
-               * Invoking Active Event responsible for creating a "phrase2hyper"
-               * association, making sure we pass in what was actually spoken,
+               * Invoking Active Event responsible for creating a new command,
+               * making sure we pass in what was actually spoken,
                * and the current "grammar position" if any.
                */
               magic-menu.grammar-position.get
               if:x:/@magic-menu.grammar-position.get?value
+
+                /*
+                 * Making sure we pass in [pos] to our create invocation.
+                 */
                 eval-x:x:/+/*/*
                 add:x:/..case/*/magic-menu.command.create
                   src
                     pos:x:/@magic-menu.grammar-position.get?value
+
+                /*
+                 * Making sure the default [global-id] becomes a "materialised path".
+                 */
+                p5.mysql.connect:[magic-menu]
+                  p5.mysql.scalar:@"select global_id from commands where id = @id"
+                    @id:x:/@magic-menu.grammar-position.get?value
+                  eval-x:x:/+/*/*
+                  add:x:/..case/*/magic-menu.command.create
+                    src
+                      global-id:{0}-child
+                        :x:/@p5.mysql.scalar?value
+
               magic-menu.command.create:x:/../*/_arg?value
 
             default
