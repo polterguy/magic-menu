@@ -70,6 +70,33 @@ create-event:desktop.plugins.post.create-toolbar-button
       title:Starts and stops the Magic menu, keyboard shortcut M
       innerValue:@"<span class=""icon-magic-wand""></span>"
       accesskey:M
+      events
+
+
+        /*
+         * Handling "quit" and "start" event, to toggle button's toggled CSS class.
+         */
+        magic-menu.quit
+
+          /*
+           * Removing toggled class from button.
+           */
+          micro.css.delete:x:/../*/_event?value
+            class:toggled
+
+
+        /*
+         * Handling "quit" and "start" event, to toggle button's toggled CSS class.
+         */
+        magic-menu.start
+
+          /*
+           * Toggling button.
+           */
+          micro.css.add:x:/../*/_event?value
+            class:toggled
+
+
       oninit
 
         /*
@@ -83,7 +110,6 @@ create-event:desktop.plugins.post.create-toolbar-button
            * Starts Magic menu.
            */
           magic-menu.start
-            greeting:[OK]
 
         /*
          * Clearing session variable, to avoid automatically starting it during
@@ -110,9 +136,3 @@ create-event:desktop.plugins.post.create-toolbar-button
            * Magic menu doesn't exist, hence we start it.
            */
           magic-menu.start
-
-        /*
-         * Toggling button.
-         */
-        micro.css.toggle:x:/../*/_event?value
-          class:toggled
