@@ -5,7 +5,7 @@ p5.web.get-root-location
 p5.web.send-javascript:@""window.open('{0}hypereval?name={1}');""
   :x:/@p5.web.get-root-location?value
   :x:/@p5.html.url-encode?value
-magic-menu.listen:OK
+magic-menu.listen
 magic-menu.grammar-position.pop
 return:bool:false
 "

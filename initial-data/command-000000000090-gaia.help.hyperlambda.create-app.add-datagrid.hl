@@ -1,5 +1,5 @@
 command
-  hyperlambda:@"magic-menu.listen:OK
+  hyperlambda:@"magic-menu.listen
 hypereval.widgets.eval.get-code
 hyper2lambda:x:/-?value
 select-data:x:/*/*/form-type-name/[0,1]

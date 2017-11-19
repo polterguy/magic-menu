@@ -1,6 +1,6 @@
 command
   hyperlambda:@"magic-menu.options.close
-magic-menu.listen:OK
+magic-menu.listen
 return:bool:false"
   global:uint:1
   global-id:gaia.options.close

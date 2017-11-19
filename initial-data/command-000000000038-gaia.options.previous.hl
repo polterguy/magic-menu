@@ -1,7 +1,7 @@
 command
   hyperlambda:@"if
   magic-menu.options.show-previous
-  magic-menu.listen:OK
+  magic-menu.listen
 else
   magic-menu.listen:There are no more previous options.
 return:bool:false"

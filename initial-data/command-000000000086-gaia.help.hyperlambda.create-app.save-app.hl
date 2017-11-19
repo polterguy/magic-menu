@@ -9,7 +9,8 @@ command
       content:x:/@hypereval.widgets.eval.get-code?value
       type:page
     eval-x:x:/+/*
-    magic-menu.listen:OK, I saved your app as {0}. Do you want to preview your app?
+    magic-menu.set-text:x:/../*/text?value
+    magic-menu.listen:I saved your app as {0}. Do you want to preview your app?
       :x:/../*/text?value
 return:bool:true
 "
