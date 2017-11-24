@@ -147,18 +147,6 @@ create-widget:magic-menu-main-container
               class:strip toolbar fill
               widgets
 
-                button:magic-menu-add-command
-                  innerValue:@"<span class=""icon-plus""></span>"
-                  title:Add new command
-                  style:"padding-left:45px;padding-right:45px;"
-                  onclick
-
-                    /*
-                     * Creates a new command, by invoking file responsible for doing just that..
-                     */
-                    magic-menu.command.create
-                      global-id:your-namespace.your-concepts.some-unique-id
-
                 container:magic-menu-select-language
                   element:select
                   oninit
@@ -220,6 +208,18 @@ create-widget:magic-menu-main-container
                      * Re-databinding grid.
                      */
                     micro.evaluate.file:@MAGIC/helpers/databind-grid.hl
+
+                button:magic-menu-add-command
+                  innerValue:@"<span class=""icon-plus""></span>"
+                  title:Add new command
+                  style:"padding-left:45px;padding-right:45px;"
+                  onclick
+
+                    /*
+                     * Creates a new command, by invoking file responsible for doing just that..
+                     */
+                    magic-menu.command.create
+                      global-id:your-namespace.your-concepts.some-unique-id
 
                 button
                   innerValue:@"<span class=""icon-download2""></span>"
