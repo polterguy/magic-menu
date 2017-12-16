@@ -124,7 +124,7 @@ if:x:/@p5.mysql.connect/*/p5.mysql.select/[2,3]/*/*/username?value
  */
 p5.web.widgets.find:magic-menu-phrases-grid
   .id:x:/../*/id?value
-eval-x:x:/+/**/micro.widgets.wizard-form/*(/value|/*/hypereval.widgets.hyperlambda-textarea/*/value)
+eval-x:x:/+/**/micro.widgets.wizard-form/*(/value|/*/micro.widgets.codemirror/*/value)
 create-widget
   element:tr
   .edit:x:/../*/id?value
@@ -162,7 +162,7 @@ create-widget
                 style:"margin-bottom:0;"
               div
                 widgets
-                  hypereval.widgets.hyperlambda-textarea
+                  micro.widgets.codemirror
                     .data-field:hyperlambda
                     value:x:/@p5.mysql.connect/*/p5.mysql.select/[2,3]/*/*/hyperlambda?value
               checkbox

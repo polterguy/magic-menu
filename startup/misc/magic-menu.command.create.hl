@@ -128,7 +128,7 @@ return:bool:false
    * a piece of Hyperlambda, which will result in associating the specified Hyperlambda
    * with the given [_arg] phrase.
    */
-  eval-x:x:/+/**(/_pos|/hypereval.widgets.hyperlambda-textarea/*/value|/.data-field/=global_id/./*/value)
+  eval-x:x:/+/**(/_pos|/micro.widgets.codemirror/*/value|/.data-field/=global_id/./*/value)
   create-widgets
     micro.widgets.modal:magic-menu-create-phrase2hyper-association
       widgets
@@ -149,8 +149,7 @@ return:bool:false
         label
           innerValue:Hyperlambda to asociate with phrase(s)
           style:"margin-bottom:0;"
-        hypereval.widgets.hyperlambda-textarea:hyper-input
-          element:textarea
+        micro.widgets.codemirror:hyper-input
           .data-field:hyperlambda
           value:x:(/../*/hyperlambda|/@.defaults/*/hyperlambda)/$?value
         label
