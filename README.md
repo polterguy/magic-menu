@@ -1,4 +1,3 @@
-
 # Magic Menu
 
 Magic Menu is an Ajax navbar and menu system, working across all your Phosphorus Five 
@@ -37,31 +36,33 @@ output with speech synthesis, allowing you to choose menu items by speaking e.g.
 search for something for me"_ - Although these features are for all practical concerns limited
 to Google Chrome, since this is the only browser that adequately implements the W3C Speech API.
 
-The Magic menu is easily edited through its administrative dashboard, which you can see a
+The Magic menu is easily configured through its administrative dashboard, which you can see a
 screenshot of below.
 
 ![alt screenshot](media/screenshots/screenshot-2.png)
 
-It is not entirely finished implemented, and should still be considered BETA technology.
-
 The Magic menu will automatically create a _"trigger button"_ in your app, if you have
 a widget in your app, with the CSS class of _"toolbar"_, and inject a button with a
 magic wand icon, which you can see in the first screenshot above, which launches the menu.
-It is doing this, by being a core Phosphorus Five plugin.
+It is doing this, by being a core Phosphorus Five plugin. It contains a very rich API, to 
+allow you to launch it yourself, or manipulate it in any ways you see fit. If you choose 
+to turn on voice recognition, you can completely control your app, using exclusively your 
+voice, and the Magic menu will provide feedback to the user, using speech synthesis.
 
-It contains a very rich API, to allow you to launch it yourself, or manipulate it
-in any ways you see fit. If you choose to turn on voice recognition, you can completely
-control your app, using exclusively your voice, and the Magic menu will provide feedback
-to the user, using speech synthesis.
-
-Magic menu is localisable in any language your browser supports speech recognition for,
+The Magic Menu is localisable in any language your browser supports speech recognition for,
 and speech synthesis, and it is easily localisable. You can declare multiple phrases, words,
 and sentences, to trigger the same action. Allowing for having multiple similar phrases being
 used, to trigger the same Hyperlambda.
 
-Notice, it is dependent upon [Hypereval](https://github.com/polterguy/hypereval),
-which allows you to create reusable snippets, making your actual menu snippets smaller,
-and DRY'er. It also depens upon the CodeMirror extension widget found in Hypereval.
+## Installation
+
+The easiest way to install it, is to [install phosphorus five](https://github.com/polterguy/phosphorusfive),
+for then to visit _"The Bazar"_, and simply install it through the Bazar on your local machine/server.
+However, if you want a more manual installation path, you can download the latest release,
+unzip it, and move the unzipped root folder into your _"core/p5.webapp/modules"_ folder. If you
+choose this path, you should rename the folder, removing any version information, making sure
+your Magic Menu modules folder is called exactly _"magic-menu"_. Installation through the Bazar
+also requires you having some sort of GnuPG client on your machine/server.
 
 ## The tree structure
 
@@ -70,13 +71,13 @@ menu item, you can choose to change the scope of your available menu items in th
 This allows you to create menu hierarchies which are nested, and dependent upon some choice
 performed in a previous action. An example could be e.g.
 
-* Create a new page
-* Add a widget to my page
-* Make my widget green
-* Etc ...
+1 Create a new page
+2 Add a widget to my page
+3 Make my widget green
+4 Etc ...
 
 Then the two latter menu items in the above example, would only be possible to select,
-if you had previously selected the _"Create a new page"_ item first. This allows you
+if you have selected the previous item first. This allows you
 to purely logically, have _"discussions"_ with your application, and creating wizard
 steps in execution, where the evaluation of some step, is dependent upon the results
 of the evaluation of a previous step. The Magic menu is in such a regard, in fact a
