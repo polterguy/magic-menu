@@ -71,10 +71,10 @@ menu item, you can choose to change the scope of your available menu items in th
 This allows you to create menu hierarchies which are nested, and dependent upon some choice
 performed in a previous action. An example could be e.g.
 
-1 Create a new page
-2 Add a widget to my page
-3 Make my widget green
-4 Etc ...
+1. Create a new page
+2. Add a widget to my page
+3. Make my widget green
+4. Etc ...
 
 Then the two latter menu items in the above example, would only be possible to select,
 if you have selected the previous item first. This allows you
