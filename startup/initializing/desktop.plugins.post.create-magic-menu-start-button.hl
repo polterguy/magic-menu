@@ -11,7 +11,7 @@
  * which implies that Magic menu is only available for "actual users" in
  * your system, and not guest accounts, or random visitors that are not logged in.
  */
-create-event:desktop.plugins.post.create-toolbar-button
+create-event:desktop.plugins.post.create-magic-menu-start-button
 
   /*
    * We only allow speech recognition for registered users in system.
@@ -43,13 +43,13 @@ create-event:desktop.plugins.post.create-toolbar-button
     if:x:/@p5.web.widgets.get-children/*/*
 
       /*
-       * Toolbar had children, adding our Magic menu button as the second 
+       * Toolbar had children, adding our Magic menu button as the third 
        * last button within it.
        */
       eval-x:x:/+/*/*
       add:x:/././*/create-widget
         src
-          before:x:/@p5.web.widgets.get-children/*/0/-?value
+          before:x:/@p5.web.widgets.get-children/*/0/-2?value
 
     else
 
