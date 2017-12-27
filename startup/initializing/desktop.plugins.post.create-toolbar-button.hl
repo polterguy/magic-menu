@@ -30,7 +30,7 @@ create-event:desktop.plugins.post.create-toolbar-button
     /*
      * Includes CSS file.
      */
-    p5.web.include-css-file:@MAGIC/media/main.css
+    micro.page.minify-and-bundle-css-file:@MAGIC/media/main.css
 
     /*
      * Try to insert our widget as the second last widget into our "toolbar".

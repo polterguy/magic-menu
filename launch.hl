@@ -28,9 +28,10 @@ if:x:/@split/0/-?name
 /*
  * Including Micro and its "serious" skin.
  */
-p5.web.include-css-file:@MICRO/media/main.css
-p5.web.include-css-file:@MICRO/media/skins/serious.css
-p5.web.include-css-file:@MICRO/media/fonts.css
+micro.page.minify-and-bundle-css-file
+  @MICRO/media/main.css
+  @MICRO/media/fonts.css
+  @MICRO/media/skins/serious.css
 
 
 
