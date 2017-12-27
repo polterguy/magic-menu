@@ -1,11 +1,11 @@
 ﻿
 /*
- * Desktop widget file for app.
+ * Desktop widget.
  */
 container
   element:a
   class:desktop-app shaded rounded air-inner
-  title:Magic menu
+  title:The Magic Menu is a global navigational menu system, for all your apps, allowing you to speak to your computer to navigate it, if you wish
   widgets
     span
       class:desktop-app-name
@@ -14,5 +14,5 @@ container
           element:span
           class:icon-magic-wand desktop-app-icon
         span
-          style:"position:absolute;top:5px;right:5px;font-size:.7rem;"
-          innerValue:Magic menu
+          class:desktop-app-text
+          innerValue:Menu
