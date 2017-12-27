@@ -5,22 +5,7 @@
 container
   element:a
   class:desktop-app shaded rounded air-inner
-  href:/magic-menu
   title:Magic menu
-  oninit
-
-    /*
-     * Verifying user is logged in as root, and if not, deleting widget.
-     */
-    whoami
-    if:x:/@whoami/*/role?value
-      !=:root
-
-      /*
-       * User is not logged in, simply deleting entire icon.
-       */
-      delete-widget:x:/../*/_event?value
-
   widgets
     span
       class:desktop-app-name
