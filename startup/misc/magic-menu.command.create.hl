@@ -154,7 +154,7 @@ return:bool:false
           value:x:(/../*/hyperlambda|/@.defaults/*/hyperlambda)/$?value
         label
           title:Is this a global command, implying something you could tell Elizabeth at any time?
-          style:"margin-bottom:0;"
+          class:air-top
           widgets
             input
               type:checkbox
@@ -184,6 +184,7 @@ return:bool:false
               innerValue:Global
         label
           title:Should this phrase only apply for you?
+          class:air-top
           widgets
             input
               type:checkbox

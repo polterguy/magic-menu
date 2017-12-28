@@ -32,6 +32,7 @@ micro.page.minify-and-bundle-css-file
   @MICRO/media/main.css
   @MICRO/media/fonts.css
   @MICRO/media/skins/serious.css
+p5.web.include-css-file:x:/-?value
 
 
 
@@ -190,7 +191,7 @@ create-widget:magic-menu-main-container
                 button:magic-menu-add-command
                   innerValue:@"<span class=""icon-plus""></span>"
                   title:Add new command
-                  style:"padding-left:45px;padding-right:45px;"
+                  style:"padding-left:35px;padding-right:35px;"
                   onclick
 
                     /*

@@ -31,6 +31,7 @@ create-event:desktop.plugins.post.create-magic-menu-start-button
      * Includes CSS file.
      */
     micro.page.minify-and-bundle-css-file:@MAGIC/media/main.css
+    p5.web.include-css-file:x:/-?value
 
     /*
      * Try to insert our widget as the second last widget into our "toolbar".
