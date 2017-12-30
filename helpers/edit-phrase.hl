@@ -1,4 +1,3 @@
-﻿
 /*
  * Edits a "phrase".
  * 
@@ -161,6 +160,7 @@ create-widget
                 innerValue:Hyperlambda
                 style:"margin-bottom:0;"
               div
+                class:air-bottom
                 widgets
                   micro.widgets.codemirror
                     .data-field:hyperlambda
@@ -176,18 +176,21 @@ create-widget
 
             div
               class:strip fill
+              style:"margin-bottom:0;"
               widgets
                 label
                   innerValue:Global ID
+                  style:"margin-bottom:0;"
                 input
                   type:text
                   .data-field:global_id
                   placeholder:Global ID ...
                   value:x:/@p5.mysql.connect/*/p5.mysql.select/[2,3]/*/*/global_id?value
+                  style:"margin-bottom:0;"
                 button
                   innerValue:@"<span class=""icon-floppy-disk""></span>"
                   title:Saves command object, and all associated synonyms
-                  style:"margin-bottom:0;"
+                  style:"margin-bottom:0;padding-left:35px;padding-right:35px;"
                   events
 
                     /*
