@@ -4,4 +4,4 @@
  */
 create-event:magic-menu.version
 
-  return:decimal:1.2
+  return:decimal:1.3

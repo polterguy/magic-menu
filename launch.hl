@@ -1,4 +1,3 @@
-﻿
 /*
  * File responsible for starting module.
  */
@@ -239,23 +238,6 @@ create-widget:magic-menu-main-container
                                 style:"display:inline-block;"
                                 widgets
                                   button
-                                    innerValue:No
-                                    style:"margin-bottom:0;"
-                                    oninit
-
-                                      /*
-                                       * Setting focus initially to "No" button.
-                                       */
-                                      micro.page.set-focus:x:/../*/_event?value
-
-                                    onclick
-
-                                      /*
-                                       * Simply closing modal widget.
-                                       */
-                                      delete-widget:magic-menu-delete-all-commands-modal
-
-                                  button
                                     innerValue:Yes
                                     style:"margin-bottom:0;"
                                     onclick
@@ -280,6 +262,23 @@ create-widget:magic-menu-main-container
                                        */
                                       micro.windows.info:All your commands was successfully deleted
                                         class:micro-windows-info success
+
+                                  button
+                                    innerValue:No
+                                    style:"margin-bottom:0;"
+                                    oninit
+
+                                      /*
+                                       * Setting focus initially to "No" button.
+                                       */
+                                      micro.page.set-focus:x:/../*/_event?value
+
+                                    onclick
+
+                                      /*
+                                       * Simply closing modal widget.
+                                       */
+                                      delete-widget:magic-menu-delete-all-commands-modal
 
                 button
                   innerValue:@"<span class=""icon-home3""></span>"
