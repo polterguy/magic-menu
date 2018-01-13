@@ -187,7 +187,7 @@ create-widget:magic-menu-main-container
                 button:magic-menu-add-command
                   innerValue:@"<span class=""icon-plus""></span>"
                   title:Add new command
-                  style:"padding-left:35px;padding-right:35px;"
+                  class:larger
                   onclick
 
                     /*

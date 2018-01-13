@@ -190,7 +190,8 @@ create-widget
                 button
                   innerValue:@"<span class=""icon-floppy-disk""></span>"
                   title:Saves command object, and all associated synonyms
-                  style:"margin-bottom:0;padding-left:35px;padding-right:35px;"
+                  style:"margin-bottom:0;"
+                  class:larger
                   events
 
                     /*
