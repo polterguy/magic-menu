@@ -421,7 +421,7 @@ create-widget
                       force-parent:bool:true
 
                 button
-                  innerValue:@"<span class=""icon-spinner11""></span>"
+                  innerValue:@"<span class=""icon-files-empty""></span>"
                   title:Clones the given command
                   style:"margin-bottom:0;"
                   onclick

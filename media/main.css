@@ -153,6 +153,7 @@ label.magic-menu-tip {
     margin-bottom:.5rem;
     margin-left:0;
     background:var(--wid-dark-col);
+    background-size:1px 400%;
 }
 .magic-menu-help ul li {
     cursor:pointer;

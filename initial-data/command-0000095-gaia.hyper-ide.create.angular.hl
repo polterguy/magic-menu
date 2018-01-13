@@ -1,0 +1,33 @@
+command
+  hyperlambda:@"/*
+ * Verifying we can do this, by first checking if Hyper IDE
+ * is installed, and afterwards verifying that it is open.
+ */
+if
+  hyper-ide.version
+  not
+  magic-menu.listen:You don't seem to have Hyper I.D.E installed.
+  return:bool:false
+if
+  hyper-ide.is-open
+  not
+  magic-menu.listen:Hyper I.D.E must be open for this command to work.
+  return:bool:false
+
+/*
+ * Selcting ""/modules/"" folder.
+ */
+micro.widgets.tree.select-items:hyper-ide-folder-tree-browser
+  items
+    /modules/
+hyper-ide._plugins.create-app
+  app-type:angular-todo
+
+magic-menu.listen:OK, supply a name to me with your keyboard
+return:bool:false
+"
+  global:uint:0
+  global-id:gaia.hyper-ide.create.angular
+  phrase
+    command:Create an angular app
+    lang:en

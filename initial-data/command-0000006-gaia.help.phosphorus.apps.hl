@@ -2,7 +2,9 @@ command
   hyperlambda:@"magic-menu.listen:@""The GaiaSoul suite contains a whole range of apps, solving all sorts
 of needs you might have. For instance, Sephia Five is a webmail system, with PGP cryptography.
 In addition to Sulphur Five, which allows you to securely share files, and Camphora Five, 
-which allows you to create your own CRUD apps.""
+which allows you to create your own CRUD apps. Our crown jewel however, is Hyper I.D.E, which
+is a web based integrated development environment, allowing you to create code in more than 
+100 programming languages.""
 return:bool:true
 "
   global:uint:0
