@@ -1,4 +1,3 @@
-﻿
 /*
  * Desktop widget.
  */
@@ -15,4 +14,4 @@ container
           class:icon-magic-wand desktop-app-icon
         span
           class:desktop-app-text
-          innerValue:Menu
+          innerValue:Magic Menu
