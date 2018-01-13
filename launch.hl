@@ -25,12 +25,10 @@ if:x:/@split/0/-?name
 
 
 /*
- * Including Micro and its "serious" skin.
+ * Including Micro and its "off-white" skin.
  */
-p5.web.include-css-file
-  @MICRO/media/main.css
-  @MICRO/media/fonts.css
-  @MICRO/media/skins/serious.css
+micro.css.include
+  skin:off-white
 
 
 
