@@ -148,7 +148,6 @@ create-widget
             micro.widgets.wizard-form
               label
                 innerValue:Command(s)
-                style:"margin-bottom:0;"
               br
               textarea
                 info:Phrase(s), one for each line
@@ -158,7 +157,6 @@ create-widget
               br
               label
                 innerValue:Hyperlambda
-                style:"margin-bottom:0;"
               div
                 class:air-bottom
                 widgets
@@ -176,21 +174,17 @@ create-widget
 
             div
               class:strip fill
-              style:"margin-bottom:0;"
               widgets
                 label
                   innerValue:Global ID
-                  style:"margin-bottom:0;"
                 input
                   type:text
                   .data-field:global_id
                   placeholder:Global ID ...
                   value:x:/@p5.mysql.connect/*/p5.mysql.select/[2,3]/*/*/global_id?value
-                  style:"margin-bottom:0;"
                 button
                   innerValue:@"<span class=""icon-floppy-disk""></span>"
                   title:Saves command object, and all associated synonyms
-                  style:"margin-bottom:0;"
                   class:larger
                   events
 
@@ -386,7 +380,6 @@ create-widget
                 button
                   innerValue:@"<span class=""icon-plus""></span>"
                   title:Creates a new child command
-                  style:"margin-bottom:0;"
                   onclick
 
                     /*
@@ -423,7 +416,6 @@ create-widget
                 button
                   innerValue:@"<span class=""icon-files-empty""></span>"
                   title:Clones the given command
-                  style:"margin-bottom:0;"
                   onclick
 
                     /*
@@ -475,7 +467,6 @@ create-widget
                 button
                   innerValue:@"<span class=""icon-bin""></span>"
                   title:Deletes command object, and all associated synonyms
-                  style:"margin-bottom:0;"
                   onclick
 
                     /*
@@ -502,7 +493,6 @@ create-widget
                                 widgets
                                   button
                                     innerValue:Yes
-                                    style:"margin-bottom:0;"
                                     oninit
 
                                       /*
@@ -533,7 +523,6 @@ create-widget
 
                                   button
                                     innerValue:No
-                                    style:"margin-bottom:0;"
                                     onclick
 
                                       /*
@@ -544,7 +533,6 @@ create-widget
                 button
                   innerValue:@"<span class=""icon-cross""></span>"
                   title:Close editor for command object without saving
-                  style:"margin-bottom:0;"
                   onclick
 
                     /*

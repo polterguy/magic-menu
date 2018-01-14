@@ -87,7 +87,6 @@ create-event:magic-menu.start
         class:strip fill
         widgets
           button
-            style:"margin-bottom:0;"
             title:Pauses or turns off/on speech input/output, keyboard shortcut P
             accesskey:P
             onclick
@@ -217,7 +216,6 @@ create-event:magic-menu.start
             innerValue:x:/@magic-menu.unwrap-phrase?value
 
           button:magic-menu-show-options-button
-            style:"margin-bottom:0;"
             innerValue:@"<span class=""icon-question""></span>"
             title:Help, or show options, keyboard shortcut H
             accesskey:H
@@ -282,7 +280,6 @@ create-event:magic-menu.start
                 magic-menu.options.show
 
           button
-            style:"margin-bottom:0;"
             innerValue:@"<span class=""icon-plus""></span>"
             title:Teach computer phrase, keyboard shortcut T
             visible:false

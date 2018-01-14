@@ -32,7 +32,6 @@ command
         widgets
           button
             innerValue:Close
-            style:""margin-bottom:0;""
             onclick
               delete-widget:magic-menu-dictated-text-modal
 magic-menu.dictate:What do you want me to dictate for you?

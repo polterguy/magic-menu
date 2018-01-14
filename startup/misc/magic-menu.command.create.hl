@@ -137,7 +137,6 @@ return:bool:false
         label
           innerValue:Phrase(s)
           for:magic-menu-synonymous-phrases
-          style:"margin-bottom:0;"
         literal:magic-menu-synonymous-phrases
           element:textarea
           class:fill
@@ -148,7 +147,6 @@ return:bool:false
           value:x:/../*/_arg?value
         label
           innerValue:Hyperlambda to asociate with phrase(s)
-          style:"margin-bottom:0;"
         micro.widgets.codemirror:hyper-input
           .data-field:hyperlambda
           value:x:(/../*/hyperlambda|/@.defaults/*/hyperlambda)/$?value
@@ -244,7 +242,6 @@ return:bool:false
               widgets
                 button
                   innerValue:OK
-                  style:"margin-bottom:0;"
                   onclick
 
                     /*
@@ -433,7 +430,6 @@ return:bool:false
 
                 button
                   innerValue:Cancel
-                  style:"margin-bottom:0;"
                   onclick
 
                     /*

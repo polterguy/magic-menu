@@ -70,7 +70,6 @@ create-event:desktop.plugins.post.create-magic-menu-start-button
       title:Starts and stops the Magic menu, keyboard shortcut M
       innerValue:@"<span class=""icon-magic-wand""></span>"
       accesskey:M
-      style:"margin-bottom:0;"
       events
 
 

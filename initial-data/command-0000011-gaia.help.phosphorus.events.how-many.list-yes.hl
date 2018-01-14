@@ -30,7 +30,6 @@ create-widgets
         widgets
           button
             innerValue:Close
-            style:""margin-bottom:0;""
             oninit
               micro.page.set-focus:x:/../*/_event?value
             onclick

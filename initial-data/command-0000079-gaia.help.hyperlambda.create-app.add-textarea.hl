@@ -8,7 +8,6 @@ add:x:/@hyper2lambda/**/widgets/=main-content
       widgets
         label
           innerValue:Some textarea
-          style:""margin-bottom:0;""
         textarea
           placeholder:Textarea content ...
           innerValue
