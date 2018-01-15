@@ -1,27 +1,22 @@
-﻿
 /*
- * File responsible for initializing module.
+ * Startup file.
+ *
+ * Creates "path" event and evaluates all files in "/startup/" folder for module.
  */
 
 
 /*
- * Creates the "path" Active Event.
+ * Creates our "path" Active Event for module.
  */
-split:x:/..?name
-  =:/
-set:x:/@split/0/-
-join:x:/@split/*?name
-  sep:/
+micro.path.get-folder:x:/..?name
+trim-right:x:/@micro.path.get-folder?value
+  chars:/
 eval-x:x:/+/*
 create-event:p5.io.unroll-path.@MAGIC
-  return:/{0}
-    :x:/@join?value
-
-
-
+  return:x:/@trim-right?value
 
 
 /*
- * Evaluates all startup scripts in "/startup/" folder.
+ * Evaluating all other startup files.
  */
 micro.evaluate.folder:@MAGIC/startup/
