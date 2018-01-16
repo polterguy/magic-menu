@@ -13,7 +13,7 @@ if
             class:col
             widgets
               hypereval.widgets.eval
-hypereval.widgets.eval.set-code:@""p5.web.include-css-file:@MICRO/media/main.css
+hypereval.widgets.eval.set-code:@""p5.web.include-css-file:@MICRO/media/micro.css
 p5.web.include-css-file:@MICRO/media/skins/serious.css
 create-widget
   class:container

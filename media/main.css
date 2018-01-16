@@ -120,6 +120,7 @@ label.magic-menu-tip {
     animation-iteration-count: 1;
     animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
+    padding-left:0;
 }
 @keyframes magic-menu-options-push {
     0% {margin-left:0;}
@@ -137,6 +138,9 @@ label.magic-menu-tip {
     top: 38px;
     width: calc(100% - 1rem);
 }
+.magic-menu-help .magic-menu-options-pager-toolbar {
+    margin-bottom:0;
+}
 .magic-menu-help .magic-menu-options-pager-toolbar button {
     height:30px;
     width:35px;
@@ -149,16 +153,15 @@ label.magic-menu-tip {
     margin-bottom:0;
 }
 .magic-menu-help ul {
-    margin-top:.5rem;
+    margin-top:0;
     margin-bottom:.5rem;
     margin-left:0;
-    background:var(--wid-dark-col);
     background-size:1px 400%;
 }
 .magic-menu-help ul li {
     cursor:pointer;
     list-style:none;
-    border:solid var(--border-width) var(--wid-border-col);
+    border:solid 1px var(--border-color);
     border-top-color:rgba(0,0,0,.02);
     border-bottom:none;
 }
@@ -171,7 +174,7 @@ label.magic-menu-tip {
     border-top-right-radius:var(--border-radius);
 }
 .magic-menu-help ul li:last-child {
-    border-bottom:solid var(--border-width) var(--wid-border-col);
+    border-bottom:solid 1px var(--border-color);
     border-bottom-left-radius:var(--border-radius);
     border-bottom-right-radius:var(--border-radius);
 }
@@ -180,6 +183,9 @@ label.magic-menu-tip {
 }
 .magic-menu-help ul li a {
     display:block;
+}
+.magic-menu-bottom-toolbar-wrapper {
+    margin-bottom:0;
 }
 .magic-menu-options-root {
 }

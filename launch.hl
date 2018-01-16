@@ -226,7 +226,6 @@ create-widget:magic-menu-main-container
                         widgets
                           div
                             class:strip
-                            style:"display:inline-block;"
                             widgets
                               button
                                 innerValue:Yes

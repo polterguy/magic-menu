@@ -491,23 +491,6 @@ create-event:magic-menu.options._ensure-window
                */
               magic-menu.options.show-next
 
-      container:magic-menu-help-list-custom
-        element:ul
-        class:magic-menu-custom-options
-        events
-
-
-          /*
-           * Helper active event to clear custom options
-           */
-          magic-menu.options.clear-custom
-
-            /*
-             * Clearing custom options.
-             */
-            clear-widget:x:/../*/_event?value
-
-
       container
         element:ul
         class:magic-menu-options

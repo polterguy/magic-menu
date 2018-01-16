@@ -1,4 +1,3 @@
-﻿
 /*
  * Creates the event that actually starts Magic menu.
  *
@@ -84,7 +83,7 @@ create-event:magic-menu.start
        * the Magic menu.
        */
       div
-        class:strip fill
+        class:strip fill magic-menu-bottom-toolbar-wrapper
         widgets
           button
             title:Pauses or turns off/on speech input/output, keyboard shortcut P
@@ -281,9 +280,8 @@ create-event:magic-menu.start
 
           button
             innerValue:@"<span class=""icon-plus""></span>"
-            title:Teach computer phrase, keyboard shortcut T
-            visible:false
-            accesskey:T
+            title:Teach computer phrase
+            class:hide
             events
 
 
@@ -304,8 +302,9 @@ create-event:magic-menu.start
                  * Simply making widget visible.
                  */
                 set-widget-property:x:/../*/_event?value
-                  visible:true
                   .spoken:x:/../*/_arg?value
+                micro.css.delete:x:/../*/_event?value
+                  class:hide
 
 
               /*
@@ -317,10 +316,10 @@ create-event:magic-menu.start
                  * Simply making widget visible, and removing any reference to
                  * previously spoken phrase.
                  */
-                set-widget-property:x:/../*/_event?value
-                  visible:false
                 delete-widget-property:x:/../*/_event?value
                   .spoken
+                micro.css.add:x:/../*/_event?value
+                  class:hide
 
 
             onclick
