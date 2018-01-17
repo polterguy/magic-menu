@@ -1,7 +1,6 @@
-﻿
 /*
  * Creates version Active Event.
  */
 create-event:magic-menu.version
 
-  return:decimal:6.1
+  return:decimal:6.2
