@@ -28,7 +28,6 @@ if:x:/@split/0/-?name
  * Including Micro and its "serious" skin.
  */
 micro.css.include
-  skin:serious
 
 
 
@@ -45,239 +44,244 @@ create-widget:magic-menu-main-container
       class:row
       widgets
         div
-          class:col-40 strip fill
+          class:col-40
           widgets
-            input:magic-menu-search-textbox
-              type:text
-              onkeydown:@"if (event.keyCode == 13) {p5.$('magic-menu-search-button').raise('onclick');return false;}"
-              oninit
+            div
+              class:strip fill
+              widgets
+                input:magic-menu-search-textbox
+                  type:text
+                  onkeydown:@"if (event.keyCode == 13) {p5.$('magic-menu-search-button').raise('onclick');return false;}"
+                  oninit
 
-                /*
-                 * Figuring out how many commands we have, and setting the placeholder's value accordingly,
-                 * to give user a visual clue about how much data there actually is.
-                 */
-                p5.mysql.connect:[magic-menu]
-                  p5.mysql.scalar:@"select count(*) from commands"
-                  set-widget-property:x:/../*/_event?value
-                    placeholder:Search among {0} commands ...
-                      :x:/@p5.mysql.scalar?value
+                    /*
+                     * Figuring out how many commands we have, and setting the placeholder's value accordingly,
+                     * to give user a visual clue about how much data there actually is.
+                     */
+                    p5.mysql.connect:[magic-menu]
+                      p5.mysql.scalar:@"select count(*) from commands"
+                      set-widget-property:x:/../*/_event?value
+                        placeholder:Search among {0} commands ...
+                          :x:/@p5.mysql.scalar?value
 
-            button:magic-menu-search-button
-              innerValue:@"<span class=""icon-search""></span>"
-              title:Search
-              onclick
-
-                /*
-                 * Retrieving filter, and re-databinding grid, now with the specified filter condition.
-                 */
-                get-widget-property:magic-menu-search-textbox
-                  value
-                eval-x:x:/+/*
-                micro.evaluate.file:@MAGIC/helpers/databind-grid.hl
-                  filter:x:/@get-widget-property/*/*?value
-
-                /*
-                 * For simplicity, we set focus to search textbox again.
-                 */
-                micro.page.set-focus:magic-menu-search-textbox
-
-                /*
-                 * Making sure we store filter.
-                 */
-                p5.web.viewstate.set:magic-menu.grid-filter
-                  src:x:/@get-widget-property/*/*?value
-
-                /*
-                 * Enabling clear button, if we have a filter, otherwise disabling it.
-                 */
-                if:x:/@get-widget-property/*/*?value
-                  !=:
-                  delete-widget-property:magic-menu-clear-search-button
-                    disabled
-                else
-                  set-widget-property:magic-menu-clear-search-button
-                    disabled
-
-            button:magic-menu-clear-search-button
-              innerValue:@"<span class=""icon-cross""></span>"
-              title:Clears filter
-              disabled
-              onclick
-
-                /*
-                 * Clears filter and invokes Ajax event for search button.
-                 */
-                set-widget-property:magic-menu-search-textbox
-                  value:
-                p5.web.widgets.ajax-events.raise:magic-menu-search-button
+                button:magic-menu-search-button
+                  innerValue:@"<span class=""icon-search""></span>"
+                  title:Search
                   onclick
 
+                    /*
+                     * Retrieving filter, and re-databinding grid, now with the specified filter condition.
+                     */
+                    get-widget-property:magic-menu-search-textbox
+                      value
+                    eval-x:x:/+/*
+                    micro.evaluate.file:@MAGIC/helpers/databind-grid.hl
+                      filter:x:/@get-widget-property/*/*?value
+
+                    /*
+                     * For simplicity, we set focus to search textbox again.
+                     */
+                    micro.page.set-focus:magic-menu-search-textbox
+
+                    /*
+                     * Making sure we store filter.
+                     */
+                    p5.web.viewstate.set:magic-menu.grid-filter
+                      src:x:/@get-widget-property/*/*?value
+
+                    /*
+                     * Enabling clear button, if we have a filter, otherwise disabling it.
+                     */
+                    if:x:/@get-widget-property/*/*?value
+                      !=:
+                      delete-widget-property:magic-menu-clear-search-button
+                        disabled
+                    else
+                      set-widget-property:magic-menu-clear-search-button
+                        disabled
+
+                button:magic-menu-clear-search-button
+                  innerValue:@"<span class=""icon-cross""></span>"
+                  title:Clears filter
+                  disabled
+                  onclick
+
+                    /*
+                     * Clears filter and invokes Ajax event for search button.
+                     */
+                    set-widget-property:magic-menu-search-textbox
+                      value:
+                    p5.web.widgets.ajax-events.raise:magic-menu-search-button
+                      onclick
+
         div
-          class:col-60 strip fill
+          class:col-60
           widgets
-
-            container:magic-menu-select-language
-              element:select
-              oninit
-
-                /*
-                 * Selecting all supported languages, which depends upon
-                 * your browser's supported speech languages.
-                 */
-                micro.speech.speak.query-voices
-                  onfinish
+            div
+              class:strip fill
+              widgets
+                container:magic-menu-select-language
+                  element:select
+                  oninit
 
                     /*
-                     * Looping through each voice, and creating one option element for each.
-                     *
-                     * But first creating our "select voice" option element.
+                     * Selecting all supported languages, which depends upon
+                     * your browser's supported speech languages.
                      */
-                    create-widget
-                      parent:magic-menu-select-language
-                      element:option
-                      innerValue:Select voice ...
-                      value:_default
-                    for-each:x:/../*/voices/*
-                      p5.globalization.get-language-name:x:/@_dp/#?value
-                      _local
-                      if:x:/@_dp/#/*/local?value.bool
-                        not
-                        set:x:/@_local?value
-                          src:", External service"
-                      create-widget
-                        parent:magic-menu-select-language
-                        element:option
-                        innerValue:{1}, {0}{2}
-                          :x:/@_dp/#?name
-                          :x:/@p5.globalization.get-language-name?value
-                          :x:/@_local?value
-                        value:{0},{1}
-                          :x:/@_dp/#?name
-                          :x:/@_dp/#?value
+                    micro.speech.speak.query-voices
+                      onfinish
+
+                        /*
+                         * Looping through each voice, and creating one option element for each.
+                         *
+                         * But first creating our "select voice" option element.
+                         */
+                        create-widget
+                          parent:magic-menu-select-language
+                          element:option
+                          innerValue:Select voice ...
+                          value:_default
+                        for-each:x:/../*/voices/*
+                          p5.globalization.get-language-name:x:/@_dp/#?value
+                          _local
+                          if:x:/@_dp/#/*/local?value.bool
+                            not
+                            set:x:/@_local?value
+                              src:", External service"
+                          create-widget
+                            parent:magic-menu-select-language
+                            element:option
+                            innerValue:{1}, {0}{2}
+                              :x:/@_dp/#?name
+                              :x:/@p5.globalization.get-language-name?value
+                              :x:/@_local?value
+                            value:{0},{1}
+                              :x:/@_dp/#?name
+                              :x:/@_dp/#?value
+
+                        /*
+                         * Setting widget's initial value to language setting for user, if possible.
+                         */
+                        magic-menu.settings.get-language
+                        set-widget-property:magic-menu-select-language
+                          value:{0},{1}
+                            :x:/@magic-menu.settings.get-language/*/voice?value
+                            :x:/@magic-menu.settings.get-language/*/sublang?value
+
+                  onchange
 
                     /*
-                     * Setting widget's initial value to language setting for user, if possible.
+                     * Updating user's settings according to voice selected.
                      */
-                    magic-menu.settings.get-language
-                    set-widget-property:magic-menu-select-language
-                      value:{0},{1}
-                        :x:/@magic-menu.settings.get-language/*/voice?value
-                        :x:/@magic-menu.settings.get-language/*/sublang?value
+                    get-widget-property:x:/../*/_event?value
+                      value
+                    magic-menu.settings.set-language:x:/@get-widget-property/*/*?value
 
-              onchange
+                    /*
+                     * Re-databinding grid.
+                     */
+                    micro.evaluate.file:@MAGIC/helpers/databind-grid.hl
 
-                /*
-                 * Updating user's settings according to voice selected.
-                 */
-                get-widget-property:x:/../*/_event?value
-                  value
-                magic-menu.settings.set-language:x:/@get-widget-property/*/*?value
+                button:magic-menu-add-command
+                  innerValue:@"<span class=""icon-plus""></span>"
+                  title:Add new command
+                  class:larger
+                  onclick
 
-                /*
-                 * Re-databinding grid.
-                 */
-                micro.evaluate.file:@MAGIC/helpers/databind-grid.hl
+                    /*
+                     * Creates a new command, by invoking file responsible for doing just that..
+                     */
+                    magic-menu.command.create
+                      global-id:your-namespace.your-concepts.some-unique-id
 
-            button:magic-menu-add-command
-              innerValue:@"<span class=""icon-plus""></span>"
-              title:Add new command
-              class:larger
-              onclick
+                button
+                  innerValue:@"<span class=""icon-download2""></span>"
+                  title:Download dictionary
+                  onclick
 
-                /*
-                 * Creates a new command, by invoking file responsible for doing just that..
-                 */
-                magic-menu.command.create
-                  global-id:your-namespace.your-concepts.some-unique-id
+                    /*
+                     * Downloads a backup of entire database as a zip file.
+                     */
+                    micro.evaluate.file:@MAGIC/helpers/export-dictionary.hl
+                    magic-menu.backup.download
 
-            button
-              innerValue:@"<span class=""icon-download2""></span>"
-              title:Download dictionary
-              onclick
+                button
+                  innerValue:@"<span class=""icon-upload2""></span>"
+                  title:Upload dictionary file
+                  onclick:@"p5.dropzone.browse();event.stopPropagation(true);return false;"
 
-                /*
-                 * Downloads a backup of entire database as a zip file.
-                 */
-                micro.evaluate.file:@MAGIC/helpers/export-dictionary.hl
-                magic-menu.backup.download
+                button:magic-menu-delete-all-commands
+                  innerValue:@"<span class=""icon-bin""></span>"
+                  title:Deletes all commands
+                  onclick
 
-            button
-              innerValue:@"<span class=""icon-upload2""></span>"
-              title:Upload dictionary file
-              onclick:@"p5.dropzone.browse();event.stopPropagation(true);return false;"
-
-            button:magic-menu-delete-all-commands
-              innerValue:@"<span class=""icon-bin""></span>"
-              title:Deletes all commands
-              onclick
-
-                /*
-                 * Asking user to confirm action.
-                 */
-                create-widgets
-                  micro.widgets.modal:magic-menu-delete-all-commands-modal
-                    widgets
-                      h3
-                        innerValue:Please confirm action
-                      p
-                        innerValue:Are you sure you want to do this? This action is permanent.
-                      div
-                        class:right
+                    /*
+                     * Asking user to confirm action.
+                     */
+                    create-widgets
+                      micro.widgets.modal:magic-menu-delete-all-commands-modal
                         widgets
+                          h3
+                            innerValue:Please confirm action
+                          p
+                            innerValue:Are you sure you want to do this? This action is permanent.
                           div
-                            class:strip
+                            class:right
                             widgets
-                              button
-                                innerValue:Yes
-                                onclick
-
-                                  /*
-                                   * Deleting all commands, and re-databinding grid.
-                                   */
-                                  p5.mysql.connect:[magic-menu]
-                                    p5.mysql.delete:@"delete from commands"
-
-                                  /*
-                                   * Re-databinding datagrid, and closing modal widget.
-                                   */
-                                  set-widget-property:magic-menu-search-textbox
-                                    value:
-                                  p5.web.widgets.ajax-events.raise:magic-menu-search-button
+                              div
+                                class:strip
+                                widgets
+                                  button
+                                    innerValue:Yes
                                     onclick
-                                  delete-widget:magic-menu-delete-all-commands-modal
 
-                                  /*
-                                   * Giving user some feedback.
-                                   */
-                                  micro.windows.info:All your commands was successfully deleted
-                                    class:micro-windows-info success
+                                      /*
+                                       * Deleting all commands, and re-databinding grid.
+                                       */
+                                      p5.mysql.connect:[magic-menu]
+                                        p5.mysql.delete:@"delete from commands"
 
-                              button
-                                innerValue:No
-                                oninit
+                                      /*
+                                       * Re-databinding datagrid, and closing modal widget.
+                                       */
+                                      set-widget-property:magic-menu-search-textbox
+                                        value:
+                                      p5.web.widgets.ajax-events.raise:magic-menu-search-button
+                                        onclick
+                                      delete-widget:magic-menu-delete-all-commands-modal
 
-                                  /*
-                                   * Setting focus initially to "No" button.
-                                   */
-                                  micro.page.set-focus:x:/../*/_event?value
+                                      /*
+                                       * Giving user some feedback.
+                                       */
+                                      micro.windows.info:All your commands was successfully deleted
+                                        class:micro-windows-info success
 
-                                onclick
+                                  button
+                                    innerValue:No
+                                    oninit
 
-                                  /*
-                                   * Simply closing modal widget.
-                                   */
-                                  delete-widget:magic-menu-delete-all-commands-modal
+                                      /*
+                                       * Setting focus initially to "No" button.
+                                       */
+                                      micro.page.set-focus:x:/../*/_event?value
 
-            button
-              innerValue:@"<span class=""icon-home3""></span>"
-              title:Close Magic menu
-              onclick
+                                    onclick
 
-                /*
-                 * Redirecting user to server's root URL.
-                 */
-                p5.web.get-root-location
-                p5.web.set-location:x:/-?value
+                                      /*
+                                       * Simply closing modal widget.
+                                       */
+                                      delete-widget:magic-menu-delete-all-commands-modal
+
+                button
+                  innerValue:@"<span class=""icon-home3""></span>"
+                  title:Close Magic menu
+                  onclick
+
+                    /*
+                     * Redirecting user to server's root URL.
+                     */
+                    p5.web.get-root-location
+                    p5.web.set-location:x:/-?value
 
     div
       class:row
