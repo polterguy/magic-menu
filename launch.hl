@@ -28,6 +28,7 @@ if:x:/@split/0/-?name
  * Including Micro and its "serious" skin.
  */
 micro.css.include
+p5.web.include-css-file:@MAGIC/media/main.css
 
 
 

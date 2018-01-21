@@ -1,7 +1,6 @@
-﻿
-/*
- * Styles for main plugin button, which initiates Hyperlang.
- */
+html, body {
+    height: auto;
+}
 
 
 /*
@@ -11,7 +10,7 @@
     padding-bottom:150px;
 }
 .magic-menu-grid tr.grid-row td {
-    font-size:.8rem;
+    font-size:.9rem;
 }
 .magic-menu-grid tr th:nth-child(1),
 .magic-menu-grid tr td:nth-child(1) {
