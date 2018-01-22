@@ -43,7 +43,7 @@ create-event:magic-menu.start
    * Creating main Magic menu widget.
    */
   create-widget:magic-menu-listener
-    class:magic-menu-listener shaded rounded
+    class:magic-menu-listener shaded rounded bg
     events
 
 
@@ -211,8 +211,35 @@ create-event:magic-menu.start
 
           literal:magic-menu-current-text
             element:label
+            role:button
             class:magic-menu-tip
             innerValue:x:/@magic-menu.unwrap-phrase?value
+            onclick
+
+              /*
+               * Displaying a modal window with current answer.
+               */
+              get-widget-property:x:/../*/_event?value
+                title
+              if:x:/-/*/*?value
+                not
+                or:x:/-/*/*?value
+                  =:
+                return
+              create-widgets
+                micro.widgets.modal:magic-menu-show-tip-modal
+                  widgets
+                    p
+                      innerValue:x:/@get-widget-property/*/*?value
+                    div
+                      class:right
+                      widgets
+                        button
+                          innerValue:Close
+                          oninit
+                            micro.page.set-focus:x:/../*/_event?value
+                          onclick
+                            delete-widget:magic-menu-show-tip-modal
 
           button:magic-menu-show-options-button
             innerValue:@"<span class=""icon-question""></span>"

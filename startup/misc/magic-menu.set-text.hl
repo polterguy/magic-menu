@@ -1,4 +1,3 @@
-﻿
 /*
  * Creates the event that sets the "current text" (tip).
  *
@@ -37,9 +36,9 @@ create-event:magic-menu.set-text
        */
       if
         length:x:/@magic-menu.unwrap-phrase?value
-        >:int:57
+        >:int:40
         split:x:/@magic-menu.unwrap-phrase?value
-          =:int:57
+          =:int:40
         set-widget-property:magic-menu-current-text
           title:x:/@magic-menu.unwrap-phrase?value
         set:x:/@magic-menu.unwrap-phrase?value

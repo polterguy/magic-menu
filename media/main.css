@@ -85,7 +85,6 @@ html, body {
     position:fixed;
     bottom:0;
     left:1rem;
-    background-color:#fefefe;
     z-index:999;
     padding:.5rem;
     overflow:hidden;
@@ -98,9 +97,9 @@ html, body {
     animation-timing-function:ease-in-out;
 }
 label.magic-menu-tip {
-    color:#a0a0a0;
     margin-bottom:0;
     width:100%;
+    cursor: pointer;
 }
 .magic-menu-tip:before {
     content:'\00ab';
@@ -113,7 +112,6 @@ label.magic-menu-tip {
     100% {margin-left:0;}
 }
 .magic-menu-options {
-    min-height:144px;
     animation-name: magic-menu-options;
     animation-duration: .2s;
     animation-iteration-count: 1;
@@ -126,7 +124,6 @@ label.magic-menu-tip {
     100% {margin-left:-1000px;}
 }
 .magic-menu-options-push {
-    min-height: 144px;
     animation-name: magic-menu-options-push;
     animation-duration: .2s;
     animation-iteration-count: 1;
@@ -138,21 +135,13 @@ label.magic-menu-tip {
     width: calc(100% - 1rem);
 }
 .magic-menu-help .magic-menu-options-pager-toolbar {
-    margin-bottom:0;
 }
 .magic-menu-help .magic-menu-options-pager-toolbar button {
-    height:30px;
-    width:35px;
-    padding-left:9px;
-    padding-top:7px;
-    margin-bottom:0;
 }
 .magic-menu-help .magic-menu-options-pager-toolbar input[type=text] {
-    height:30px;
-    margin-bottom:0;
 }
 .magic-menu-help ul {
-    margin-top:0;
+    margin-top:.5rem;
     margin-bottom:.5rem;
     margin-left:0;
     background-size:1px 400%;
