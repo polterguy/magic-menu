@@ -137,11 +137,6 @@ create-widget:magic-menu-main-container
                          *
                          * But first creating our "select voice" option element.
                          */
-                        create-widget
-                          parent:magic-menu-select-language
-                          element:option
-                          innerValue:Select voice ...
-                          value:_default
                         for-each:x:/../*/voices/*
                           p5.globalization.get-language-name:x:/@_dp/#?value
                           _local
