@@ -9,7 +9,7 @@ create-event:magic-menu.speech.is-enabled
    * false to caller.
    */
   magic-menu.settings.get:speech-enabled
-    default:no
+    default:yes
   if:x:/@magic-menu.settings.get?value
     =:no
     return:bool:false
