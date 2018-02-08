@@ -7,24 +7,6 @@
 
 
 /*
- * Checking if this is an upload request.
- */
-split:x:/../*/url?value
-  =:/
-if:x:/@split/0/-?name
-  =:upload
-
-  /*
-   * Invoking event responsible for handling uploads, and returning early.
-   */
-  micro.evaluate.file:@MAGIC/helpers/handle-upload-request.hl
-  return
-
-
-
-
-
-/*
  * Including Micro and its "serious" skin.
  */
 micro.css.include
@@ -201,10 +183,22 @@ create-widget:magic-menu-main-container
                     micro.evaluate.file:@MAGIC/helpers/export-dictionary.hl
                     magic-menu.backup.download
 
-                button
-                  innerValue:@"<span class=""icon-upload2""></span>"
+                micro.widgets.upload-button
                   title:Upload dictionary file
-                  onclick:@"p5.dropzone.browse();event.stopPropagation(true);return false;"
+                  accept:.zip
+                  .onupload
+
+                    /*
+                     * Invoking file responsible for handling uploads.
+                     */
+                    add:x:/../*/micro.evaluate.file
+                      src:x:/../*/files
+                    micro.evaluate.file:@MAGIC/helpers/handle-upload-request.hl
+
+                    /*
+                     * Re-databinding grid.
+                     */
+                    micro.evaluate.file:@MAGIC/helpers/databind-grid.hl
 
                 button:magic-menu-delete-all-commands
                   innerValue:@"<span class=""icon-bin""></span>"
@@ -218,9 +212,9 @@ create-widget:magic-menu-main-container
                       micro.widgets.modal:magic-menu-delete-all-commands-modal
                         widgets
                           h3
-                            innerValue:Please confirm action
+                            innerValue:Please confirm deletion of all commands
                           p
-                            innerValue:Are you sure you want to do this? This action is permanent.
+                            innerValue:Are you sure you want to <strong>delete all commands</strong>? This action is permanent.
                           div
                             class:right
                             widgets

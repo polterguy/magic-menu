@@ -11,8 +11,17 @@
 
 
 /*
- * Verifying user is logged in as root, and if not, 
- * returning error to client.
+ * Sanity checking arguments.
+ */
+micro.lambda.contract.min:x:/..
+  files
+
+
+
+
+
+/*
+ * Verifying user is logged in as root, and if not, returning error to client.
  */
 whoami
 if:x:/@whoami/*/role?value
@@ -21,37 +30,10 @@ if:x:/@whoami/*/role?value
   /*
    * User is not root.
    */
-  p5.web.echo:ERROR
+  p5.web.response.set-status-code:401
+  p5.web.response.set-status-description:401 - You are not authorized to perform this action
+  p5.web.echo:401, not authorized
   return
-
-
-
-
-
-/*
- * User is allowed to upload files to server.
- *
- * Checking if temp folder for module exists, and if not, creating it.
- */
-if
-  fetch:x:/0/0?value
-    folder-exists:~/temp/magic-menu/
-  not
-
-  /*
-   * Creating Magic menu temp folder.
-   */
-  create-folder:~/temp/magic-menu/
-
-else
-
-  /*
-   * Magic menu "temp" folder already exists, making sure we empty it.
-   */
-  list-files:~/temp/magic-menu/
-  delete-file:x:/@list-files/*?name
-  list-folder:~/temp/magic-menu/
-  delete-folder:x:/@list-folder/*?name
 
 
 
@@ -65,77 +47,77 @@ p5.mysql.connect:[magic-menu]
   p5.mysql.transaction.begin
 
     /*
-     * Parsing MIME request, and checking which type of file we were given.
-     *
-     * Candidates are ".hl" and ".zip".
-     * A zip file is considered a "backup", but will still be "appended" to existing
-     * database. A .hl file (Hyperlambda) is considered a single command entry, and
-     * will also be added to existing dictionary.
+     * Looping through each file supplied by caller.
      */
-    p5.web.request.parse-mime
-      attachment-folder:~/temp/magic-menu/
-    split:x:/@p5.web.request.parse-mime/**/filename/[0,1]?value
-      =:.
-    switch:x:/@split/0/-?name
-      case:hl
+    for-each:x:/../*/files/*
 
-        /*
-         * A single Hyperlambda file.
-         *
-         * Invoking Hyperlambda file responsible for importing file, making sure we
-         * pass in the filename, as returned from [p5.web.request.parse-mime].
-         */
-        eval-x:x:/+/*
-        micro.evaluate.file:@MAGIC/helpers/import-hyperlambda-file.hl
-          filename:{0}{1}{2}
-            :x:/@p5.web.request.parse-mime/**/filename/[0,1]/*/folder?value
-            :x:/@p5.web.request.parse-mime/**/filename/[0,1]/*/prefix?value
-            :x:/@p5.web.request.parse-mime/**/filename/[0,1]?value
-
-      case:zip
-
-        /*
-         * A zip file, possibly containing multiple Hyperlambda files.
-         * Making sure we unzip it, and import each Hyperlambda file found in it.
-         */
-        unzip:{0}{1}{2}
-          :x:/@p5.web.request.parse-mime/**/filename/[0,1]/*/folder?value
-          :x:/@p5.web.request.parse-mime/**/filename/[0,1]/*/prefix?value
-          :x:/@p5.web.request.parse-mime/**/filename/[0,1]?value
-          dest:~/temp/magic-menu/
-
-        /*
-         * Mac OS X tends to create "funny additional" folders, which we simply remove.
-         */
-        set:x:/@unzip/*/~__MACOSX
-
-        /*
-         * Iterating through each zip entry.
-         */
-        for-each:x:/@unzip/*?name
+      /*
+       * Checking currently iterated file's extension.
+       *
+       * Candidates are ".hl" and ".zip".
+       * A zip file is considered a "backup", but will still be "appended" to existing
+       * database.
+       * An .hl file (Hyperlambda) is considered a single command entry, and
+       * will also be added to existing dictionary.
+       */
+      split:x:/@_dp/#?value
+        =:.
+      switch:x:/@split/0/-?name
+        case:hl
 
           /*
-           * Sanity checking filename before we invoke file responsible for importing file,
-           * otherwise we simply ignore the file entirely.
+           * A single Hyperlambda file.
+           *
+           * Invoking Hyperlambda file responsible for importing file, making sure we
+           * pass in the filename, as returned from [p5.web.request.parse-mime].
            */
-          if
-            ends-with:x:/@_dp?value
-              src:.hl
+          eval-x:x:/+/*
+          micro.evaluate.file:@MAGIC/helpers/import-hyperlambda-file.hl
+            filename:x:/@_dp/#?value
+
+        case:zip
+
+          /*
+           * A zip file, possibly containing multiple Hyperlambda files.
+           * Making sure we unzip it, and import each Hyperlambda file found in it.
+           */
+          unzip:x:/@_dp/#?value
+            dest:~/temp/
+
+          /*
+           * Mac OS X tends to create "funny additional" folders, which we simply remove.
+           */
+          set:x:/@unzip/*/~__MACOSX
+
+          /*
+           * Iterating through each zip entry.
+           */
+          for-each:x:/@unzip/*?name
 
             /*
-             * Currently iterated file is a Hyperlambda file.
+             * Sanity checking filename before we invoke file responsible for importing file,
+             * otherwise we simply ignore the file entirely.
              */
-            eval-x:x:/+/*
-            micro.evaluate.file:@MAGIC/helpers/import-hyperlambda-file.hl
-              filename:x:/@_dp?value
+            if
+              ends-with:x:/@_dp?value
+                src:.hl
 
-      default
+              /*
+               * Currently iterated file is a Hyperlambda file.
+               */
+              eval-x:x:/+/*
+              micro.evaluate.file:@MAGIC/helpers/import-hyperlambda-file.hl
+                filename:x:/@_dp?value
 
-        /*
-         * Unsupported file format.
-         */
-        p5.web.echo:ERROR
-        return
+        default
+
+          /*
+           * Unsupported file format.
+           */
+          p5.web.response.set-status-code:406
+          p5.web.response.set-status-description:406 - File type is not supported
+          p5.web.echo:406, unsupported file type, import aborted
+          return
 
     /*
      * Committing transaction.
