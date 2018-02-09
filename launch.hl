@@ -185,7 +185,7 @@ create-widget:magic-menu-main-container
 
                 micro.widgets.upload-button
                   title:Upload dictionary file
-                  accept:.zip
+                  accept:.zip,.hl
                   .onupload
 
                     /*
