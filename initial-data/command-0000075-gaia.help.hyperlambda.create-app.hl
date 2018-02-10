@@ -1,7 +1,7 @@
 command
   hyperlambda:@"magic-menu.listen:What do you want to put into your app?
 if
-  hypereval.widgets.eval.exists
+  hypereval.widgets.eval.is-running
   not
   create-widget
     class:container your-apps-root-css-class

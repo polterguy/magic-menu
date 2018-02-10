@@ -5,7 +5,7 @@ command
       src:x:/../*/text?value
     hypereval.widgets.eval.get-code
     eval-x:x:/+/*
-    hypereval.snippets.create:x:/../*/text?value
+    hypereval.snippets.save:x:/../*/text?value
       content:x:/@hypereval.widgets.eval.get-code?value
       type:page
     eval-x:x:/+/*
