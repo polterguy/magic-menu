@@ -17,9 +17,7 @@ if
 /*
  * Selcting ""/modules/"" folder.
  */
-micro.widgets.tree.select-items:hyper-ide-folder-tree-browser
-  items
-    /modules/
+hyper-ide.folder-explorer.set-active-item:/modules/
 hyper-ide._plugins.create-app
   app-type:hello-world
 
