@@ -262,16 +262,12 @@ create-widget:magic-menu-main-container
                                        */
                                       delete-widget:magic-menu-delete-all-commands-modal
 
-                button
+                a
+                  href:/
+                  role:button
+                  class:button
                   innerValue:@"<span class=""icon-home3""></span>"
                   title:Close Magic menu
-                  onclick
-
-                    /*
-                     * Redirecting user to server's root URL.
-                     */
-                    p5.web.get-root-location
-                    p5.web.set-location:x:/-?value
 
     div
       class:row
