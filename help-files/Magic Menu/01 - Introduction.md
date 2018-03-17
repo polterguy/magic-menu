@@ -1,9 +1,8 @@
-
 ## Introduction to the Magic Menu
 
-The Magic Menu is a common navigation system for all your needs. In addition to being a common navigation
+The Magic Menu is a common navigation system for all your apps. In addition to being a common navigation
 system, it also supports speech recognition and speech synthesis - But only on browsers that supports this,
-which happens to only be Google Chrome at the time of this writing. This allows you to completely control
+which happens to be only Google Chrome at the time of this writing. This allows you to completely control
 your system, almost exclusively using your voice if you wish. The Magic Menu allows you to create your own
 menu commands, which are sentences, phrases and words, which are associated with some piece of Hyperlambda,
 that will be evaluated when your menu item is chosen, or the phrase/sentence/word is spoken. Below is a
@@ -11,9 +10,13 @@ screenshot of how the Magic Menu looks like.
 
 https://phosphorusfive.files.wordpress.com/2018/03/magic-menu-screenshot-gui.png
 
+The Magic Menu supports searching for menu items, paging, in addition to having a hierarchical structure.
+It also loads items on demands. This allows you to create humongously large menu structures,
+with much more menu items than you would normally use in a normal menu.
+
 Now you can use the Magic Menu simply as a _"navbar"_, and ignore its speech recognition capabilities - At
 which point it becomes a highly flexible and extendible menu system. However, if you are using a browser that
-has support for speech recognition and speech synthesis (Google Chrome), you can also use it as a speech
+supports speech recognition and speech synthesis (Google Chrome), you can also use it as a speech
 interface to your web apps. Regardless of how you choose to use it, understanding its structure is imperative,
 since you would highly likely want to create your own custom menu items, to make it possible to automate tasks
 and such, through menu items in it. So let us have a look at its structure, which is more easily understood,
@@ -33,7 +36,7 @@ some basic knowledge about Hyperlambda, and the API of whatever module you want 
 If you want to learn Hyperlambda, then please check out the documentation for Hyperlambda at the root
 of the documentation system.
 
-### Menu item structure
+### Menu structure
 
 Each menu command can have multiples _"aliases"_ or _"synonyms"_, which are synonymous phrases or words,
 which are all associated with the same actual piece of Hyperlambda. A menu item can be _"private"_. This
@@ -54,7 +57,7 @@ find some other globally unique name to start yours with, such as your company n
 #### Conversations with your computer
 
 Due to that the Magic Menu's structure is hierarchical, and actually implemented as a tree structure -
-This allows you to implement somewhat of a _"conversational type of interaction"_, which just so happens
+This allows you to implement somewhat of a _"conversational type of user interface"_, which just so happens
 to seem very intuitive for the human brain. For instance, by default there is a menu item called _"Translate something"_.
 This menu item, if chosen, will ask the user _"What language do you wish to translate to"_, at which point
 you can answer _"Arabic"_, _"Norwegian"_, etc.
@@ -72,3 +75,5 @@ your computer, that could be broken up into the following entities.
 
 **Yet again**, speech recognition is currently only available on Google Chrome.
 
+**Notice**, the Magic Menu only listens for input when it is flashing yellow. If you speak to it when it
+is not yellow, it won't capture your input.

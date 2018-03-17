@@ -403,5 +403,13 @@ create-event:magic-menu.start
 
   /*
    * Greets user, and asks for input.
+   * Notice, caller can avoid this by invoking event with a "false" argument.
    */
-  magic-menu.listen:x:/@magic-menu.unwrap-phrase?value
+  if:x:/../*/_arg?value
+    !=:bool:false
+
+    /*
+     * Caller did not explicitly initiate Magic Menu with a "false" argument,
+     * implying we need to greet the user, and start our listening loop.
+     */
+    magic-menu.listen:x:/@magic-menu.unwrap-phrase?value

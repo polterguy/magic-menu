@@ -1,10 +1,11 @@
-
 ## Teaching your computer to speak
 
 If you're logged in as _"root"_ in your system, and you speak something that your computer doesn't understand,
 the response will be _"I do not understand"_ - At which point you can simply say _"I will teach you"_, and
 a CodeMirror editor will popup, allowing you to type in a piece of Hyperlambda, and have that Hyperlambda
-associated with your phrase/sentence/word.
+associated with your phrase/sentence/word. The same is true if you search for a phrase that doesn't exist
+at your current position in the menu's hierarchi. Instead of speaking _"I will teach you"_, you can also
+click the _"+"_ button to teach the Magic Menu a new phrase or word.
 
 As you type in your Hyperlambda, you can also choose to give your item a Global ID, making it private, and
 making it a global menu item. In addition you can type in synonyms, separated by a carriage return, and you
@@ -23,7 +24,7 @@ to his currently selected language.
 **Notice**, the Magic Menu assumes that whatever you're typing in as phrases is in your currently selected
 language, so adding a language code for Norwegian, if that was my currently selected language, would not
 be necessary - Since the Magic Menu would assume that everything I type into it as phrases, are localized
-in my currently selected language.
+in my currently selected language, unless explicitly overridden as the screenshot above illustrates.
 
 ### Changing your tree
 
@@ -31,10 +32,14 @@ The last line of Hyperlambda from the above screenshot is `return:bool:false`. T
 menu item, does not have any children items of itself, and is in fact a _"leaf item"_. If I had chosen to
 return _"true"_ instead, the Magic Menu would create a new _"scope"_, or a _"sub menu"_, which I could further
 add children menu items to. Since the phrase _"Thank you"_ doesn't need any children menu items, the above
-screenshot example, simpy returns _"false"_ to the Magic Menu - Indicating it is a _"leaf item"_.
+screenshot example, simpy returns _"false"_ to the Magic Menu - Indicating it is a _"leaf item"_. However, a
+phrase such as _"Open up an application"_ would probably need children menu items, since the user would
+have to inform the Magic Menu which app he wants to open up, and this would be contextually related to
+the parent menu item, being _"Open up an application"_. At which point your _"Open up an application"_ menu
+item would have to return `true`.
 
 If you look at the menu item for _"Translate something"_ in your administrative backend, you will see that
-it doesn't return anything, which is the same as returning _"true"_. This implies that the phrase _"Translate
+it doesn't return anything, which is equivalent to returning _"true"_. This implies that the phrase _"Translate
 something"_ has its own children menu items, which you can clearly see from the screenshot below that it does
 indeed have.
 
@@ -46,7 +51,8 @@ _"Translate something"_ menu item. In the administrative backend of the Magic Me
 column, which informs you of whether or not the item has a parent menu item, and what parent is has - Or
 if it is a root menu item.
 
-Yet again, global menu items are accessible from anywhere you are within your navbar structure.
+Yet again, global menu items are accessible from anywhere you are within your navbar structure. Global
+menu items are also clearly marked in the GUI of the Magic Menu as you browse your available menu items.
 
 ### Millions of menu items
 

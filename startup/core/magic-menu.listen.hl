@@ -1,4 +1,3 @@
-﻿
 /*
  * Invoked when Magic menu should listen for new input.
  *
@@ -35,6 +34,8 @@ create-event:magic-menu.listen
     /*
      * Speaking given [_arg], before we start listening.
      */
+    add:x:/+
+      src:x:/../*/voice
     magic-menu.speak:x:/../*/_arg?value
       onfinish
 

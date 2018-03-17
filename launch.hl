@@ -22,6 +22,15 @@ p5.web.include-css-file:@MAGIC/media/main.css
 p5.web.page.set-title:Magic Menu dashboard
 create-widget:magic-menu-main-container
   class:container magic-menu-editor
+  events
+
+    /*
+     * Help context Active Event.
+     */
+    desktop.help.get-context
+      return:@MAGIC/help-files/Magic Menu/index.hl
+
+
   widgets
     div
       class:row
@@ -101,7 +110,7 @@ create-widget:magic-menu-main-container
           class:col-60
           widgets
             div
-              class:strip fill
+              class:strip fill toolbar
               widgets
                 container:magic-menu-select-language
                   element:select
