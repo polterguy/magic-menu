@@ -16,6 +16,7 @@ create-event:magic-menu.start
    */
   micro.lambda.contract.optional:x:/..
     greeting:string
+    show-options:bool
 
   /*
    * Checking if Magic menu is already initiated from before, and if so, simply
@@ -42,6 +43,7 @@ create-event:magic-menu.start
   /*
    * Creating main Magic menu widget.
    */
+  eval-x:x:/+/**/.show-options
   create-widget:magic-menu-listener
     class:magic-menu-listener shaded rounded bg
     events
@@ -144,9 +146,18 @@ create-event:magic-menu.start
                       class:icon-mic
 
                   /*
-                   * Displaying options by default.
+                   * Displaying options by default, unless caller suppled a
+                   * "do not show options" argument.
                    */
-                  magic-menu.options.show
+                  .show-options:x:/../*/show-options?value
+                  if:x:/@.show-options?value
+                    !=:bool:false
+
+                    /*
+                     * Caller did not explicitly invoke event with a [show-options]
+                     * argument being false.ß
+                     */
+                    magic-menu.options.show
 
                 events
 

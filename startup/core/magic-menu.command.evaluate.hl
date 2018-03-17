@@ -11,7 +11,7 @@ create-event:magic-menu.command.evaluate
   /*
    * Sanity checking arguments.
    */
-  micro.lambda.contract.optional:x:/..
+  micro.lambda.contract.min:x:/..
     _arg:string
 
   /*
@@ -22,8 +22,15 @@ create-event:magic-menu.command.evaluate
   /*
    * Deletes the visual clue, indicating we're listening for input.
    */
-  micro.css.delete:magic-menu-listener
-    class:magic-menu-listening
+  if
+    fetch:x:/0/0?value
+      widget-exists:magic-menu-listener
+
+    /*
+     * Magic Menu exists on page.
+     */
+    micro.css.delete:magic-menu-listener
+      class:magic-menu-listening
 
   /*
    * Looks up command from database.

@@ -39,7 +39,7 @@ create-event:magic-menu.grammar-position.list-options
    * Then afterwards, we loop through all commandids to find the most recently used phrase,
    * which is the one we'll end up displaying to our user.
    */
-  _sql:@"select commandid, parent, global from phrases p join commands c on c.id = p.commandid
+  _sql:@"select commandid, parent, global, global_id from phrases p join commands c on c.id = p.commandid
     where p.id in
     (
       select min(id) from phrases where (lang = @lang or lang = @sublang) {{filter}} group by commandid
@@ -163,6 +163,14 @@ create-event:magic-menu.grammar-position.list-options
         add:x:/../*/return/0/-
           src
             type:magic-menu-options-root
+
+      /*
+       * Making sure we also return [global-id].
+       */
+      eval-x:x:/+/*/*
+      add:x:/../*/return/0/-
+        src
+          global-id:x:/@_dp/#/*/global_id?value
 
   /*
    * Returning results to caller.

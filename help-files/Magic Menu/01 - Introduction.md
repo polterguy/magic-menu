@@ -10,6 +10,10 @@ screenshot of how the Magic Menu looks like.
 
 https://phosphorusfive.files.wordpress.com/2018/03/magic-menu-screenshot-gui.png
 
+Below is an illustration of whatthe different parts of your menu are.
+
+https://phosphorusfive.files.wordpress.com/2018/03/magic-menu-screenshot-gui-info.png
+
 The Magic Menu supports searching for menu items, paging, in addition to having a hierarchical structure.
 It also loads items on demands. This allows you to create humongously large menu structures,
 with much more menu items than you would normally use in a normal menu.
