@@ -1,6 +1,7 @@
-﻿
 /*
  * Returns the specified [_arg] setting value, if any.
+ * If you want to return all settings for the Magic Menu, you can
+ * invoke it without any [_arg] argument.
  *
  * Optionally pass in [default], who's value will be returned if the setting doesn't exist.
  */
@@ -9,15 +10,24 @@ create-event:magic-menu.settings.get
   /*
    * Sanity checking arguments.
    */
-  micro.lambda.contract.min:x:/..
-    _arg:string
   micro.lambda.contract.optional:x:/..
     default
+    _arg:string
 
   /*
    * Retrieving settings for user.
    */
   p5.auth.my-settings.get
+
+  /*
+   * Checking if user did not provide an [_arg] argument, at which
+   * point we return everything.
+   */
+  if:x:/../*/_arg?value
+    not
+    add:x:/+
+      src:x:/@p5.auth.my-settings.get/*/magic-menu/*
+    return
 
   /*
    * Checking if setting didn't exist, and caller supplied a [default], at which

@@ -10,10 +10,10 @@ events. These settings again, are stored on a per user basis, implying all setti
 implemented on a _"per user level"_ in the _"auth.hl"_ file.
 
 * __[magic-menu.speech.is-enabled]__ - Returns true if speech is enabled
-* __[magic-menu.speech.turn-on]__ - Turns on speech recognition and utterance
-* __[magic-menu.speech.turn-off]__ - Turns off speech recognition and utterance
+* __[magic-menu.speech.turn-on]__ - Turns _ON_ speech recognition and utterance
+* __[magic-menu.speech.turn-off]__ - Turns _OFF_ speech recognition and utterance
 
-Below is an example of how to turn OFF both speech recognition and utterance.
+Below is an example of how to turn off both speech recognition and utterance before starting the Magic Menu.
 
 ```hyperlambda-snippet
 /*
@@ -22,7 +22,7 @@ Below is an example of how to turn OFF both speech recognition and utterance.
 magic-menu.speech.turn-off
 
 /*
- * Starting Magic Menu.
+ * Starting the Magic Menu.
  *
  * At this point, since speech is turned OFF, the Magic Menu
  * becomes a "simple navigation menu", and does not try to neither
@@ -36,16 +36,35 @@ its _"information tooltip widget"_ if speech is turned off, it is still for most
 equally usable, since it provides feedback as text. The end user can still explicitly choose to turn
 ON speech again, by clicking the microphone widget in his Magic Menu.
 
-**Notice**, if what the menu is supposed to speak is a long sentence, the sentence will be clipped, and
-you'll have to hover your mouse above the _"info tooltip widget"_ to see the whole sentence. This is chosen
+### Displaying a custom text
+
+The Magic Menu has an API event called **[magic-menu.set-text]** which allows you to change the text it
+displays in its _"information widget"_. You can use this as you see fit, to give the user some hints about
+what he or she can do. The default implementation for this is to display whatever it recognize, and speaks
+though - So if you want to customize this text, you'll have to invoke the event _after_ you've started your
+listening loop, or having it speak something. Below is an example.
+
+```hyperlambda-snippet
+/*
+ * Starting Magic Menu.
+ */
+magic-menu.start:bool:false
+magic-menu.listen:Hello there
+magic-menu.set-text:Yo dude!
+```
+
+**Notice**, the text widget's content will be clipped, and you'll have to hover your mouse above the
+_"info tooltip widget"_ to see the whole sentence, if you supply a very long piece of text. This is chosen
 to avoid having the menu fill more than its available space in your browser window.
+
+**Hint**, you can use **[magic-menu.get-text]** to retrieve the text currently displayed.
 
 ### Accessing and changing your settings
 
 The Magic Menu has several Active Events which allows you to retrieve and modify its settings for the
 currently logged in user. Below is a list of these events.
 
-* __[magic-menu.settings.get]__ - Returns the __[\_arg]__ setting back to caller for the currently logged in user (pass in e.g. _"voice"_)
+* __[magic-menu.settings.get]__ - Returns the (optionally supplied) __[\_arg]__ setting back to caller for the currently logged in user (pass in e.g. _"voice"_)
 * __[magic-menu.settings.set]__ - Sets the __[\_arg]__ setting to the specified __[value]__. Pass in e.g. _"voice"_ and `value:Alex`
 * __[magic-menu.settings.get-language]__ - Returns the language settings, including the voice, semantically broken down into its distinct sections
 * __[magic-menu.settings.set-language]__ - Sets the language, or to be more accurately the **[voice]** setting, which are actually overlapping settings
@@ -81,17 +100,23 @@ your realise that you actually can significantly simplify usage in your own code
 anything, unless there explicitly exists a value for the setting you're querying it for - Unless you provide a
 **[default]** value.
 
-The **[magic-menu.settings.get-language]** event will use a **[default]** argument being `Daniel,en-GB`, which
-implies that this is the default voice and language code for the Magic Menu.
+Also notice that if you want to return all Magic Menu settings, you can invoke the above **[magic-menu.settings.get]**
+event without any **[\_arg]** argument, at which point all settings will be returned to caller. The latter does
+not allow you to provide a **[default]** segment though.
+
+The **[magic-menu.settings.get-language]** event will in fact internally use the **[magic-menu.settings.get]**
+event, with a **[default]** argument being `Daniel,en-GB`, which implies that this is the default voice and
+language code for the Magic Menu.
 
 ### Explicitly handling a menu item
 
 In our previous documentation file, we had a lot of examples where we completely bypassed the internals
 of the Magic Menu, and handled the speak utterance ourselves. Sometimes you want to handle the recognized text
 yourself, to provide some sort of _"override"_ - And unless the user speaks something you recognize, you want to
-evaluate the default menu matching event. This is easily achieved by explicitly invoking **[magic-menu.command.handle]**.
+evaluate the default menu matching event. This is easily achieved by explicitly invoking **[magic-menu.command.evaluate]**.
 This event requires an **[\_arg]** argument, or an **[id]** argument, being either some phrase, or the
-database ID to a command.
+database ID to a phrase/synonym. The **[id]** argument can also optionally be supplied as the command's global
+database ID.
 
 Below is an example of usage.
 
@@ -122,15 +147,42 @@ magic-menu.listen:Speak yes or some menu item
       /*
        * User spoke anything BUT "yes".
        */
-      magic-menu.command.handle:x:/../*/text?value
+      magic-menu.command.evaluate:x:/../*/text?value
 ```
 
+Below is an example of evaluating the **[magic-menu.command.evaluate]** event with a global ID instead of a phrase.
+
+```hyperlambda-snippet
+/*
+ * Starting Magic Menu.
+ */
+magic-menu.start:bool:false
+
+/*
+ * Starts listening, speaking something first.
+ */
+magic-menu.listen:Speak to me
+  onfinish
+
+    /*
+     * Speaking something, and evaluating Hyperlambda command.
+     */
+    magic-menu.speak:All roads leads to Hyperlambda
+      onfinish
+        magic-menu.command.evaluate
+          id:gaia.help.hyperlambda
+```
+
+The above arguably becomes the equivalent of polymorphistically overriding the core implementation, invoking
+base implementation, unless it's something you explicitly know how to handle in your application.
+
 If you want to, you can also pass in an **[id]** argument, instead of an **[\_arg]** argument - Which is expected
-to be the database ID of the menu command object, which will directly evaluate that menu item's Hyperlambda.
-This is in fact what occurs when you click a menu item in the Magic Menu, instead of choosing to use speech
-input. This allows you to create a visual wrapper, displaying menu items, allowing the user to click
-the menu item instead of using utterance. At which point you could if you wanted to, create your own visual
-wrapper entirely around the Magic Menu, and simply use it as a database for commands. Below is an example.
+to be the database ID of the menu phrase object, or the global id of the command object, which will directly
+evaluate that menu item's Hyperlambda. This is in fact what occurs when you click a menu item in the Magic Menu,
+instead of choosing to use speech input. This allows you to create a visual wrapper, displaying menu items,
+allowing the user to click the menu item instead of using utterance. At which point you could if you wanted to,
+create your own visual wrapper entirely around the Magic Menu, and simply use it as a database for commands.
+Below is an example.
 
 ```hyperlambda-snippet
 /*
@@ -161,7 +213,7 @@ for-each:x:/@magic-menu.grammar-position.list-options/*
             onclick
               .menu-item:x:/@_dp/#?name
               eval-x:x:/+/*
-              magic-menu.command.handle
+              magic-menu.command.evaluate
                 id:x:/@.menu-item?value
 
 /*
@@ -202,53 +254,5 @@ create-widgets
     widgets
       pre
         innerValue:x:/@magic-menu.grammar-position.list-options
-```
-
-### Explicitly evaluating a menu item
-
-You can also explicitly evaluate a menu item by its global ID. Combining this with your own GUI, you can
-(almost) entirely create your own GUI. Consider the example from above, where we created a list of anchor
-elements to evaluate our menu items, and combining it with the **[magic-menu.command.evaluate]** event, to
-explicitly evaluate items instead. You still need to actually start the Magic Menu though, but you can start
-it minimized, without displaying its options, or initiating the listening loop.
-
-```hyperlambda-snippet
-/*
- * Notice, we'll have to start the Magic Menu before we can interact with it.
- *
- * Making sure we start it without initiating listening loop.
- */
-magic-menu.start:bool:false
-  show-options:bool:false
-
-/*
- * Listing available commands.
- */
-magic-menu.grammar-position.list-options
-
-/*
- * Creating a list item for each command.
- */
-for-each:x:/@magic-menu.grammar-position.list-options/*
-  eval-x:x:/+/*/*/*/*/*(/innerValue|/onclick/*/.global-id)
-  add:x:/../*/create-widgets/*/micro.widgets.modal/*/widgets/*/ul/*/widgets
-    src
-      li
-        widgets
-          a
-            href:#
-            innerValue:x:/@_dp/#?value
-            onclick
-              .global-id:x:/@_dp/#/*/global-id?value
-              magic-menu.command.evaluate:x:/@.global-id?value
-
-/*
- * Creating a modal window, displaying available Menu items.
- */
-create-widgets
-  micro.widgets.modal
-    widgets
-      ul
-        widgets
 ```
 

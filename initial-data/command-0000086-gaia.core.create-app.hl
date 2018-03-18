@@ -1,5 +1,6 @@
 command
-  hyperlambda:@"magic-menu.command.evaluate:gaia.help.hyperlambda.create-app
+  hyperlambda:@"magic-menu.command.evaluate
+  id:gaia.help.hyperlambda.create-app
 return:bool:false
 "
   global:uint:0

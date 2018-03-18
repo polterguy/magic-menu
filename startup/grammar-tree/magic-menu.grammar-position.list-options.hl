@@ -152,14 +152,28 @@ create-event:magic-menu.grammar-position.list-options
        */
       if:x:/@_dp/#/*/global?value.int
         =:int:1
+
+        /*
+         * Global menu item.
+         */
         add:x:/../*/return/0/-
           src
             type:magic-menu-options-global
+
       else-if:x:/@_dp/#/*/parent?value
+
+        /*
+         * This menu item has a parent,and is hence not a "root item".
+         */
         add:x:/../*/return/0/-
           src
             type:magic-menu-options-local
+
       else
+
+        /*
+         * This is a "root item", yet not global.
+         */
         add:x:/../*/return/0/-
           src
             type:magic-menu-options-root

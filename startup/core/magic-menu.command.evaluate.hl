@@ -1,18 +1,32 @@
-﻿
 /*
- * Evaluates the specified [_arg] command.
+ * Evaluates the given [_arg] or [id] command.
  *
- * Looks up [_arg] command from database, expecting it to be a "global_id", and evaluates it.
- * Notice, this does not validate that the command belong to the user or anything like that, but
- * expects the caller to have asserted that before invoking this event.
+ * Looks up [_arg] or [id] command from database, and if existing, evaluates it.
+ * [id] is expected to be a "phrase ID" or a global_id from database.
+ * [_arg] is expected to be a phrase, that it'll attempt to match towards something
+ * from its database of menu items, according to its current "branch" in the
+ * menu hierarchy.
+ *
+ * Either supply [_arg] or [id], not both.
+ *
+ * If the command does not exist, it will ask user if he wants to create 
+ * a new command.
  */
 create-event:magic-menu.command.evaluate
 
   /*
    * Sanity checking arguments.
    */
-  micro.lambda.contract.min:x:/..
+  micro.lambda.contract.optional:x:/..
+    id:string
     _arg:string
+
+  /*
+   * Sanity check.
+   */
+  if:x:/../*/_arg
+    and:x:/../*/id
+    throw:Supply either [_arg] or [id], and not both.
 
   /*
    * Stopping speech engine.
@@ -20,17 +34,117 @@ create-event:magic-menu.command.evaluate
   micro.speech.stop
 
   /*
-   * Deletes the visual clue, indicating we're listening for input.
+   * Checking if anything was given, and if not, restarting listening loop.
    */
-  if
-    fetch:x:/0/0?value
-      widget-exists:magic-menu-listener
+  if:x:/../*/_arg?value
+    =:
+    or:x:/../*/_arg?value
+      not
+    and:x:/../*/id?value
+      not
 
     /*
-     * Magic Menu exists on page.
+     * Nothing was given, returning early to avoid evaluating the rest 
+     * of our lambda, making sure we restart listening before we return.
      */
-    micro.css.delete:magic-menu-listener
-      class:magic-menu-listening
+    magic-menu.set-text:[Waiting]
+    magic-menu.listen
+    return
+
+  /*
+   * Deletes the visual clue, indicating we're listening for input.
+   */
+  micro.css.delete:magic-menu-listener
+    class:magic-menu-listening
+
+  /*
+   * Necessary to parametrise SQL.
+   */
+  whoami
+  magic-menu.settings.get-language
+  magic-menu.grammar-position.get
+
+  /*
+   * Dynamically building our SQL, depending upon whethere or not we should look
+   * at "root" level, use the given [id], or search using text.
+   */
+  _sql:@"select p.command, c.id, c.hyperlambda, p.id as phraseid from commands c 
+  inner join phrases p on p.commandid = c.id
+  where (c.username is null or c.username = @username) and (lang = @lang or lang = @sublang)"
+
+  /*
+   * Checking type of invocation.
+   */
+  if:x:/../*/_arg?value
+
+    /*
+     * Text based search.
+     * Make sure we show the user what we heard.
+     *
+     * Notice, since this is done before we invoke lambda for command, this allows
+     * the lambda to override what's displayed to user.
+     *
+     * Notice, we also do a SOUNDEX lookup into database, to make it slightly stronger
+     * in regards to recognition, since [_arg] is highly likely something that was
+     * spoken by the user.
+     */
+    magic-menu.set-text:x:/../*/_arg?value
+    set:x:/@_sql?value
+      src:@"{0} and soundex(p.command) = soundex(@command)"
+        :x:/@_sql?value
+    add:x:/../*/p5.mysql.connect/*/p5.mysql.select
+      src
+        @command:x:/../*/_arg?value
+
+  else-if
+    p5.types.can-convert:x:/../*/id?value
+      type:long
+
+    /*
+     * Looking for a specified [id] phrase.
+     */
+    set:x:/@_sql?value
+      src:@"{0} and p.id = @id"
+        :x:/@_sql?value
+    add:x:/../*/p5.mysql.connect/*/p5.mysql.select
+      src
+        @id:x:/../*/id?value.long
+
+  else
+
+    /*
+     * Looking for a specified [global_id] command.
+     */
+    set:x:/@_sql?value
+      src:@"{0} and c.global_id = @global"
+        :x:/@_sql?value
+    add:x:/../*/p5.mysql.connect/*/p5.mysql.select
+      src
+        @global:x:/../*/id?value
+
+  /*
+   * Checking if we have a current level.
+   */
+  if:x:/@magic-menu.grammar-position.get?value
+
+    /*
+     * Adding parent criteria.
+     */
+    set:x:/@_sql?value
+      src:@"{0} and (parent = @parent or global = 1)"
+        :x:/@_sql?value
+    add:x:/../*/p5.mysql.connect/*/p5.mysql.select
+      src
+        @parent:x:/@magic-menu.grammar-position.get?value
+
+  else
+
+    /*
+     * Only looking for empty parents, and global commands.
+     */
+    set:x:/@_sql?value
+      src:@"{0} and (parent is null or global = 1)"
+        :x:/@_sql?value
 
   /*
    * Looks up command from database.
@@ -43,8 +157,11 @@ create-event:magic-menu.command.evaluate
      * Making sure we prioritise phrases in "current level", and making sure we
      * only select one match.
      */
-    p5.mysql.select:@"select id, hyperlambda from commands where global_id = @global_id"
-      @global_id:x:/../*/_arg?value
+    p5.mysql.select:"{0} order by parent desc, global limit 1"
+      :x:/@_sql?value
+      @username:x:/@whoami/*/username?value
+      @lang:x:/@magic-menu.settings.get-language/*/lang?value
+      @sublang:x:/@magic-menu.settings.get-language/*/sublang?value
 
     /*
      * Checking to see if we actually found a command.
@@ -52,13 +169,34 @@ create-event:magic-menu.command.evaluate
     if:x:/@p5.mysql.select/*
 
       /*
+       * Success, we have a command in the current position, matching our specified [_arg].
+       *
+       * Checking type of invocation, and if it's text search, we display the text,
+       * to make sure user can see what we recognized.
+       */
+      if:x:/../*/_arg?value
+
+        /*
+         * Make sure we show the user what we heard.
+         */
+        magic-menu.set-text:x:/../*/_arg?value
+
+      /*
        * Converting Hyperlambda to lambda, and evaluating it.
        *
-       * Notice, we pass in [jump] to signal to lambda that this was a "jump" invocation.
+       * Notice, we pass in [id] (from commands), [phraseid], [spoken] (what was spoken),
+       * and [matches] (the phrase's content from our database).
+       *
+       * Since we're using SOUNDEX matching, what was spoken, and what it was matched
+       * towards, might in theory be slightly different.
        */
       hyper2lambda:x:/@p5.mysql.select/*/*/hyperlambda?value
+      eval-x:x:/+/*
       eval:x:/@hyper2lambda
-        jump:bool:true
+        id:x:/@p5.mysql.select/*/*/id?value
+        phraseid:x:/@p5.mysql.select/*/*/phraseid?value
+        spoken:x:/../*/_arg?value
+        matches:x:/@p5.mysql.select/*/*/command?value
 
       /*
        * Checking if we should "push" current ID unto our "grammar-position" stack.
@@ -74,9 +212,136 @@ create-event:magic-menu.command.evaluate
          */
         magic-menu.grammar-position.push:x:/@p5.mysql.select/*/*/id?value
 
+      /*
+       * Updating "lastused" for phrase.
+       *
+       * This is done, since we always "prioritize" the last used phrase, when
+       * suggesting phrases, and selecting from our phrases table. Such that the
+       * most commonly used phrases will always appear first, and be prioritised
+       * when spoken and trying to find a match.
+       */
+      p5.types.date.now
+      p5.mysql.update:@"update phrases set lastused = @lastused where id = @id"
+        @lastused:x:/@p5.types.date.now?value
+        @id:x:/@p5.mysql.select/*/*/phraseid?value
+
     else
 
       /*
-       * Command didn't exist.
+       * The specified [_arg] command doesn't exist, asking user if he wants to
+       * create a new association for the given [_arg] command, or if he wants to
+       * discard input, and rephrase his command.
+       *
+       * Waiting for user to tell us what to do.
+       *
+       * Giving a visual clue to user, to inform him or her, that he can teach the 
+       * computer a new word.
+       *
+       * Notice, the user is only allowed to configure new words, if he is root.
+       * If user is not root, we simply say "I don't understand".
        */
+      whoami
+      if:x:/@whoami/*/role?value
+        !=:root
+
+        /*
+         * Computer didn't understand phrase, and user is not root.
+         *
+         * Informing user and returning early.
+         * TODO: Allow user to create a new "association" towards an existing command.
+         */
+        magic-menu.listen:[I don't understand]
+        return
+
+      /*
+       * User is "root", allowing him the option to teach a new command.
+       *
+       * First updating text widget to show that the user has the option to 
+       * teach a new command.
+       */
+      magic-menu.set-text:x:/../*/_arg?value
+
+      /*
+       * Making sure we display "add command" button, to allow user to teach computer
+       * using a button instead of speaking.
+       */
+      magic-menu.display-create-command-button:x:/../*/_arg?value
+
+      /*
+       * Then asking the user if he wants to teach the computer or not.
+       *
+       * If user answers anything but what is found in [Teach] (localized phrase),
+       * we assume it's another command, and attempts to handle what was spoken.
+       */
+      eval-x:x:/+/*/*/*/*/magic-menu.command.create
       magic-menu.listen:[I don't understand]
+        onfinish
+
+          /*
+           * Deletes the visual clue, indicating we're listening for input.
+           */
+          micro.css.delete:magic-menu-listener
+            class:magic-menu-listening
+
+          /*
+           * Getting the "I will teach you phrase", and making sure our switch
+           * below is correctly parametrised accordingly.
+           */
+          magic-menu.language.get-localized-phrase:[Teach]
+          set:x:/../*/switch/*/case/=teach?value
+            src:x:/@magic-menu.language.get-localized-phrase?value
+
+          /*
+           * Checking what user said, and if he wants to teach the computer a new
+           * phrase or command.
+           */
+          switch:x:/../*/text?value
+            case:teach
+
+              /*
+               * Invoking Active Event responsible for creating a new command,
+               * making sure we pass in what was actually spoken,
+               * and the current "grammar position" if any.
+               */
+              magic-menu.grammar-position.get
+              if:x:/@magic-menu.grammar-position.get?value
+
+                /*
+                 * Making sure we pass in [pos] to our create invocation.
+                 */
+                eval-x:x:/+/*/*
+                add:x:/..case/*/magic-menu.command.create
+                  src
+                    pos:x:/@magic-menu.grammar-position.get?value
+
+                /*
+                 * Making sure the default [global-id] becomes a "materialised path".
+                 */
+                p5.mysql.connect:[magic-menu]
+                  p5.mysql.scalar:@"select global_id from commands where id = @id"
+                    @id:x:/@magic-menu.grammar-position.get?value
+                  eval-x:x:/+/*/*
+                  add:x:/..case/*/magic-menu.command.create
+                    src
+                      global-id:{0}-child
+                        :x:/@p5.mysql.scalar?value
+
+              magic-menu.command.create:x:/../*/_arg?value
+
+            default
+
+              /*
+               * Hiding our "create command button", since user obviously didn't
+               * want to teach the computer a new phrase.
+               */
+              magic-menu.hide-create-command-button
+
+              /*
+               * Unless the user says "yes" or "no", we assume the engine recognised
+               * erronously, and that what he spoke now, was what he actually wants to
+               * do, for simplicity reasons.
+               *
+               * This allows for saving one roundtrip to speech recognition engine, 
+               * avoiding having user to explicitly telling us "no, I don't want to teach you".
+               */
+              magic-menu.command.evaluate:x:/../*/text?value

@@ -1,4 +1,3 @@
-﻿
 /*
  * Pushes the given [_arg] position (database ID) unto our "grammar-tree instruction pointer".
  *

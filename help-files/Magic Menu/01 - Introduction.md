@@ -10,21 +10,24 @@ screenshot of how the Magic Menu looks like.
 
 https://phosphorusfive.files.wordpress.com/2018/03/magic-menu-screenshot-gui.png
 
-Below is an illustration of whatthe different parts of your menu are.
+Below is an illustration of what the different parts of your menu are.
 
 https://phosphorusfive.files.wordpress.com/2018/03/magic-menu-screenshot-gui-info.png
 
 The Magic Menu supports searching for menu items, paging, in addition to having a hierarchical structure.
 It also loads items on demands. This allows you to create humongously large menu structures,
-with much more menu items than you would normally use in a normal menu.
+with much more menu items than you could possibly use in most other menu systems. In addition, the Magic Menu
+will use the _"soundex algorithm"_ to find matches from your database, which makes it surprisingly robust
+when attempting to find a match for what you speak, since things like _"then"_ and _"than"_ will be equivalent,
+and things such as _"Phosphorus Five"_ will be equal to _"phosphorus V"_, etc.
 
-Now you can use the Magic Menu simply as a _"navbar"_, and ignore its speech recognition capabilities - At
+You can use the Magic Menu simply as a _"navbar"_, and ignore its speech recognition capabilities - At
 which point it becomes a highly flexible and extendible menu system. However, if you are using a browser that
 supports speech recognition and speech synthesis (Google Chrome), you can also use it as a speech
 interface to your web apps. Regardless of how you choose to use it, understanding its structure is imperative,
 since you would highly likely want to create your own custom menu items, to make it possible to automate tasks
-and such, through menu items in it. So let us have a look at its structure, which is more easily understood,
-with a screenshot of its administrative backend.
+and such, by creating your own menu items. So let us have a look at its structure, which is more easily
+understood with a screenshot of its administrative backend.
 
 https://phosphorusfive.files.wordpress.com/2018/03/magic-menu-screenshot.png
 
@@ -46,6 +49,10 @@ Each menu command can have multiples _"aliases"_ or _"synonyms"_, which are syno
 which are all associated with the same actual piece of Hyperlambda. A menu item can be _"private"_. This
 implies that it is private for your user only, and won't be accessible for other users in your system.
 
+**Notice**, if a menu item is not private, it allows for anyone to evaluate its Hyperlambda, which might
+pose a security risk for you, unless you've carefully made sure that your Hyperlambda does not in any
+ways allow for evaluating malicious code.
+
 In addition, each menu item can also optionally be created as a _"global"_ menu item. To understand what
 this implies, you must first realise that the menu structure is actually a graph object, or a tree structure,
 allowing for you to create tree structures of menu items. A _"global"_ menu item will always be accessible,
@@ -64,11 +71,9 @@ Due to that the Magic Menu's structure is hierarchical, and actually implemented
 This allows you to implement somewhat of a _"conversational type of user interface"_, which just so happens
 to seem very intuitive for the human brain. For instance, by default there is a menu item called _"Translate something"_.
 This menu item, if chosen, will ask the user _"What language do you wish to translate to"_, at which point
-you can answer _"Arabic"_, _"Norwegian"_, etc.
-
-When you have chosen a destination language, it will use its dictation capability to figure out what you
-actually want to translate. This would result in what would feel like having a _"natural conversation"_ with
-your computer, that could be broken up into the following entities.
+you can answer _"Arabic"_, _"Norwegian"_, etc. When you have chosen a destination language, it will use its
+dictation capability to figure out what you actually want to translate. This would result in what would feel
+like having a _"natural conversation"_ with your computer, that could be broken up into the following entities.
 
 * __You__ - _"Translate something"_
 * __Computer__ - _"Which language do you wish to translate into"_
@@ -81,3 +86,19 @@ your computer, that could be broken up into the following entities.
 
 **Notice**, the Magic Menu only listens for input when it is flashing yellow. If you speak to it when it
 is not yellow, it won't capture your input.
+
+### The Magic Menu is always accessible
+
+If you look at your toolbar at the top of your page, you will probably see a _"magic wand"_ toolbar button.
+This button will launch the Magic Menu regardless of which app you are within. This is a global plugin button,
+which is injected by the core, in any apps you create that have a widget with the _"toolbar"_ CSS class.
+This allows you to start the Magic Menu from anywhere you are within Phosphorus Five, making it a _"global
+operating system wide menu"_.
+
+This has some consequences though, since the Magic Menu itself does not in any ways itself know from which
+app you are consuming it. This might create problems for you, if you assume that some specific app is open,
+or some particular module has been loaded on your page. Hence, some of your items which are local to your
+particular app, might need to actually verify that your app is actually physically loaded on your page, before
+evaluating its logic - Alternatively load up your module somehow, before evaluating its internal logic, if your
+app/module is not loaded.
+

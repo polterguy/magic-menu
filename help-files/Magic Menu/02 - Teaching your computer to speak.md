@@ -69,9 +69,14 @@ to you to decide. This is arguably a lot of the purpose of the _"Global ID"_ fie
 make sure you can globally and uniquely identify menu items - Which makes it important that you give your
 menu items a **unique** global ID.
 
+If you want to go down this road, and create entire applications using the Magic Menu, I would encourage you
+to combine it with Hypereval though, to store larger snippets of code in - Such that you get at least some
+sort of separation between _"implementation"_ and _"UI"_.
+
 I will periodically create menu items myself, to automate some part of Phosphorus Five, which I might choose
 to release, either for gratis, or for a fee - At which point I will **always** namespace my menu items,
 by prepending them with `gaia`.
 
-**Warning**, hence **stay away** from namespacing your menu items with the string `gaia`.
+**Warning**, hence **stay away** from namespacing your menu items with the string `gaia`, since such items
+might crash with menu items I create and release for your convenience.
 

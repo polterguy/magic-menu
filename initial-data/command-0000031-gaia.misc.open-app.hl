@@ -1,5 +1,6 @@
 command
-  hyperlambda:@"magic-menu.command.evaluate:gaia.help.phosphorus.open-app
+  hyperlambda:@"magic-menu.command.evaluate
+  id:gaia.help.phosphorus.open-app
 return:bool:false
 "
   global:uint:0

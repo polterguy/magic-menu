@@ -5,10 +5,8 @@
  * Expects [_arg] to be whatever should be spoken, and [onfinish] being what to
  * do once [_arg] has been spoken.
  *
- * Optionally, pass in [voice] to override the default voice to use, which is 
- * fetched from the user's settings.
- *
- * Notice, this event will apply all arguments, except [_arg], into [micro.speech.speak].
+ * Optionally, pass in [voice] to override the default voice to use.
+ * The default [voice] is fetched from the user's settings.
  */
 create-event:magic-menu.speak
 
@@ -22,6 +20,9 @@ create-event:magic-menu.speak
    */
   micro.lambda.contract.min:x:/..
     _arg:string
+  micro.lambda.contract.optional:x:/..
+    voice:string
+    onfinish
 
   /*
    * If widget was closed, we simply abort.

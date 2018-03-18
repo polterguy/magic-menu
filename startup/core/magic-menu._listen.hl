@@ -13,11 +13,11 @@ create-event:magic-menu._listen
     lang:string
 
   /*
-   * Our default [onfinish] implementation simply invokes [magic-menu.command.handle].
+   * Our default [onfinish] implementation simply invokes [magic-menu.command.evaluate].
    */
   .defaults
     onfinish
-      magic-menu.command.handle:x:/../*/text?value
+      magic-menu.command.evaluate:x:/../*/text?value
 
   /*
    * If widget was closed, we simply abort.

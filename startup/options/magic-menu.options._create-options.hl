@@ -32,7 +32,7 @@ create-event:magic-menu.options._create-options
        * Evaluating command.
        */
       eval-x:x:/+/*
-      magic-menu.command.handle
+      magic-menu.command.evaluate
         id:x:/@get-widget-property/*/*?value
 
       /*
