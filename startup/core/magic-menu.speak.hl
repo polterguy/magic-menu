@@ -36,6 +36,8 @@ create-event:magic-menu.speak
   /*
    * Unwrapping any references in [_arg] given.
    */
+  add:x:/+
+    src:x:/../*/voice
   magic-menu.unwrap-phrase:x:/../*/_arg?value
 
   /*

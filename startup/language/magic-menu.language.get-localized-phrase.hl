@@ -1,5 +1,4 @@
-﻿
-/*
+﻿/*
  * Returns the localized specified phrase.
  *
  * Notice, this implies traversing our "language files", which can be found in
@@ -19,6 +18,8 @@ create-event:magic-menu.language.get-localized-phrase
    */
   micro.lambda.contract.min:x:/..
     _arg:string
+  micro.lambda.contract.optional:x:/..
+    voice:string
 
   /*
    * Retrieving language settings for user.
@@ -26,11 +27,27 @@ create-event:magic-menu.language.get-localized-phrase
   magic-menu.settings.get-language
 
   /*
+   * Checking if caller supplied an explicit [voice], at which point we override
+   * the language settings for the user.
+   */
+  if:x:/../*/voice?value
+    split:x:/../*/voice?value
+      =:,
+    split:x:/-/0/-?name
+      =:-
+    set:x:/@magic-menu.settings.get-language/*/lang?value
+      src:x:/@split/0?name
+    set:x:/@magic-menu.settings.get-language/*/sublang?value
+      src:x:/@split/0/-?name
+
+  /*
    * First checking [sublang] setting for user.
    */
   eval-x:x:/+/*
   magic-menu.language._get-localized-phrase:x:/../*/_arg?value
-    lang:x:/@magic-menu.settings.get-language/*/sublang?value
+    lang:{0}-{1}
+      :x:/@magic-menu.settings.get-language/*/lang?value
+      :x:/@magic-menu.settings.get-language/*/sublang?value
   if:x:/@magic-menu.language._get-localized-phrase?value
 
     /*

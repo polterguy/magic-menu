@@ -1,5 +1,4 @@
-﻿
-/*
+﻿/*
  * Creates the event that checks phrase to see if there are any referenced
  * parts within it, and if so, including their references, and returning the results.
  */
@@ -15,6 +14,8 @@ create-event:magic-menu.unwrap-phrase
    */
   micro.lambda.contract.min:x:/..
     _arg:string
+  micro.lambda.contract.optional:x:/..
+    voice:string
 
   /*
    * Checking if there are referenced word(s) inside specified word or phrase.
@@ -62,6 +63,8 @@ create-event:magic-menu.unwrap-phrase
       /*
        * Localized phrase, doing lookup into language file(s).
        */
+      add:x:/+
+        src:x:/../*/voice
       magic-menu.language.get-localized-phrase:x:/@_dp?value
       set:x:/../*/_arg?value
         replace:x:/../*/_arg?value

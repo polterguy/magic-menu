@@ -1,4 +1,4 @@
-## Magic Menu API II
+## Magic Menu API II - Settings and more
 
 In addition to the API events previously documented, the Magic Menu contains a whole range of additional events,
 that allows you to somehow control its behavior, or query its state. Since the user can explicitly choose to
@@ -31,10 +31,10 @@ magic-menu.speech.turn-off
 magic-menu.start
 ```
 
-Since the Magic Menu will by default display whatever it is supposed to speak in
-its _"information tooltip widget"_ if speech is turned off, it is still for most practical concerns
-equally usable, since it provides feedback as text. The end user can still explicitly choose to turn
-ON speech again, by clicking the microphone widget in his Magic Menu.
+Since the Magic Menu will by default display whatever it is supposed to speak in its
+_"information tooltip widget"_ if speech is turned off, it is still for most practical concerns equally
+usable, since it provides feedback as text. The end user can still explicitly choose to turn ON speech
+again, by clicking the microphone widget in his Magic Menu.
 
 ### Displaying a custom text
 
@@ -54,7 +54,7 @@ magic-menu.set-text:Yo dude!
 ```
 
 **Notice**, the text widget's content will be clipped, and you'll have to hover your mouse above the
-_"info tooltip widget"_ to see the whole sentence, if you supply a very long piece of text. This is chosen
+_"info tooltip widget"_ to see the whole sentence, if you supply a very long piece of text. This is by design
 to avoid having the menu fill more than its available space in your browser window.
 
 **Hint**, you can use **[magic-menu.get-text]** to retrieve the text currently displayed.
@@ -108,7 +108,7 @@ The **[magic-menu.settings.get-language]** event will in fact internally use the
 event, with a **[default]** argument being `Daniel,en-GB`, which implies that this is the default voice and
 language code for the Magic Menu.
 
-### Explicitly handling a menu item
+### Explicitly evaluating a menu item
 
 In our previous documentation file, we had a lot of examples where we completely bypassed the internals
 of the Magic Menu, and handled the speak utterance ourselves. Sometimes you want to handle the recognized text
@@ -116,9 +116,7 @@ yourself, to provide some sort of _"override"_ - And unless the user speaks some
 evaluate the default menu matching event. This is easily achieved by explicitly invoking **[magic-menu.command.evaluate]**.
 This event requires an **[\_arg]** argument, or an **[id]** argument, being either some phrase, or the
 database ID to a phrase/synonym. The **[id]** argument can also optionally be supplied as the command's global
-database ID.
-
-Below is an example of usage.
+database ID. Below is an example of usage.
 
 ```hyperlambda-snippet
 /*
@@ -236,8 +234,13 @@ allows you to query the Magic Menu for items, and is actually quite powerful. It
 * __[filter]__ - Search filter
 
 This is in fact the event that is used to display menu items in the GUI of your Magic Menu, and it allows you
-to implement paging, search, etc as you query the Magic Menu for its items. Below is an example, that will return
-the first 50 items at the _"root level"_.
+to implement paging, search, etc, as you query the Magic Menu for its items. Below is an example, that will return
+the first 50 items at the _"root level"_. Notice, the integer number returned for each item, is the _"phrase ID"_,
+and the string returned is the last used phrase for the current language you've configured your user to use.
+The last used phrase, is in general terms what is displayed every time you choose to query for menu items,
+or display the menu somehow. The **[type]** returned can be either _"magic-menu-options-global"_,
+_"magic-menu-options-local"_, or _"magic-menu-options-root"_ - Implying a global item, an item with a parent,
+or a root level menu item.
 
 ```hyperlambda-snippet
 /*
@@ -256,3 +259,17 @@ create-widgets
         innerValue:x:/@magic-menu.grammar-position.list-options
 ```
 
+### Manipulating the options window
+
+The options widget can be explicitly hidden or displayed as you see fit by using the following events. In addition,
+you can also explicitly page back and forth in the options window, and check if options are visible, by using
+the following events.
+
+* __[magic-menu.options.show]__ - Displays options
+* __[magic-menu.options.close]__ - Hides options
+* __[magic-menu.options.exists]__ - Returns boolean _"true"_ if options are visible
+* __[magic-menu.options.show-previous]__ - Pages to previous option page, if possible. Returns _"false"_ if not possible
+* __[magic-menu.options.show-next]__ - Pages to next option page, if possible. Returns _"false"_ if not possible
+
+In fact, the above events are evaluated internally by the Magic Menu as you click its UI to page and toggle its
+options window.

@@ -18,6 +18,7 @@ create-event:magic-menu.listen
     onfinish
     _arg:string
     lang:string
+    voice:string
 
   /*
    * Applying [onfinish], if any.

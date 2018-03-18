@@ -1,4 +1,5 @@
-## Magic Menu API
+
+## Magic Menu API I
 
 The Magic Menu has a rich API which you can interact with. The most important Active Events are probably
 the ones necessary to start and stop the Magic Menu, speak some phrase, and initiate speech recognition.
@@ -52,6 +53,8 @@ magic-menu.start:bool:false
 have to explicitly make sure it becomes possible to interact with yourself, some way. The above logic
 will launch the Magic Menu in a state where it is impossible to interact with, at least without displaying
 its options, by clicking the question mark that shows the available options.
+
+**[magic-menu.quit]** quits the menu.
 
 ### Customizing your input/output loop
 

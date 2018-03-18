@@ -52,6 +52,7 @@ return:bool:false
     _arg:string
   micro.lambda.contract.optional:x:/..
     pos:long
+    pos-is-phrase-id:bool
     hyperlambda:string
     force-parent:bool
     global:bool
@@ -71,7 +72,7 @@ return:bool:false
     /*
      * We don't allow execution of this lambda, unless user is root.
      */
-    return
+    throw:This event is only possible to evaluate for a 'root' account
 
   /*
    * Checking to see if we're in some specific point in our "grammar tree".
@@ -80,10 +81,27 @@ return:bool:false
   if:x:/../*/pos?value
 
     /*
-     * Using explicitly given position from [pos].
+     * Checking if [pos] is a phrase ID and not a command ID.
      */
-    set:x:/@_pos?value
-      src:x:/../*/pos?value
+    if:x:/../*/pos-is-phrase-id?value
+      =:bool:true
+
+      /*
+       * [pos] argument is a phrase ID andnot a command ID.
+       */
+      p5.mysql.connect:[magic-menu]
+        p5.mysql.scalar:select commandid from phrases where id = @id
+          @id:x:/../*/pos?value
+        set:x:/@_pos?value
+          src:x:/@p5.mysql.scalar?value
+
+    else
+
+      /*
+       * Using explicitly given position from [pos].
+       */
+      set:x:/@_pos?value
+        src:x:/../*/pos?value
 
   /*
    * Checking if user provided [force-parent], and if so, deleting the "Global"
