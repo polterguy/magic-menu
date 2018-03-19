@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Creates the event that checks phrase to see if there are any referenced
  * parts within it, and if so, including their references, and returning the results.
  */
@@ -43,15 +43,17 @@ create-event:magic-menu.unwrap-phrase
         chars:[]
       split:x:/@trim?value
         =:":"
-      set:x:/+2?name
+      set:x:/+3?name
         src:x:/@split/0?name
-      set:x:/+?value
+      set:x:/+2?value
         src:x:/@split/1?name
+      add:x:/+
+        src:x:/@.signal/--/<-(!/_arg)
       foo
 
       /*
        * Replacing all occurrencies of currently iterated [match] inside of
-       * [_arg] to result of event invocation.
+       * [_arg] to the result of our event invocation.
        */
       set:x:/../*/_arg?value
         replace:x:/../*/_arg?value

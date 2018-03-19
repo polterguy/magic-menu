@@ -12,6 +12,11 @@
 create-event:magic-menu.listen
 
   /*
+   * Signal node.
+   */
+  .signal
+
+  /*
    * Sanity checking arguments.
    */
   micro.lambda.contract.optional:x:/..
@@ -36,7 +41,7 @@ create-event:magic-menu.listen
      * Speaking given [_arg], before we start listening.
      */
     add:x:/+
-      src:x:/../*/voice
+      src:x:/@.signal/--/<-(!/onfinish!/_arg)
     magic-menu.speak:x:/../*/_arg?value
       onfinish
 

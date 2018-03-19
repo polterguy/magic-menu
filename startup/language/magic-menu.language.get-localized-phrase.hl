@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Returns the localized specified phrase.
  *
  * Notice, this implies traversing our "language files", which can be found in
@@ -31,6 +31,11 @@ create-event:magic-menu.language.get-localized-phrase
    * the language settings for the user.
    */
   if:x:/../*/voice?value
+
+    /*
+     * An explicit [voice] were given, hence we resort to using that
+     * argument, instead of the user's settings.
+     */
     split:x:/../*/voice?value
       =:,
     split:x:/-/0/-?name
@@ -70,11 +75,25 @@ create-event:magic-menu.language.get-localized-phrase
        */
       return:x:/@magic-menu.language._get-localized-phrase?value
 
-    else
+    else-if:x:/@magic-menu.settings.get-language/*/lang?value
+      !=:en
 
       /*
        * Defaulting to English.
        */
       magic-menu.language._get-localized-phrase:x:/../*/_arg?value
         lang:en
-      return:x:/@magic-menu.language._get-localized-phrase?value
+      if:x:/@magic-menu.language._get-localized-phrase?value
+
+        /*
+         * The English language file contained the references.
+         */
+        return:x:/@magic-menu.language._get-localized-phrase?value
+
+    /*
+     * No language reference exists at all for specified [_arg] in any
+     * of our files, including the English file.
+     */
+    trim:x:/../*/_arg?value
+      chars:[]
+    return:x:/@trim?value

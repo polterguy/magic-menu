@@ -1,4 +1,3 @@
-﻿
 /*
  * Invoked when Magic menu should speak something.
  *
@@ -37,8 +36,8 @@ create-event:magic-menu.speak
    * Unwrapping any references in [_arg] given.
    */
   add:x:/+
-    src:x:/../*/voice
-  magic-menu.unwrap-phrase:x:/../*/_arg?value
+    src:x:/@.signal/--/<-
+  magic-menu.unwrap-phrase
 
   /*
    * Checking if speech is enabled, and if not, evaluating any potential
