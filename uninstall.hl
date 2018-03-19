@@ -12,3 +12,5 @@
 delete-event:p5.io.unroll-path.@MAGIC
 vocabulary:~magic-menu.
 delete-event:x:/-/*?name
+delete-event:desktop.help-files.magic-menu
+delete-event:desktop.plugins.post.create-magic-menu-start-button

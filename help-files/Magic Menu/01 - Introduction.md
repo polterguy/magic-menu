@@ -5,8 +5,9 @@ system, it also supports speech recognition and speech synthesis - But only on b
 which happens to be only Google Chrome at the time of this writing. This allows you to completely control
 your system, almost exclusively using your voice if you wish. The Magic Menu allows you to create your own
 menu commands, which are sentences, phrases and words, which are associated with some piece of Hyperlambda,
-that will be evaluated when your menu item is chosen, or the phrase/sentence/word is spoken. Below is a
-screenshot of how the Magic Menu looks like.
+that will be evaluated when your menu item is chosen, or the phrase/sentence/word is spoken. Hence, arguably
+it becomes a bridge between natural language and computer code, allowing you to evaluate some piece of 
+Hyperlambda, in response to natural spoken language. Below is a screenshot of how the Magic Menu looks like.
 
 https://phosphorusfive.files.wordpress.com/2018/03/magic-menu-screenshot-gui.png
 
@@ -93,7 +94,7 @@ If you look at your toolbar at the top of your page, you will probably see a _"m
 This button will launch the Magic Menu regardless of which app you are within. This is a global plugin button,
 which is injected by the core, in any apps you create that have a widget with the _"toolbar"_ CSS class.
 This allows you to start the Magic Menu from anywhere you are within Phosphorus Five, making it a _"global
-operating system wide menu"_.
+operating system wide navbar"_.
 
 This has some consequences though, since the Magic Menu itself does not in any ways itself know from which
 app you are consuming it. This might create problems for you, if you assume that some specific app is open,

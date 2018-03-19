@@ -12,6 +12,11 @@ making it a global menu item. In addition you can type in synonyms, separated by
 can even choose to create localized versions of your synonyms, by prepending your language code in front
 of your phrase. Below is an example of how this might look like for the phrase _"Thank you"_.
 
+**Notice**, to test this example, you can launch the Magic Menu by clicking the _"magic wand"_ toolbar
+button at the top of your page, and speak out loud the phrase _"Thank you"_. This will result in that
+the Magic Menu will utter _"I don't understand"_, at which point you can speak _"I will teach you"_.
+When you have spoken _"I will teach you"_, a window will popup, allowing you to create a new command.
+
 https://phosphorusfive.files.wordpress.com/2018/03/magic-menu-screenshot-teach.png
 
 **Notice** the third phrase above is the Norwegian word for _"Thank you"_, and the language code of `nb-NO`
@@ -24,7 +29,8 @@ to his currently selected language.
 **Notice**, the Magic Menu assumes that whatever you're typing in as phrases is in your currently selected
 language, so adding a language code for Norwegian, if that was my currently selected language, would not
 be necessary - Since the Magic Menu would assume that everything I type into it as phrases, are localized
-in my currently selected language, unless explicitly overridden as the screenshot above illustrates.
+in my currently selected language, unless explicitly overridden as the screenshot above illustrates. You cannot
+use colons (:) in your phrases for the above reasons.
 
 ### Changing your tree
 
@@ -39,7 +45,7 @@ the parent menu item, being _"Open up an application"_. At which point your _"Op
 item would have to return `true`.
 
 If you look at the menu item for _"Translate something"_ in your administrative backend, you will see that
-it doesn't return anything, which is equivalent to returning _"true"_. This implies that the phrase _"Translate
+it doesn't return anything, which is equivalent of returning _"true"_. This implies that the phrase _"Translate
 something"_ has its own children menu items, which you can clearly see from the screenshot below that it does
 indeed have.
 
@@ -71,12 +77,10 @@ menu items a **unique** global ID.
 
 If you want to go down this road, and create entire applications using the Magic Menu, I would encourage you
 to combine it with Hypereval though, to store larger snippets of code in - Such that you get at least some
-sort of separation between _"implementation"_ and _"UI"_.
-
-I will periodically create menu items myself, to automate some part of Phosphorus Five, which I might choose
-to release, either for gratis, or for a fee - At which point I will **always** namespace my menu items,
-by prepending them with `gaia`.
+sort of separation between _"implementation"_ and _"UI"_. I will periodically create menu items myself,
+to automate some part of Phosphorus Five, which I might choose to release, either for gratis, or for a fee -
+At which point I will **always** namespace my menu items, by prepending them with `gaia`.
 
 **Warning**, hence **stay away** from namespacing your menu items with the string `gaia`, since such items
-might crash with menu items I create and release for your convenience.
+might crash with menu items I create and release into the public.
 
