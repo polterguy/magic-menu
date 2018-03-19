@@ -71,21 +71,39 @@ magic-menu.language.get-localized-phrase:[Hello]
 micro.windows.info:x:/-?value
 ```
 
+Notice, the **[magic-menu.language.get-localized-phrase]** event can only handle a single localized reference.
+If you wish, you can use the **[magic-menu.unwrap-phrase]** event, to unwrap entire sentences, containing
+multiple localized references instead. Below is an example.
+
+```hyperlambda-snippet
+/*
+ * Unwrapping entire sentence.
+ */
+magic-menu.unwrap-phrase:Jeg heter Nora. [Talk to me]. Jeg vil gjerne høre hva du har å si. [Hello]
+  voice:nb-NO
+micro.windows.info:x:/-?value
+```
+
 #### Localization files' structure
 
 Your localization files' structure is probably important to understand, if you want to create your own
-localized phrases or sentences. The language files are named _"lang-MAJOR-MINOR.hl"_, and they can be found
+localized phrases or sentences. The language files are semantically named _"lang-MAJOR-MINOR.hl"_, and they can be found
 in your _"/configuration/"_ folder. MAJOR being major language code, such as e.g. _"en"_ for English.
-Minor being minor language code, such as e.g. _"AU"_ for Australian. If you try to retrieve something for
-the language code of _"en-AU"_ for instance, it will check to see if the language file for _"en-AU"_ exists,
+MINOR being minor language code, such as e.g. _"AU"_ for Australian. If you try to retrieve something for
+the language code of _"en-AU"_ for instance, it will check to see if the language file _"lang-en-AU.hl"_ exists,
 and if it does, it will see if your phrase exists within this file. If the file doesn't exist, or the file
-does not contain whatever you're looking for, it will default to the _"lang-en.hl"_ file.
+does not contain whatever you're looking for, it will check the _"lang-en.hl"_ file. The default language
+file the engine will use is _"lang-en.hl"_.
 
-The default language file of _"lang-en.hl"_ will be used, if no localization value exists for your phrase, and
-if not even this file contains a localized version of your string, it will return the string as is, without
-square brackets. This implies that it's probably smart to use the English sentence or phrase as your reference
-as you create your own localization entities, since if your string cannot be localized in any ways, the engine
-will resort to speak whatever is in between your square brackets. Below is an example.
+This implies that your localization efforts becomes a _"tree"_, where you can choose to only override strings
+that are different for Australian language in your _"lang-en-AU.hl"_ file, while keeping all commonalities in
+your _"lang-en.hl"_ file.
+
+The default language file of _"lang-en.hl"_ will be used, if no localization file or value exists for your phrase -
+And if not even this file exists or contains a localized version of your string, it will return the string as is,
+without square brackets. This implies that it's probably smart to use the English sentence or phrase as your
+reference, as you create your own localization entities - Since if your string cannot be localized in any ways,
+the engine will resort to using whatever is in between your square brackets. Below is an example.
 
 ```hyperlambda-snippet
 /*
@@ -94,6 +112,9 @@ will resort to speak whatever is in between your square brackets. Below is an ex
 magic-menu.language.get-localized-phrase:[This doesn't exist]
 micro.windows.info:x:/-?value
 ```
+
+**Notice**, for reasons that'll become apparent further down in this documentation, you cannot use periods (.)
+in your localized resource references.
 
 ### Inline event invocations
 
