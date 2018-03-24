@@ -40,9 +40,9 @@ again, by clicking the microphone widget in his Magic Menu.
 
 The Magic Menu has an API event called **[magic-menu.set-text]** which allows you to change the text it
 displays in its _"information widget"_. You can use this as you see fit, to give the user some hints about
-what he or she can do. The default implementation for this is to display whatever it recognize, and speaks
-though - So if you want to customize this text, you'll have to invoke the event _after_ you've started your
-listening loop, or having it speak something. Below is an example.
+what he or she can do. The default implementation for this is to display whatever it recognize - So if
+you want to customize this text, you'll have to invoke the event _after_ you've started your listening
+loop, or having it speak something. Below is an example.
 
 ```hyperlambda-snippet
 /*
@@ -234,13 +234,16 @@ allows you to query the Magic Menu for items, and is actually quite powerful. It
 * __[filter]__ - Search filter
 
 This is in fact the event that is used to display menu items in the GUI of your Magic Menu, and it allows you
-to implement paging, search, etc, as you query the Magic Menu for its items. Below is an example, that will return
-the first 50 items at the _"root level"_. Notice, the integer number returned for each item, is the _"phrase ID"_,
-and the string returned is the last used phrase for the current language you've configured your user to use.
-The last used phrase, is in general terms what is displayed every time you choose to query for menu items,
-or display the menu somehow. The **[type]** returned can be either _"magic-menu-options-global"_,
-_"magic-menu-options-local"_, or _"magic-menu-options-root"_ - Implying a global item, an item with a parent,
-or a root level menu item.
+to implement paging, search, etc, as you query the Magic Menu for its items. Below is an example, that will
+return the first 50 items from your _"current level"_. Notice, the integer number returned for each item,
+is the _"phrase ID"_, and the string returned is the last used phrase for the current language you've
+configured your user to use. The last used phrase, is in general terms what is displayed every time you
+choose to query for menu items, or display the menu somehow. The **[type]** returned can be either
+_"magic-menu-options-global"_, _"magic-menu-options-local"_, or _"magic-menu-options-root"_ - Implying
+a global item, an item with a parent, or a root level menu item.
+
+**Notice**, this event will always return items from your _"current level"_. To understand what that implies,
+we'll have a look at the _"grammar graph object"_ later in our documentation.
 
 ```hyperlambda-snippet
 /*

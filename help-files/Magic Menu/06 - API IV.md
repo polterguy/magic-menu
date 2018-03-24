@@ -1,7 +1,8 @@
 ## Magic Menu API IV - Misc.
 
 If you want to allow for explicitly creating a new menu item, you can evaluate the **[magic-menu.command.create]**
-event yourself, at which poin the _"create new menu item"_ window is displayed, illustrated below.
+event yourself, at which poin the _"create new menu item"_ window is displayed. Below is a screenshot of
+how this window looks like.
 
 https://phosphorusfive.files.wordpress.com/2018/03/magic-menu-create-new-command-screenshot.png
 
@@ -23,12 +24,12 @@ above Active Event, if you choose to supply a **[pos]** argument.
 ### Localization
 
 In addition to that you can explicitly choose to supply a language as you speak and capture input, you also
-have some _"standard phrases"_, such as the default greeting, etc. These phrases can be found inside of your
-Magic Menu modules folder, in the _"/configuration/"_ folder. By default, only a handful of localization files
-and phrases exists, such as for standard English, Australian English, and Norwegian - With only a handful of
-greetings and similar phrases. However, feel free to expand to these, and localize these
-phrases as you wish. These phrases can be used in your own logic by wrapping square brackets around whatever
-you want for the Magic Menu to utter for you. Below is an example.
+have some localized _"standard phrases"_, such as the default greeting, etc. These phrases can be found
+inside of your Magic Menu modules folder, in the _"/configuration/"_ folder. By default, only a handful of
+localization files and phrases exists, such as for standard English, Australian English, and Norwegian -
+With only a handful of greetings and similar phrases. However, feel free to expand these, and localize
+them as you wish. These phrases can be used in your own logic by wrapping square brackets around
+whatever you want the Magic Menu to utter for you. Below is an example.
 
 ```hyperlambda-snippet
 /*
@@ -51,9 +52,13 @@ magic-menu.listen:Jeg heter Nora. [Talk to me]. Jeg vil gjerne høre hva du har 
   voice:nb-NO
 ```
 
-And of course, you can create such phrases as you see fit, and reference these in your own vocabulary,
-as you see fit - By creating such phrases and storing them in your localization files in the _"/configuration/"_
+And of course, you can create such phrases as you see fit, and reference these in your own vocabulary -
+By creating such phrases, and storing them in your localization files in the _"/configuration/"_
 folder.
+
+**Warning**, if you upgrade Phosphorus Five or the Magic Menu, all such customized phrases will by
+default be deleted. Make sure you backup this folder, if you want to upgrade to a newer version of
+Phosphorus Five or the Magic Menu.
 
 #### Explicitly localizing a string
 
@@ -192,12 +197,15 @@ magic-menu.listen:"Hello. [gaia.samples.foo:Phosphorus Five]"
   /*
    * This argument will be ignored by the Magic Menu itself, but still
    * passed into your [gaia.samples.foo] event, as your text is being built
-   * and parsed by the main engine.
+   * and parsed by the Magic Menu.
    */
   coolnes:very cool
 ```
 
 **Notice**, using the above to invoke Google Translate is simply an example, and you could use such Active Event
 references any ways you see fit - As long as your events somehow are able to return something that the Magic
-Menu is capable of actually speaking.
+Menu is capable of actually speaking. Also realize that by using Google Translate, you are sending your
+sentences to Google - Which _might not be something you want to do, for privacy reasons_!
+
+**Also realize** that if you use a voice that is not _"local"_, your data is also transferred to Google.
 

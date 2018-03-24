@@ -4,7 +4,7 @@ The Magic Menu is a hierarchical menu system. This implies that what you're actu
 is that you are moving around the different branches in a tree structure. Although these Active Events are for the
 most parts intended for internal usage by the menu itself, you can explicitly choose to manipulate
 which branch you're currently on explicitly, by using the API events of the Magic Menu. There are 4 basic Active Events
-that allows you to query and manipulate the position in this tree, or what _"branch"_ you're currently at.
+that allows you to query and manipulate the position in this tree, or what _"branch"_ you're currently on.
 These are as follows.
 
 * __[magic-menu.grammar-position.clear]__ - Clears your current position, and jumps to _"root branch"_

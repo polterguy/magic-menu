@@ -1,4 +1,3 @@
-
 ## Magic Menu API I
 
 The Magic Menu has a rich API which you can interact with. The most important Active Events are probably
@@ -63,14 +62,18 @@ to your browser's installed speech synthesis languages, or a language code such 
 combination of both. In addition, it requires you to (obviously) pass in an **[\_arg]** argument, being the
 phrase or word(s) you want it to speak for you.
 
-The **[magic-menu.listen]** event optionally takes a **[lang]** and a **[voice]** argument, being a language
-code (e.g. `es-AR` for Spanish) used for capturing speech input, and a voice used for speaking. In addition,
-the listen event also optionally takes an **[\_arg]** argument, which allows you to have it speak something,
-before listening is initiated. Obviously, the **[voice]** argument only makes any sense if you also pass in
-an **[\_arg]** argument.
+The **[magic-menu.listen]** event optionally takes a **[lang]** argument, being a language code (e.g. `es-AR`
+for Spanish) used for capturing speech input. In addition, the listen event also optionally takes an
+**[\_arg]** argument, which allows you to have it speak something, before listening is initiated. The latter
+is similar to invoking **[magic-menu.speak]** before you invoke **[magic-menu.listen]**, and really just
+serves as a convenience shortcut for invoking both events. If you supply an **[\_arg]** argument, you
+can also optionally supply a  **[voice]** argument, which is passed into your speak event, declaring which
+voice to use for uttering your sentence.
 
 Both events optionally takes an **[onfinish]** lambda callback, which is evaluated when speaking is done,
-or speech has been captured. Below is an example of usage of the **[magic-menu.speak]**.
+or speech has been captured. If you do not supply an **[onfinish]** lambda callback, the default implementation
+will try to recognize your phrase as a _"menu command"_, by invoking the **[magic-menu.command.evaluate]**
+event. Below is an example of usage of the **[magic-menu.speak]**.
 
 ```hyperlambda-snippet
 /*
@@ -229,8 +232,8 @@ magic-menu.listen:Give me something to work with
         magic-menu.quit
 ```
 
-Obviously, the ease of creating language tutoring apps, translation apps, etc, becomes quite stunning once
-you see the creative potential of constructs such as the above.
+For obvious reasons, the act of creating language tutoring apps, translation apps, etc, becomes
+stunningly easy, once you see the creative potential of constructs such as the above.
 
 **Notice**, the speech parts of the Magic Menu is built on top of the speech Active Events from Micro. Feel
 free to check out the documentation for Micro for more details about the internals of speech recognition and

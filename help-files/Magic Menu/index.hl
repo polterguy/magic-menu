@@ -4,12 +4,20 @@
 h2
   innerValue:Magic Menu
 
+img
+  style:"margin-left:1rem; float:right;"
+  src:"https://phosphorusfive.files.wordpress.com/2018/03/magic-menu-screenshot-2.png"
+
 p
-  innerValue:@"The Magic Menu is a common navigation system, which you can use in your own modules,
+  innerValue:@"The Magic Menu is a common navigation system, that you can use in your own modules,
 that allows for easily navigating your apps. It also supports speech recognition, and speech synthesis, allowing
 you to exclusively use your voice to command your Phosphorus Five modules. In addition, it also contains a rich
 API, allowing for you to interact with it, and override almost its entire behaviour as you see fit."
 
+p
+  innerValue:@"The Magic Menu literally supports creating thousands of menu items, which can be selected by
+speaking to your computer, and easily allows the user to search and page through these menu items. This makes
+it an extremely scalable menu system, and you could in theory use it to create entire apps if you wanted to."
 
 /*
  * All files at "root" of sub section.

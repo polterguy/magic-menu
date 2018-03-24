@@ -1,13 +1,13 @@
 ## Introduction to the Magic Menu
 
 The Magic Menu is a common navigation system for all your apps. In addition to being a common navigation
-system, it also supports speech recognition and speech synthesis - But only on browsers that supports this,
-which happens to be only Google Chrome at the time of this writing. This allows you to completely control
-your system, almost exclusively using your voice if you wish. The Magic Menu allows you to create your own
-menu commands, which are sentences, phrases and words, which are associated with some piece of Hyperlambda,
-that will be evaluated when your menu item is chosen, or the phrase/sentence/word is spoken. Hence, arguably
-it becomes a bridge between natural language and computer code, allowing you to evaluate some piece of 
-Hyperlambda, in response to natural spoken language. Below is a screenshot of how the Magic Menu looks like.
+system, it also supports speech recognition and speech synthesis - But _only on browsers that supports speech
+recognition_ - Which happens to be only Google Chrome at the time of this writing. This allows you to
+completely control your system, almost exclusively using your voice. The Magic Menu allows you to create
+your own menu commands, which are sentences, phrases and words, which are associated with some piece of
+Hyperlambda, that will be evaluated when your menu item is chosen, or the phrase/sentence/word is spoken.
+Hence, it becomes a bridge between natural language and computer code, allowing you to evaluate some piece of
+Hyperlambda, in response to natural spoken language. Below is a screenshot of the Magic Menu.
 
 https://phosphorusfive.files.wordpress.com/2018/03/magic-menu-screenshot-gui.png
 
@@ -22,20 +22,30 @@ will use the _"soundex algorithm"_ to find matches from your database, which mak
 when attempting to find a match for what you speak, since things like _"then"_ and _"than"_ will be equivalent,
 and things such as _"Phosphorus Five"_ will be equal to _"phosphorus V"_, etc.
 
+If you want to try it out, you can evaluate the snippet below.
+
+```hyperlambda-snippet
+/*
+ * Launches the Magic Menu.
+ */
+magic-menu.start
+```
+
+**Notice**, speak _"Goodbye"_ to quit the menu.
+
 You can use the Magic Menu simply as a _"navbar"_, and ignore its speech recognition capabilities - At
 which point it becomes a highly flexible and extendible menu system. However, if you are using a browser that
 supports speech recognition and speech synthesis (Google Chrome), you can also use it as a speech
 interface to your web apps. Regardless of how you choose to use it, understanding its structure is imperative,
-since you would highly likely want to create your own custom menu items, to make it possible to automate tasks
-and such, by creating your own menu items. So let us have a look at its structure, which is more easily
-understood with a screenshot of its administrative backend.
+since you would highly likely want to create your own custom menu items. So let us have a look at its
+structure, which is more easily understood with a screenshot of its administrative backend.
 
 https://phosphorusfive.files.wordpress.com/2018/03/magic-menu-screenshot.png
 
-In the above screenshot, you can see that there are four synonym phrases, which are all associated with
-the same piece of Hyperlambda, which will be evaluated when that menu item is _"chosen"_ or _"spoken"_.
-Each phrase can also be localized for some specific language, by prepending the language code for your
-chosen language in front of it - Which we will look at later.
+In the above screenshot, you can see that there are four synonym phrases or _"Commands"_, that are all
+associated with the same piece of Hyperlambda. This Hyperlambda will be evaluated when that menu item
+is _"chosen"_ or _"spoken"_. Each phrase can also be localized for some specific language, by prepending
+the language code for your chosen language in front of it - Which we will look at later.
 
 The above example Hyperlambda simply checks to see if there are any modal windows opened in your app,
 and if so, it will close these windows for you. This allows you to close a modal window, by for instance
@@ -63,7 +73,7 @@ which are always accessible, regardless of how deeply you have traversed into yo
 In addition, each menu item has a _"global ID"_. This is a unique identifier, which (preferably) should be
 unique for your company/entity/user/etc. This allows you to _"merge"_ menu items from other companies or
 users, without having these clash with each other, in addition to serving as a globally unique ID for
-your menu item. I always start my menu items global ID with the word _"gaia."_ for instance. You should
+your menu item. I always start my menu items global ID with the word _"gaia"_. You should
 find some other globally unique name to start yours with, such as your company name, etc.
 
 #### Conversations with your computer
