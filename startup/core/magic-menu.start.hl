@@ -45,7 +45,7 @@ create-event:magic-menu.start
    */
   eval-x:x:/+/**/.show-options
   create-widget:magic-menu-listener
-    class:magic-menu-listener shaded rounded bg
+    class:magic-menu-listener shaded rounded
     events
 
 

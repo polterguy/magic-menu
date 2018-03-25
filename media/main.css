@@ -73,8 +73,8 @@
  * These styles are for the "Magic Menu plugin".
  */
 @keyframes magic-menu-listener {
-    0% {background-color:#fefefe;}
-    100% {background-color:#fefeaa;}
+    0% {background-color: rgba(255,255,0,.4);}
+    100% {background-color: rgba(255,255,255,.1);}
 }
 .magic-menu-listener {
     position:fixed;
@@ -155,6 +155,7 @@ label.magic-menu-tip {
 .magic-menu-help ul li:first-child {
     border-top-left-radius:var(--border-radius);
     border-top-right-radius:var(--border-radius);
+    border-top-color:var(--border-color);
 }
 .magic-menu-help ul li:last-child {
     border-bottom:solid 1px var(--border-color);
