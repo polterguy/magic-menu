@@ -336,12 +336,3 @@ window.onscroll = function() {
                   keep-items:true
                   offset:x:/../*/p5.web.viewstate.get/[0,1]/*?value
                   filter:x:/../*/p5.web.viewstate.get/[1,2]/*?value
-
-
-/*
- * Creating dropzone for entire page, to allow for drag and drop uploading of language files.
- */
-micro.page.create-dropzone
-  filter:zip|hl
-  url:/magic-menu/upload
-  .onfinish:@"function(uid, no_files, no_errors) {window.location.replace(window.location.href);}"
