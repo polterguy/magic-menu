@@ -1,5 +1,22 @@
 ﻿
 /*
+ * Verifying that MySQL is installed, and if not, returning early.
+ */
+try
+  p5.mysql.connect:[sys]
+catch
+
+  /*
+   * No MySQL.
+   */
+  return
+
+
+
+
+
+
+/*
  * Creating database schema if it doesn't exist.
  */
 try
