@@ -1,10 +1,12 @@
 # Magic Menu
 
-The Magic Menu is an Ajax navbar and menu system, working across all your Phosphorus Five
+The Magic Menu is an Ajax navbar and menu system for Phosphorus Five, working across all your
 apps, allowing you to easily navigate your apps, and associate small pieces of Hyperlambda, with
-some _"navbar"_ item. It is extremly configurable, and among other things features speech
+some _"navbar"_ item. It is highly configurable, and among other things features speech
 recoginition and speech synthesis to navigate your menu structure on browsers that
-supports speech.
+supports such things.
+
+![screenshot](https://phosphorusfive.files.wordpress.com/2018/03/magic-menu-screenshot3.png)
 
 ## Installation
 
