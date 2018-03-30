@@ -3,12 +3,11 @@
  */
 container
   element:a
-  class:desktop-app button shaded
+  class:jumbo-button
   title:A navbar for all your apps, supporting speech recognition
   widgets
+    span
+      innerValue:Magic Menu
     literal
       element:span
-      class:icon-magic-wand desktop-app-icon
-    span
-      class:desktop-app-text
-      innerValue:Magic Menu
+      class:icon-magic-wand
