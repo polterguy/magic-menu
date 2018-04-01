@@ -84,3 +84,13 @@ At which point I will **always** namespace my menu items, by prepending them wit
 **Warning**, hence **stay away** from namespacing your menu items with the string `gaia`, since such items
 might crash with menu items I create and release into the public.
 
+### Distributing your version - Advanced
+
+If you have created some menu items, and you want to create your own distribution, containing these items -
+You can easily do so by exporting your menu items from the administrative dashboard to a zip file, unzip this
+file, and put the unzipped Hyperlambda files into your distribution's _"/initial-data/"_ folder. This ensures
+that when the Magic Menu is installed, these items are automatically created during installation. This allows
+you to create your own distributions, containing the menu items you want to distribute to your customers, which
+is useful if you're creating your own distribution of Phosphorus Five, with for instance _"Hyperbuild"_ or
+something similar.
+
