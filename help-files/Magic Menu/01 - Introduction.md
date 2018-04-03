@@ -113,3 +113,8 @@ particular app, might need to actually verify that your app is actually physical
 evaluating its logic - Alternatively load up your module somehow, before evaluating its internal logic, if your
 app/module is not loaded.
 
+**Notice** - Speech recognition is only accessible, either on 127.0.0.1, or through an SSL connection, due to
+the security settings in Google Chrome. If you intend to use the Magic Menu, you have to make sure you install
+an SSL keypair on your server - Which for the record, the integrated _"install.sh"_ script will ask you to do
+on your behalf, and automatically take care of, if you answer it correctly during installation.
+
