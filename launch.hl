@@ -31,8 +31,17 @@ create-widget:magic-menu-main-container
       return:@MAGIC/help-files/Magic Menu/index.hl
 
 
+    /*
+     * Sink necessary to make sure help is NOT loaded at the bottom,
+     * which would mess with our "never ending scrolling" experience.
+     */
+    desktop.help.get-widget-arguments
+      return
+        after:magic-menu-toolbar-row
+
+
   widgets
-    div
+    div:magic-menu-toolbar-row
       class:row
       widgets
         div
