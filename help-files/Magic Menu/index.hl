@@ -27,10 +27,6 @@ desktop.help.widgets.help-index
   folder:@MAGIC/help-files/Magic Menu/
 
 
-h3
-  innerValue:Files meta information
-
-
 /*
  * Meta information for all files in module.
  */
