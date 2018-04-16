@@ -226,59 +226,30 @@ create-widget:magic-menu-main-container
                     /*
                      * Asking user to confirm action.
                      */
-                    create-widgets
-                      micro.widgets.modal:magic-menu-delete-all-commands-modal
-                        widgets
-                          h3
-                            innerValue:Please confirm deletion of all commands
-                          p
-                            innerValue:Are you sure you want to <strong>delete all commands</strong>? This action is permanent.
-                          div
-                            class:right
-                            widgets
-                              div
-                                class:strip
-                                widgets
-                                  button
-                                    innerValue:Yes
-                                    onclick
+                    micro.windows.confirm
+                      body:Please confirm deletion of all commands
+                      header:Are you sure you want to <strong>delete all commands</strong>? This action is permanent.
+                      onok
 
-                                      /*
-                                       * Deleting all commands, and re-databinding grid.
-                                       */
-                                      p5.mysql.connect:[magic-menu]
-                                        p5.mysql.delete:@"delete from commands"
+                        /*
+                         * Deleting all commands, and re-databinding grid.
+                         */
+                        p5.mysql.connect:[magic-menu]
+                          p5.mysql.delete:@"delete from commands"
 
-                                      /*
-                                       * Re-databinding datagrid, and closing modal widget.
-                                       */
-                                      set-widget-property:magic-menu-search-textbox
-                                        value:
-                                      p5.web.widgets.ajax-events.raise:magic-menu-search-button
-                                        onclick
-                                      delete-widget:magic-menu-delete-all-commands-modal
+                        /*
+                         * Re-databinding datagrid, and closing modal widget.
+                         */
+                        set-widget-property:magic-menu-search-textbox
+                          value:
+                        p5.web.widgets.ajax-events.raise:magic-menu-search-button
+                          onclick
 
-                                      /*
-                                       * Giving user some feedback.
-                                       */
-                                      micro.windows.info:All your commands was successfully deleted
-                                        class:micro-windows-info success
-
-                                  button
-                                    innerValue:No
-                                    oninit
-
-                                      /*
-                                       * Setting focus initially to "No" button.
-                                       */
-                                      micro.page.set-focus:x:/../*/_event?value
-
-                                    onclick
-
-                                      /*
-                                       * Simply closing modal widget.
-                                       */
-                                      delete-widget:magic-menu-delete-all-commands-modal
+                        /*
+                         * Giving user some feedback.
+                         */
+                        micro.windows.info:All your commands was successfully deleted
+                          class:micro-windows-info success
 
                 a
                   href:/
