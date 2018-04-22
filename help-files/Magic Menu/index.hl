@@ -4,9 +4,11 @@
 h2
   innerValue:Magic Menu
 
-img
-  class:desktop-help-icon-image
-  src:"https://phosphorusfive.files.wordpress.com/2018/03/magic-menu-hat.png"
+micro.widgets.file
+  style:"float:right; margin-left: 1rem; margin-bottom: 1rem;"
+  files
+    /modules/magic-menu/desktop.hl
+      href:/magic-menu/
 
 p
   innerValue:@"The Magic Menu is a common <em>'navbar'</em> system, that you can use in your own modules,
