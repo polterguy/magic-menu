@@ -17,7 +17,7 @@ if
 /*
  * Selecting ""/modules/"" folder.
  */
-hyper-ide.folder-explorer.set-active-item:/modules/
+hyper-ide.file-explorer.set-active-item:/modules/
 hyper-ide._plugins.create-app
   app-type:angular-todo
 
