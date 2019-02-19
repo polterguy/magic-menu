@@ -229,7 +229,7 @@ create-widget
                         set:x:/@micro.form.serialize/*/global_id?value
                           p5.types.guid.new
                       match:x:/@micro.form.serialize/*/global_id?value
-                        src:regex:/^[-a-z0-9_\.]{10,}$/i
+                        src:/^[-a-z0-9_\.]{10,}$/i
                       if:x:/@match/*
                         not
                         throw:Not a valid global ID, use only a-z, 0-9, -, _ or ., and use at least 10 characters

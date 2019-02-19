@@ -58,7 +58,7 @@ if:x:/../*/filter?value
   if
     fetch:x:/0/0?name
       match:x:/../*/filter?value
-        src:regex:/\{\{filter/
+        src:/\{\{filter/
     throw:Illegal filter condition
 
   /*

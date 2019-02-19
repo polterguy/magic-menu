@@ -21,7 +21,7 @@ create-event:magic-menu.unwrap-phrase
    * Checking if there are referenced word(s) inside specified word or phrase.
    */
   match:x:/../*/_arg?value
-    src:regex:/\[[^\]]*\]/i
+    src:/\[[^\]]*\]/i
 
   /*
    * Making sure we do any substitutions found inside of [_arg].

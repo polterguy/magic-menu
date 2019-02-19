@@ -15,7 +15,6 @@ p5.web.include-css-file:@MAGIC/media/main.css
 
 
 
-
 /*
  * Creating our main wire frame, making sure we set the page's title at the same time.
  */
